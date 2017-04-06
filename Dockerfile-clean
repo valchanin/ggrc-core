@@ -38,6 +38,6 @@ COPY ./extras /vagrant/extras
 RUN make setup_dev DEV_PREFIX=/vagrant-dev \
   && make appengine_sdk DEV_PREFIX=/vagrant-dev \
   && make appengine_packages DEV_PREFIX=/vagrant-dev \
-  && rm /vagrant-dev/opt/google_appengine_1.9.3.zip
+  && rm /vagrant-dev/opt/google_appengine_1.9.52.zip
 
 CMD bash -c 'tail -f bin/init_env'
