@@ -18,9 +18,8 @@ APPENGINE_ZIP_PATH=$(DEV_PREFIX)/opt/$(APPENGINE_ZIP_NAME)
 APPENGINE_SDK_PATH=$(DEV_PREFIX)/opt/google_appengine
 APPENGINE_NOAUTH_PATCH_PATH=$(PREFIX)/extras/google_appengine__force_noauth_local_webserver.diff
 
-APPENGINE_PACKAGES_ZIP=$(PREFIX)/src/packages.zip
-APPENGINE_PACKAGES_TEMP_ZIP=$(DEV_PREFIX)/opt/packages.zip
-APPENGINE_PACKAGES_DIR=$(DEV_PREFIX)/opt/gae_packages
+APPENGINE_PACKAGES_DIR=$(PREFIX)/src/packages
+APPENGINE_PACKAGES_TEMP_DIR=$(DEV_PREFIX)/opt/gae_packages
 
 APPENGINE_ENV_DIR=$(DEV_PREFIX)/opt/gae_virtualenv
 APPENGINE_REQUIREMENTS_TXT=$(PREFIX)/src/requirements.txt
@@ -55,9 +54,8 @@ $(APPENGINE_ZIP_PATH) :
 	mv "$(APPENGINE_ZIP_PATH).tmp" "$(APPENGINE_ZIP_PATH)"
 
 clean_appengine_packages :
-	rm -f -- "$(APPENGINE_PACKAGES_ZIP)"
-	rm -f -- "$(APPENGINE_PACKAGES_TEMP_ZIP)"
 	rm -rf -- "$(APPENGINE_PACKAGES_DIR)"
+	rm -rf -- "$(APPENGINE_PACKAGES_TEMP_DIR)"
 	rm -rf -- "$(APPENGINE_ENV_DIR)"
 
 $(APPENGINE_ENV_DIR) :
@@ -68,28 +66,28 @@ $(APPENGINE_ENV_DIR) :
 
 appengine_virtualenv : $(APPENGINE_ENV_DIR)
 
-$(APPENGINE_PACKAGES_DIR) : $(APPENGINE_ENV_DIR)
-	mkdir -p $(APPENGINE_PACKAGES_DIR)
+$(APPENGINE_PACKAGES_TEMP_DIR) : $(APPENGINE_ENV_DIR)
+	mkdir -p $(APPENGINE_PACKAGES_TEMP_DIR)
 	source "$(APPENGINE_ENV_DIR)/bin/activate"; \
-		pip install --no-deps -r "$(APPENGINE_REQUIREMENTS_TXT)" --target "$(APPENGINE_PACKAGES_DIR)"
-	cd "$(APPENGINE_PACKAGES_DIR)/webassets"; \
+		pip install --no-deps -r "$(APPENGINE_REQUIREMENTS_TXT)" --target "$(APPENGINE_PACKAGES_TEMP_DIR)"
+	cd "$(APPENGINE_PACKAGES_TEMP_DIR)/webassets"; \
 		patch -p3 < "${PREFIX}/extras/webassets__fix_builtin_filter_loading.diff"
+
+$(APPENGINE_PACKAGES_DIR) : $(APPENGINE_PACKAGES_TEMP_DIR)
+	cd "$(APPENGINE_PACKAGES_TEMP_DIR)"; \
+		find . -name "*.pyc" -delete; \
+		find . -name "*.egg-info" | xargs rm -rf
+	cp -r "$(APPENGINE_PACKAGES_TEMP_DIR)" "$(APPENGINE_PACKAGES_DIR)"
 
 appengine_packages : $(APPENGINE_PACKAGES_DIR)
 
-$(APPENGINE_PACKAGES_TEMP_ZIP) : $(APPENGINE_PACKAGES_DIR)
-	cd "$(APPENGINE_PACKAGES_DIR)"; \
-		find . -name "*.pyc" -delete; \
-		find . -name "*.egg-info" | xargs rm -rf; \
-		zip -9rv "$(APPENGINE_PACKAGES_TEMP_ZIP)" .; \
-		touch "$(APPENGINE_PACKAGES_TEMP_ZIP)"
+$(APPENGINE_GOOGLE_PACKAGES_DIR) : $(APPENGINE_GOOGLE_REQUIREMENTS_TXT)
+	pip install --no-deps -r "$(APPENGINE_GOOGLE_REQUIREMENTS_TXT)" --target "$(APPENGINE_GOOGLE_PACKAGES_DIR)"
 
-$(APPENGINE_PACKAGES_ZIP) : $(APPENGINE_PACKAGES_TEMP_ZIP)
-	cp "$(APPENGINE_PACKAGES_TEMP_ZIP)" "$(APPENGINE_PACKAGES_ZIP)"
+appengine_google_packages : $(APPENGINE_GOOGLE_PACKAGES_DIR)
 
-appengine_packages_zip : $(APPENGINE_PACKAGES_ZIP)
+appengine : appengine_sdk appengine_packages
 
-appengine : appengine_sdk appengine_packages appengine_packages_zip
 
 clean_appengine : clean_appengine_sdk clean_appengine_packages
 
@@ -193,7 +191,7 @@ bower_components : bower.json
 clean_bower_components :
 	rm -rf $(BOWER_PATH) $(FLASH_PATH) $(STATIC_PATH)/fonts
 
-deploy : appengine_packages_zip bower_components src/ggrc/assets/assets.manifest src/app.yaml
+deploy : appengine_packages bower_components src/ggrc/assets/assets.manifest src/app.yaml
 
 clean_deploy :
 	rm -f src/ggrc/assets/stylesheets/dashboard.css
