@@ -11,6 +11,7 @@ import json
 import re
 import flask_login
 from flask_login import login_url
+import flask
 from flask import request
 from flask import redirect
 from ggrc.extensions import get_extension_module_for
@@ -63,7 +64,9 @@ def init_app(app):
 
 def get_current_user():
   if get_login_module():
-    return flask_login.current_user
+    stored_user = getattr(flask.g, "user", None)
+    flask_login_user = flask_login.current_user
+    return stored_user or flask_login_user
   else:
     return None
 
