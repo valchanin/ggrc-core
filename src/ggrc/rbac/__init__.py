@@ -1,6 +1,9 @@
 # Copyright (C) 2017 Google Inc.
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
+import sqlalchemy as sa
+
+
 def context_query_filter(context_column, contexts):
   '''
   Intended for use by `model.query.filter(...)`
@@ -28,5 +31,5 @@ def context_query_filter(context_column, contexts):
         filter_expr = filter_in_expr
     if filter_expr is None:
       # No valid contexts
-      return False
+      return sa.sql.false()
     return filter_expr
