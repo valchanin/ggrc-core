@@ -97,6 +97,13 @@ def init_services(app_):
   ggrc.services.init_all_services(app_)
 
 
+def init_cloud_endpoints():
+  """Start cloud_endpoints wsgi server."""
+  from ggrc.services import cloud_endpoints as ce
+
+  return ce.start()
+
+
 def init_views(app_):
   import ggrc.views
   ggrc.views.init_all_views(app_)
@@ -241,6 +248,7 @@ configure_flask_login(app)
 configure_webassets(app)
 configure_jinja(app)
 init_services(app)
+cloud_endpoints = init_cloud_endpoints()
 init_views(app)
 init_extension_blueprints(app)
 init_indexer()

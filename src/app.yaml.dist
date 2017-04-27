@@ -33,6 +33,10 @@ handlers:
 #    login: admin
 #    secure: always
 
+  - url: /_ah/api/.*
+    script: ggrc.app.cloud_endpoints
+    secure: always
+
   - url: /.*
     script: ggrc.app.app.wsgi_app
     secure: always
@@ -93,3 +97,5 @@ env_variables:
   AUTHORIZED_DOMAINS: "{AUTHORIZED_DOMAINS}"
   GGRC_Q_INTEGRATION_URL: "{GGRC_Q_INTEGRATION_URL}"
   AUDIT_DASHBOARD_INTEGRATION_URL: "{AUDIT_DASHBOARD_INTEGRATION_URL}"
+  ENDPOINTS_SERVICE_NAME: echo-api.endpoints.{APPENGINE_INSTANCE}.cloud.goog
+  ENDPOINTS_SERVICE_VERSION: 2017-04-27r0
