@@ -99,6 +99,10 @@ def init_services(app_):
 
 def init_cloud_endpoints():
   """Start cloud_endpoints wsgi server."""
+  if not getattr(settings, "APP_ENGINE", False):
+    # endpoints module is not even importable with no GAE environment
+    return None
+
   from ggrc.services import cloud_endpoints as ce
 
   return ce.start()
