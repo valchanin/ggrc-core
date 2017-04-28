@@ -19,7 +19,7 @@ def context_query_filter(context_column, contexts):
     filter_expr = None
     # Handle `NULL` context specially
     if None in contexts:
-      filter_expr = context_column == None
+      filter_expr = context_column == None  # noqa  # pylint: disable=singleton-comparison
       # We're modifying `contexts`, so copy
       contexts = set(contexts)
       contexts.remove(None)
