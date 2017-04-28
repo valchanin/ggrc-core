@@ -12,6 +12,7 @@ import protorpc
 from ggrc.models.person import Person
 from ggrc.services.query_helper import QueryAPIQueryHelper
 from ggrc.services.cloud_endpoints import messages
+from ggrc import settings
 from ggrc.utils import as_json
 
 
@@ -36,7 +37,19 @@ def get_endpoints_current_user(raise_unauthorized=True):
   return current_user
 
 
-@endpoints.api(name="query", version="v1")
+def _get_client_ids():
+  client_ids = getattr(settings, "ALLOWED_CLOUD_ENDPOINTS_CLIENT_IDS", [])
+  if getattr(settings, "DEBUG", False):
+    client_ids += [endpoints.API_EXPLORER_CLIENT_ID]
+  return client_ids
+
+
+@endpoints.api(
+    name="QueryAPI",
+    version="v1",
+    allowed_client_ids=_get_client_ids(),
+    auth_level=endpoints.AUTH_LEVEL.REQUIRED,
+)
 class CloudEndpointsQueryAPI(protorpc.remote.Service):
   """GCE service to wrap QueryAPI."""
 
