@@ -11,6 +11,7 @@ RUN rm /usr/sbin/policy-rc.d \
     make \
     mysql-server \
     nodejs \
+    python-dev \
     python-imaging \
     python-mysqldb \
     python-pip \

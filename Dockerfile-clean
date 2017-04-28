@@ -10,6 +10,7 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     make \
     mysql-client \
     nodejs \
+    python-dev \
     python-imaging \
     python-mysqldb \
     python-pip \
