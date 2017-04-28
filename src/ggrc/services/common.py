@@ -689,6 +689,9 @@ class ModelView(View):
 
   @classmethod
   def url_for(cls, *args, **kwargs):
+    if not has_request_context():
+      # TODO: make url_for working with no request context
+      return "#"
     url = cls.base_url_for()
     if len(args) > 0:
       arg = args[0]
