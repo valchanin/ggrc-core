@@ -4,7 +4,7 @@
 """A mixin for objects that can be cloned"""
 
 import itertools
-from ggrc.services import common
+from ggrc.services import signals
 
 
 class Clonable(object):
@@ -24,7 +24,7 @@ class Clonable(object):
   def set_handlers(cls, model):
     """Set up handlers for cloning"""
     # pylint: disable=unused-argument, unused-variable
-    @common.Resource.collection_posted.connect_via(model)
+    @signals.Restful.collection_posted.connect_via(model)
     def handle_model_clone(sender, objects=None, sources=None):
       for obj, src in itertools.izip(objects, sources):
         if src.get("operation") == "clone":
@@ -36,7 +36,7 @@ class Clonable(object):
               mapped_objects={obj for obj in mapped_objects
                               if obj in model.CLONEABLE_CHILDREN})
 
-    @common.Resource.model_posted_after_commit.connect_via(model)
+    @signals.Restful.model_posted_after_commit.connect_via(model)
     def handle_scope_clone(sender, obj=None, src=None, service=None,
                            event=None):
       if src.get("operation") == "clone":

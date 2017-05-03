@@ -12,7 +12,6 @@ from sqlalchemy.orm.session import Session
 from ggrc import db
 from ggrc.models import relationship
 from ggrc.models import object_document
-from ggrc.services import common
 from ggrc.services import signals
 from ggrc.models.mixins import statusable
 
@@ -230,7 +229,7 @@ class AutoStatusChangeable(object):
     Args:
       model: Class on which handlers will be set up.
     """
-    @common.Resource.model_put.connect_via(model)
+    @signals.Restful.model_put.connect_via(model)
     def handle_object_put(sender, obj=None, src=None, service=None):
       """Handles object PUT operation
 
@@ -280,9 +279,9 @@ class AutoStatusChangeable(object):
 
       cls.handle_first_class_edit(model, obj)
 
-    @common.Resource.model_posted.connect_via(relationship.Relationship)
-    @common.Resource.model_put.connect_via(relationship.Relationship)
-    @common.Resource.model_deleted.connect_via(relationship.Relationship)
+    @signals.Restful.model_posted.connect_via(relationship.Relationship)
+    @signals.Restful.model_put.connect_via(relationship.Relationship)
+    @signals.Restful.model_deleted.connect_via(relationship.Relationship)
     def handle_relationship(sender, obj=None, src=None, service=None):
       """Handle creation of relationships that can change object status.
 
@@ -311,10 +310,8 @@ class AutoStatusChangeable(object):
             handlers[k](model, target_object, obj,
                         method=service.request.method)
 
-    @common.Resource.model_posted.connect_via(
-        object_document.ObjectDocument)
-    @common.Resource.model_deleted.connect_via(
-        object_document.ObjectDocument)
+    @signals.Restful.model_posted.connect_via(object_document.ObjectDocument)
+    @signals.Restful.model_deleted.connect_via(object_document.ObjectDocument)
     def handle_objectdocument_post(sender, obj=None, src=None, service=None):
       """Handles addition and deletion of evidences
 

@@ -10,7 +10,8 @@ from ggrc.login import get_current_user
 from ggrc.models import all_models
 from ggrc.models.relationship import Relationship
 from ggrc.rbac.permissions import is_allowed_update
-from ggrc.services.common import Resource, log_event
+from ggrc.services.signals import Restful
+from ggrc.services.common import log_event
 from ggrc.services.registry import service
 from ggrc_workflows import models, notification
 from ggrc_workflows.models import relationship_helper
@@ -182,7 +183,7 @@ def update_cycle_dates(cycle):
   cycle.next_due_date = _get_min_next_due_date(cycle.cycle_task_groups)
 
 
-@Resource.model_posted.connect_via(models.Cycle)
+@Restful.model_posted.connect_via(models.Cycle)
 def handle_cycle_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if src.get('autogenerate', False):
     # When called via a REST POST, use current user.
@@ -451,7 +452,7 @@ def ensure_assignee_is_workflow_member(workflow, assignee):
     db.session.add(user_role)
 
 
-@Resource.model_put.connect_via(models.TaskGroupTask)
+@Restful.model_put.connect_via(models.TaskGroupTask)
 def handle_task_group_task_put(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.contact.history.has_changes():
     ensure_assignee_is_workflow_member(obj.task_group.workflow, obj.contact)
@@ -467,25 +468,25 @@ def handle_task_group_task_put(sender, obj=None, src=None, service=None):  # noq
     update_workflow_state(obj.task_group.workflow)
 
 
-@Resource.model_posted.connect_via(models.TaskGroupTask)
+@Restful.model_posted.connect_via(models.TaskGroupTask)
 def handle_task_group_task_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   ensure_assignee_is_workflow_member(obj.task_group.workflow, obj.contact)
   update_workflow_state(obj.task_group.workflow)
 
 
-@Resource.model_deleted.connect_via(models.TaskGroupTask)
+@Restful.model_deleted.connect_via(models.TaskGroupTask)
 def handle_task_group_task_delete(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_workflow_state(obj.task_group.workflow)
 
 
-@Resource.model_put.connect_via(models.TaskGroup)
+@Restful.model_put.connect_via(models.TaskGroup)
 def handle_task_group_put(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.contact.history.has_changes():
     ensure_assignee_is_workflow_member(obj.workflow, obj.contact)
 
 
-@Resource.model_posted.connect_via(models.TaskGroup)
+@Restful.model_posted.connect_via(models.TaskGroup)
 def handle_task_group_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   source_task_group = None
 
@@ -509,20 +510,20 @@ def handle_task_group_post(sender, obj=None, src=None, service=None):  # noqa py
   ensure_assignee_is_workflow_member(obj.workflow, obj.contact)
 
 
-@Resource.model_deleted.connect_via(models.TaskGroup)
+@Restful.model_deleted.connect_via(models.TaskGroup)
 def handle_task_group_delete(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_workflow_state(obj.workflow)
 
 
-@Resource.model_deleted.connect_via(models.CycleTaskGroupObjectTask)
+@Restful.model_deleted.connect_via(models.CycleTaskGroupObjectTask)
 def handle_cycle_task_group_object_task_delete(sender, obj=None,
                                                src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_cycle_dates(obj.cycle)
 
 
-@Resource.model_put.connect_via(models.CycleTaskGroupObjectTask)
+@Restful.model_put.connect_via(models.CycleTaskGroupObjectTask)
 def handle_cycle_task_group_object_task_put(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
 
@@ -557,7 +558,7 @@ def handle_cycle_task_group_object_task_put(
     db.session.flush()
 
 
-@Resource.model_posted.connect_via(models.CycleTaskGroupObjectTask)
+@Restful.model_posted.connect_via(models.CycleTaskGroupObjectTask)
 def handle_cycle_task_group_object_task_post(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
 
@@ -575,7 +576,7 @@ def handle_cycle_task_group_object_task_post(
   db.session.flush()
 
 
-@Resource.model_put.connect_via(models.CycleTaskGroup)
+@Restful.model_put.connect_via(models.CycleTaskGroup)
 def handle_cycle_task_group_put(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.status.history.has_changes():
@@ -637,7 +638,7 @@ def update_workflow_state(workflow):
 # Check if workflow should be Inactive after end current cycle
 
 
-@Resource.model_put.connect_via(models.Cycle)
+@Restful.model_put.connect_via(models.Cycle)
 def handle_cycle_put(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.is_current.history.has_changes():
@@ -646,13 +647,13 @@ def handle_cycle_put(
 # Check if workflow should be Inactive after recurrence change
 
 
-@Resource.model_put.connect_via(models.Workflow)
+@Restful.model_put.connect_via(models.Workflow)
 def handle_workflow_put(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument  # noqa pylint: disable=unused-argument
   update_workflow_state(obj)
 
 
-@Resource.model_posted.connect_via(models.CycleTaskEntry)
+@Restful.model_posted.connect_via(models.CycleTaskEntry)
 def handle_cycle_task_entry_post(
         sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if src['is_declining_review'] == '1':
@@ -705,7 +706,7 @@ def _find_role(role_name):
   return db.session.query(Role).filter(Role.name == role_name).first()
 
 
-@Resource.model_posted.connect_via(models.WorkflowPerson)
+@Restful.model_posted.connect_via(models.WorkflowPerson)
 def handle_workflow_person_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
 
@@ -721,7 +722,7 @@ def handle_workflow_person_post(sender, obj=None, src=None, service=None):  # no
   db.session.add(user_role)
 
 
-@Resource.model_posted.connect_via(models.Workflow)
+@Restful.model_posted.connect_via(models.Workflow)
 def handle_workflow_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   source_workflow = None
 

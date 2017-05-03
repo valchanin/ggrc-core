@@ -24,7 +24,7 @@ from sqlalchemy import inspect
 from sqlalchemy import and_
 
 from ggrc import db
-from ggrc.services.common import Resource
+from ggrc.services.signals import Restful
 from ggrc import models
 from ggrc.models.mixins.statusable import Statusable
 
@@ -419,46 +419,46 @@ def register_handlers():  # noqa: C901
   #
   # pylint: disable=unused-argument,unused-variable
 
-  @Resource.model_deleted.connect_via(models.Assessment)
+  @Restful.model_deleted.connect_via(models.Assessment)
   def assignable_deleted_listener(sender, obj=None, src=None, service=None):
     handle_assignable_deleted(obj)
 
-  @Resource.model_put.connect_via(models.Assessment)
+  @Restful.model_put.connect_via(models.Assessment)
   def assignable_modified_listener(sender, obj=None, src=None, service=None):
     handle_assignable_modified(obj)
 
-  @Resource.collection_posted.connect_via(models.Assessment)
+  @Restful.collection_posted.connect_via(models.Assessment)
   def assignable_created_listener(sender, objects=None, **kwargs):
     for obj in objects:
       handle_assignable_created(obj)
 
-  @Resource.model_put.connect_via(models.Assessment)
+  @Restful.model_put.connect_via(models.Assessment)
   def assessment_send_reminder(sender, obj=None, src=None, service=None):
     reminder_type = src.get("reminderType", False)
     if reminder_type:
       handle_reminder(obj, reminder_type)
 
-  @Resource.collection_posted.connect_via(models.Comment)
+  @Restful.collection_posted.connect_via(models.Comment)
   def comment_created_listener(sender, objects=None, sources=None, **kwargs):
     for obj, src in izip(objects, sources):
       handle_comment_created(obj, src)
 
-  @Resource.model_posted.connect_via(models.Relationship)
+  @Restful.model_posted.connect_via(models.Relationship)
   def relationship_created_listener(sender, obj=None, src=None, service=None):
     handle_relationship_altered(obj)
 
-  @Resource.model_put.connect_via(models.Relationship)
+  @Restful.model_put.connect_via(models.Relationship)
   def relationship_updated_listener(sender, obj=None, src=None, service=None):
     handle_relationship_altered(obj)
 
-  @Resource.model_deleted.connect_via(models.Relationship)
+  @Restful.model_deleted.connect_via(models.Relationship)
   def relationship_deleted_listener(sender, obj=None, src=None, service=None):
     handle_relationship_altered(obj)
 
-  @Resource.model_posted.connect_via(models.ObjectDocument)
+  @Restful.model_posted.connect_via(models.ObjectDocument)
   def document_attached_listener(sender, obj=None, src=None, service=None):
     handle_attachment_altered(obj)
 
-  @Resource.model_deleted.connect_via(models.ObjectDocument)
+  @Restful.model_deleted.connect_via(models.ObjectDocument)
   def document_detached_listener(sender, obj=None, src=None, service=None):
     handle_attachment_altered(obj)
