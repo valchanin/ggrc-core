@@ -17,7 +17,6 @@ from exceptions import TypeError
 from wsgiref.handlers import format_date_time
 from urllib import urlencode
 
-from blinker import Namespace
 from flask import url_for, request, current_app, g, has_request_context
 from flask.views import View
 from flask.ext.sqlalchemy import Pagination
@@ -39,6 +38,7 @@ from ggrc.models.revision import Revision
 from ggrc.models.exceptions import ValidationError, translate_message
 from ggrc.rbac import permissions, context_query_filter
 from ggrc.services.attribute_query import AttributeQueryBuilder
+from ggrc.services.signals import Restful
 from ggrc.models.background_task import BackgroundTask, create_task
 from ggrc import settings
 
@@ -731,91 +731,6 @@ class Resource(ModelView):
   By default will only support the `application/json` content-type.
   """
 
-  signals = Namespace()
-  model_posted = signals.signal(
-      "Model POSTed",
-      """
-      Indicates that a model object was received via POST and will be committed
-      to the database. The sender in the signal will be the model class of the
-      POSTed resource. The following arguments will be sent along with the
-      signal:
-
-        :obj: The model instance created from the POSTed JSON.
-        :src: The original POSTed JSON dictionary.
-        :service: The instance of Resource handling the POST request.
-      """,)
-  collection_posted = signals.signal(
-      "Collection POSTed",
-      """
-      Indicates that a list of models was received via POST and will be
-      committed to the database. The sender in the signal will be the model
-      class of the POSTed resource. The following arguments will be sent along
-      with the signal:
-
-        :objects: The model instance created from the POSTed JSON.
-        :src: The original POSTed JSON dictionary.
-        :service: The instance of Resource handling the POST request.
-      """,)
-  model_posted_after_commit = signals.signal(
-      "Model POSTed - after",
-      """
-      Indicates that a model object was received via POST and has been
-      committed to the database. The sender in the signal will be the model
-      class of the POSTed resource. The following arguments will be sent along
-      with the signal:
-
-        :obj: The model instance created from the POSTed JSON.
-        :src: The original POSTed JSON dictionary.
-        :service: The instance of Resource handling the POST request.
-        :event: Instance of an Event (if change took place) or None otherwise
-      """,)
-  model_put = signals.signal(
-      "Model PUT",
-      """
-      Indicates that a model object update was received via PUT and will be
-      updated in the database. The sender in the signal will be the model class
-      of the PUT resource. The following arguments will be sent along with the
-      signal:
-
-        :obj: The model instance updated from the PUT JSON.
-        :src: The original PUT JSON dictionary.
-        :service: The instance of Resource handling the PUT request.
-      """,)
-  model_put_after_commit = signals.signal(
-      "Model PUT - after",
-      """
-      Indicates that a model object update was received via PUT and has been
-      updated in the database. The sender in the signal will be the model class
-      of the PUT resource. The following arguments will be sent along with the
-      signal:
-
-        :obj: The model instance updated from the PUT JSON.
-        :src: The original PUT JSON dictionary.
-        :service: The instance of Resource handling the PUT request.
-        :event: Instance of an Event (if change took place) or None otherwise
-      """,)
-  model_deleted = signals.signal(
-      "Model DELETEd",
-      """
-      Indicates that a model object was DELETEd and will be removed from the
-      databse. The sender in the signal will be the model class of the DELETEd
-      resource. The followin garguments will be sent along with the signal:
-
-        :obj: The model instance removed.
-        :service: The instance of Resource handling the DELETE request.
-      """,)
-  model_deleted_after_commit = signals.signal(
-      "Model DELETEd - after",
-      """
-      Indicates that a model object was DELETEd and has been removed from the
-      database. The sender in the signal will be the model class of the DELETEd
-      resource. The followin garguments will be sent along with the signal:
-
-        :obj: The model instance removed.
-        :service: The instance of Resource handling the DELETE request.
-        :event: Instance of an Event (if change took place) or None otherwise
-      """,)
-
   def dispatch_request(self, *args, **kwargs):  # noqa
     with benchmark("Dispatch request"):
       with benchmark("dispatch_request > Check Headers"):
@@ -971,7 +886,7 @@ class Resource(ModelView):
       if hasattr(obj, "validate_custom_attributes"):
         obj.validate_custom_attributes()
     with benchmark("Send PUT event"):
-      self.model_put.send(obj.__class__, obj=obj, src=src, service=self)
+      Restful.model_put.send(obj.__class__, obj=obj, src=src, service=self)
     with benchmark("Get modified objects"):
       modified_objects = get_modified_objects(db.session)
     with benchmark("Update custom attribute values"):
@@ -990,8 +905,8 @@ class Resource(ModelView):
     with benchmark("Update memcache after commit for collection PUT"):
       update_memcache_after_commit(self.request)
     with benchmark("Send PUT - after commit event"):
-      self.model_put_after_commit.send(obj.__class__, obj=obj,
-                                       src=src, service=self, event=event)
+      Restful.model_put_after_commit.send(obj.__class__, obj=obj, src=src,
+                                          service=self, event=event)
       # Note: Some data is created in listeners for model_put_after_commit
       # (like updates to snapshots), so we need to commit the changes
       db.session.commit()
@@ -1029,7 +944,7 @@ class Resource(ModelView):
         return header_error
       db.session.delete(obj)
       with benchmark("Send DELETEd event"):
-        self.model_deleted.send(obj.__class__, obj=obj, service=self)
+        Restful.model_deleted.send(obj.__class__, obj=obj, service=self)
       with benchmark("Get modified objects"):
         modified_objects = get_modified_objects(db.session)
       with benchmark("Log event"):
@@ -1044,8 +959,8 @@ class Resource(ModelView):
       with benchmark("Update memcache after commit for collection DELETE"):
         update_memcache_after_commit(self.request)
       with benchmark("Send DELETEd - after commit event"):
-        self.model_deleted_after_commit.send(obj.__class__, obj=obj,
-                                             service=self, event=event)
+        Restful.model_deleted_after_commit.send(obj.__class__, obj=obj,
+                                                service=self, event=event)
       with benchmark("Query for object"):
         object_for_json = self.object_for_json(obj)
       with benchmark("Make response"):
@@ -1385,7 +1300,8 @@ class Resource(ModelView):
         with benchmark("Deserialize object"):
           self.json_create(obj, src)
         with benchmark("Send model POSTed event"):
-          self.model_posted.send(obj.__class__, obj=obj, src=src, service=self)
+          Restful.model_posted.send(obj.__class__, obj=obj, src=src,
+                                    service=self)
         with benchmark("Update custom attribute values"):
           set_ids_for_new_custom_attributes(obj)
 
@@ -1396,8 +1312,8 @@ class Resource(ModelView):
     with benchmark("Check create permissions"):
       self._check_post_permissions(objects)
     with benchmark("Send collection POSTed event"):
-      self.collection_posted.send(obj.__class__,
-                                  objects=objects, sources=sources)
+      Restful.collection_posted.send(obj.__class__, objects=objects,
+                                     sources=sources)
     with benchmark("Flush posted objects"):
       db.session.flush()
     with benchmark("Validate custom attributes"):
@@ -1424,8 +1340,8 @@ class Resource(ModelView):
 
     with benchmark("Send model POSTed - after commit event"):
       for obj, src in itertools.izip(objects, sources):
-        self.model_posted_after_commit.send(obj.__class__, obj=obj,
-                                            src=src, service=self, event=event)
+        Restful.model_posted_after_commit.send(obj.__class__, obj=obj, src=src,
+                                               service=self, event=event)
         # Note: In model_posted_after_commit necessary mapping and
         # relationships are set, so need to commit the changes
       db.session.commit()

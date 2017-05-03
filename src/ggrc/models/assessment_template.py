@@ -15,7 +15,7 @@ from ggrc.models.exceptions import ValidationError
 from ggrc.models.reflection import AttributeInfo
 from ggrc.models.reflection import PublishOnly
 from ggrc.models.types import JsonType
-from ggrc.services import common
+from ggrc.services import signals
 from ggrc.fulltext.mixin import Indexed
 
 
@@ -202,7 +202,7 @@ def create_audit_relationship(audit_stub, obj):
   db.session.add(rel)
 
 
-@common.Resource.model_posted.connect_via(AssessmentTemplate)
+@signals.Restful.model_posted.connect_via(AssessmentTemplate)
 def handle_assessment_template(sender, obj=None, src=None, service=None):
   # pylint: disable=unused-argument
   """Handle Assessment Template POST

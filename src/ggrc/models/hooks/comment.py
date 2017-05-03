@@ -6,14 +6,14 @@
 from ggrc import db
 from ggrc.login import get_current_user_id
 from ggrc.models.all_models import Comment, ObjectOwner
-from ggrc.services.common import Resource
+from ggrc.services.signals import Restful
 
 
 def init_hook():
   """Initialize all hooks"""
   # pylint: disable=unused-variable
 
-  @Resource.collection_posted.connect_via(Comment)
+  @Restful.collection_posted.connect_via(Comment)
   def handle_comment_post(sender, objects=None, **kwargs):
     """Save information on which user created the Comment object."""
     # pylint: disable=unused-argument

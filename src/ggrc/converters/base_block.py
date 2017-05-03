@@ -33,7 +33,7 @@ from ggrc.services.common import update_index
 from ggrc.services.common import update_memcache_after_commit
 from ggrc.services.common import update_memcache_before_commit
 from ggrc.services.common import log_event
-from ggrc.services.common import Resource
+from ggrc.services.signals import Restful
 from ggrc_workflows.models.cycle_task_group_object_task import \
     CycleTaskGroupObjectTask
 
@@ -549,7 +549,7 @@ class BlockConverter(object):
     for obj in new_objects:
       collections.setdefault(obj.__class__, []).append(obj)
     for object_class, objects in collections.iteritems():
-      Resource.collection_posted.send(
+      Restful.collection_posted.send(
           object_class,
           objects=objects,
           sources=[{} for _ in xrange(len(objects))],
