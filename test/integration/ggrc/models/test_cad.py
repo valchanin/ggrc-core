@@ -6,8 +6,8 @@
 from sqlalchemy.exc import IntegrityError
 
 from ggrc import db
-from ggrc import models
 from ggrc.app import app
+from ggrc.models import all_models as models
 from integration.ggrc import TestCase
 from integration.ggrc.models import factories
 
@@ -68,6 +68,10 @@ class TestCAD(TestCase):
         definition_id=2,
         attribute_type="Text",
     ))
+    db.session.add(models.AccessControlRole(
+        name="a name for a role",
+        object_type="Section",
+    ))
     db.session.commit()
 
     with self.assertRaises(IntegrityError):
@@ -89,12 +93,26 @@ class TestCAD(TestCase):
       ))
       db.session.commit()
 
+    with self.assertRaises(ValueError):
+      db.session.add(models.CustomAttributeDefinition(
+          title="a name for a role",
+          definition_type="section",
+          definition_id=2,
+          attribute_type="Text",
+      ))
+      db.session.commit()
+
   def test_different_models(self):
     """Test unique names over on different models."""
     db.session.add(models.CustomAttributeDefinition(
         title="my custom attribute title",
         definition_type="section",
         attribute_type="Text",
+    ))
+    db.session.commit()
+    db.session.add(models.AccessControlRole(
+        name="my custom attribute title",
+        object_type="Contract",
     ))
     db.session.commit()
     cad = models.CustomAttributeDefinition(
