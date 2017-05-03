@@ -198,3 +198,26 @@ class TestCAD(TestCase):
             definition_type="assessment_template",
             definition_id=1,
         )
+
+  def test_role_attribute(self):
+    """Test access control role collisions with attributes & CADs"""
+    db.session.add(models.CustomAttributeDefinition(
+        title="my custom attribute title",
+        definition_type="section",
+        attribute_type="Text",
+    ))
+    db.session.commit()
+
+    with self.assertRaises(ValueError):
+      db.session.add(models.AccessControlRole(
+          name="title",
+          object_type="Market",
+      ))
+      db.session.commit()
+
+    with self.assertRaises(ValueError):
+      db.session.add(models.AccessControlRole(
+          name="my custom attribute title",
+          object_type="Section",
+      ))
+      db.session.commit()
