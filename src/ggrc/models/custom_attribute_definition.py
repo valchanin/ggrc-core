@@ -10,6 +10,7 @@ from sqlalchemy.sql.schema import UniqueConstraint
 
 import ggrc.models
 from ggrc import db
+from ggrc.access_control import role
 from ggrc.utils import benchmark
 from ggrc.models import mixins
 from ggrc.models.reflection import AttributeInfo
@@ -208,6 +209,17 @@ class CustomAttributeDefinition(mixins.Base, mixins.Titled, db.Model):
       flask.g.global_cad_names = {name.lower(): id_ for name, id_ in query}
     return flask.g.global_cad_names
 
+
+  @classmethod
+  def _get_custom_roles(cls, definition_type):
+    """Get all access control role names for the given object type"""
+    if not getattr(flask.g, "global_role_names", set()):
+      query = db.session.query(role.AccessControlRole.name, role.AccessControlRole.id).filter(
+        role.AccessControlRole.object_type == definition_type
+      )
+      flask.g.global_role_names = {name.lower(): id_ for name, id_ in query}
+    return flask.g.global_role_names
+
   def validate_assessment_title(self, name):
     """Check assessment title uniqueness.
 
@@ -247,12 +259,13 @@ class CustomAttributeDefinition(mixins.Base, mixins.Titled, db.Model):
     """Validate CAD title/name uniqueness.
 
     Note: title field is used for storing CAD names.
-    CAD names need to follow 3 uniqueness rules:
-      1) names must not match any attribute name on any existing object.
+    CAD names need to follow 4 uniqueness rules:
+      1) Names must not match any attribute name on any existing object.
       2) Object level CAD names must not match any global CAD name.
       3) Object level CAD names can clash, but not for the same Object
          instance. This means we can have two CAD with a name "my cad", with
          different attributable_id fields.
+      4) Names must not match any existing custom attribute role name
 
     Third rule is handled by the database with unique key uq_custom_attribute
     (`definition_type`,`definition_id`,`title`).
@@ -288,6 +301,10 @@ class CustomAttributeDefinition(mixins.Base, mixins.Titled, db.Model):
       raise ValueError(u"Global custom attribute '{}' "
                        u"already exists for this object type"
                        .format(name))
+
+    if name in self._get_custom_roles(definition_type):
+      raise ValueError(u"Custom Role with a name of '{}' "
+                       u"already existsfor this object type".format(name))
 
     if definition_type == "assessment":
       self.validate_assessment_title(name)
