@@ -15,7 +15,8 @@ from ggrc.models.custom_attribute_value import CustomAttributeValue
 from ggrc.models.exceptions import ValidationError
 
 
-class CustomAttributeDefinition(attributevalidator.AttributeValidator, mixins.Base, mixins.Titled, db.Model):
+class CustomAttributeDefinition(attributevalidator.AttributeValidator,
+                                mixins.Base, mixins.Titled, db.Model):
   """Custom attribute definition model.
 
   Attributes:

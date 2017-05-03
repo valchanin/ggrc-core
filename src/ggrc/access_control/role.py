@@ -11,7 +11,8 @@ from ggrc.models.mixins import attributevalidator
 from ggrc.fulltext.mixin import Indexed
 
 
-class AccessControlRole(Indexed, attributevalidator.AttributeValidator, mixins.Base, db.Model):
+class AccessControlRole(Indexed, attributevalidator.AttributeValidator,
+                        mixins.Base, db.Model):
   """Access Control Role
 
   Model holds all roles in the application. These roles can be added
