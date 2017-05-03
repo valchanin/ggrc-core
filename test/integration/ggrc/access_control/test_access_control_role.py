@@ -29,7 +29,7 @@ class TestAccessControlRole(TestCase):
     return self.api.post(AccessControlRole, {
         "access_control_role": {
             "name": name,
-            "objec_type": "Control",
+            "object_type": "Control",
             "context": None,
             "read": True
         },
