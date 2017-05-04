@@ -103,7 +103,7 @@ def init_cloud_endpoints():
     # endpoints module is not even importable with no GAE environment
     return None
 
-  from ggrc.services import cloud_endpoints as ce
+  from ggrc import cloud_endpoints as ce
 
   return ce.start()
 

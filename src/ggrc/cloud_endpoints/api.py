@@ -9,9 +9,7 @@ import endpoints
 import flask
 import protorpc
 
-from ggrc.models.person import Person
-from ggrc.services.query_helper import QueryAPIQueryHelper
-from ggrc.services.cloud_endpoints import messages
+from ggrc.cloud_endpoints import messages
 from ggrc import settings
 from ggrc.utils import as_json
 
@@ -66,6 +64,8 @@ class CloudEndpointsQueryAPI(protorpc.remote.Service):
     query = json.loads(request.body)
 
     from ggrc import app
+    from ggrc.models.person import Person
+    from ggrc.services.query_helper import QueryAPIQueryHelper
 
     with app.app.app_context():
       ge_user = get_endpoints_current_user(raise_unauthorized=True)

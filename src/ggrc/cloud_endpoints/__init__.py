@@ -5,7 +5,7 @@
 
 import endpoints
 
-from ggrc.services.cloud_endpoints import api
+from ggrc.cloud_endpoints import api
 
 
 def start():
