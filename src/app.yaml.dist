@@ -49,7 +49,7 @@ libraries:
   - name: jinja2
     version: "2.6"
   - name: pycrypto
-    version: "2.6"
+    version: "2.6.1"
   - name: ssl
     version: "latest"
   - name: webapp2
