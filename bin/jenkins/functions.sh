@@ -44,15 +44,17 @@ setup () {
     PROJECT="${1}"
   fi
 
+  MACHINE_ID="${2:-dev selenium}"
+
   git submodule update --init
 
   docker-compose --file docker-compose-testing.yml \
     --project-name ${PROJECT} \
-    build
+    build ${MACHINE_ID}
 
   docker-compose --file docker-compose-testing.yml \
     --project-name ${PROJECT} \
-    up --force-recreate -d
+    up --force-recreate -d ${MACHINE_ID}
 
   if [[ $UID -eq 0 ]]; then
     # Allow users inside the containers to access files.
