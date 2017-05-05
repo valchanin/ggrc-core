@@ -3,6 +3,9 @@
 # Copyright (C) 2017 Google Inc.
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
+import argparse
+import os
+
 
 def main(infile, outfile, **options):
   f = open(infile)
@@ -13,9 +16,32 @@ def main(infile, outfile, **options):
   f.write(s.format(**options))
   f.close()
 
+
+def parse_args(args):
+  parser = argparse.ArgumentParser(
+      description="Rendering config template from commandline arguments or "
+                  "environment variables",
+  )
+  parser.add_argument("input_file", help="Input filename")
+  parser.add_argument("output_file", help="Output filename")
+  parser.add_argument("--from-env", action="store_true",
+                      help="Use environment variables instead of commandline "
+                           "arguments")
+  parser.add_argument("commandline_arguments", nargs="*",
+                      help="If not using environment variables, the rendered "
+                           "placeholders in key=value format")
+
+  args = parser.parse_args(args)
+
+  if args.from_env:
+    options = os.environ
+  else:
+    options = dict(o.split("=", 1) for o in args.commandline_arguments)
+
+  return args.input_file, args.output_file, options
+
+
 if __name__ == '__main__':
   import sys
-  infile, outfile = sys.argv[1], sys.argv[2]
-  options = sys.argv[3:]
-  options = dict(map(lambda o: tuple(o.split('=', 1)), options))
+  infile, outfile, options = parse_args(sys.argv[1:])
   main(infile, outfile, **options)
