@@ -9,8 +9,8 @@ runtime: python27
 api_version: 1
 threadsafe: true
 instance_class: {INSTANCE_CLASS}
-manual_scaling:
-  instances: {MAX_INSTANCES}
+
+{SCALING}
 
 handlers:
   - url: /login
