@@ -49,7 +49,7 @@ $(GCLOUD_ZIP_PATH) :
 	mv "$(GCLOUD_ZIP_PATH).tmp" "$(GCLOUD_ZIP_PATH)"
 
 appengine_sdk : $(GCLOUD_SDK_PATH)
-	yes | gcloud components install app-engine-python
+	yes | "$(GCLOUD_SDK_PATH)/bin/gcloud" components install app-engine-python
 
 clean_appengine_packages :
 	rm -rf -- "$(APPENGINE_PACKAGES_DIR)"
