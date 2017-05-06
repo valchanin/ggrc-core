@@ -10,13 +10,12 @@ PREFIX := $(shell pwd)
 DEV_PREFIX ?= $(PREFIX)
 DEV_PREFIX := $(shell cd $(DEV_PREFIX); pwd)
 
-# APPENGINE_ZIP_NAME and APPENGINE_ZIP_HREF are independent but should be
+# GCLOUD_ZIP_NAME and GCLOUD_ZIP_HREF are independent but should be
 # updated together to ensure update is forced during `vagrant provision`
-APPENGINE_ZIP_HREF=https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.52.zip
-APPENGINE_ZIP_NAME=google_appengine_1.9.52.zip
-APPENGINE_ZIP_PATH=$(DEV_PREFIX)/opt/$(APPENGINE_ZIP_NAME)
-APPENGINE_SDK_PATH=$(DEV_PREFIX)/opt/google_appengine
-APPENGINE_NOAUTH_PATCH_PATH=$(PREFIX)/extras/google_appengine__force_noauth_local_webserver.diff
+GCLOUD_ZIP_HREF=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-154.0.1-linux-x86_64.tar.gz
+GCLOUD_ZIP_NAME=google-cloud-sdk-154.0.1-linux-x86_64.tar.gz
+GCLOUD_ZIP_PATH=$(DEV_PREFIX)/opt/$(GCLOUD_ZIP_NAME)
+GCLOUD_SDK_PATH=$(DEV_PREFIX)/opt/google-cloud-sdk
 
 APPENGINE_PACKAGES_DIR=$(PREFIX)/src/packages
 APPENGINE_PACKAGES_TEMP_DIR=$(DEV_PREFIX)/opt/gae_packages
@@ -34,24 +33,23 @@ GOLANG_PATH=/vagrant-dev/golang
 GOLANG_BIN=$(GOLANG_PATH)/go/bin/go
 GOLANG_PACKAGES=$(GOLANG_PATH)/bin
 
-$(APPENGINE_SDK_PATH) : $(APPENGINE_ZIP_PATH)
-	@echo $( dirname $(APPENGINE_ZIP_PATH) )
-	cd `dirname $(APPENGINE_SDK_PATH)`; \
-		unzip -o $(APPENGINE_ZIP_PATH)
-	touch $(APPENGINE_SDK_PATH)
-	cd $(APPENGINE_SDK_PATH); \
-		patch -p1 < $(APPENGINE_NOAUTH_PATCH_PATH)
+$(GCLOUD_SDK_PATH) : $(GCLOUD_ZIP_PATH)
+	cd `dirname $(GCLOUD_SDK_PATH)`; \
+		tar -xzf $(GCLOUD_ZIP_PATH)
 
-appengine_sdk : $(APPENGINE_SDK_PATH)
+gcloud_sdk : $(GCLOUD_SDK_PATH)
 
-clean_appengine_sdk :
-	rm -rf -- "$(APPENGINE_SDK_PATH)"
-	rm -f "$(APPENGINE_ZIP_PATH)"
+clean_gcloud_sdk :
+	rm -rf -- "$(GCLOUD_SDK_PATH)"
+	rm -f "$(GCLOUD_ZIP_PATH)"
 
-$(APPENGINE_ZIP_PATH) :
-	mkdir -p `dirname $(APPENGINE_ZIP_PATH)`
-	wget "$(APPENGINE_ZIP_HREF)" -O "$(APPENGINE_ZIP_PATH).tmp"
-	mv "$(APPENGINE_ZIP_PATH).tmp" "$(APPENGINE_ZIP_PATH)"
+$(GCLOUD_ZIP_PATH) :
+	mkdir -p `dirname $(GCLOUD_ZIP_PATH)`
+	wget "$(GCLOUD_ZIP_HREF)" -O "$(GCLOUD_ZIP_PATH).tmp"
+	mv "$(GCLOUD_ZIP_PATH).tmp" "$(GCLOUD_ZIP_PATH)"
+
+appengine_sdk : $(GCLOUD_SDK_PATH)
+	yes | gcloud components install app-engine-python
 
 clean_appengine_packages :
 	rm -rf -- "$(APPENGINE_PACKAGES_DIR)"
@@ -88,8 +86,7 @@ appengine_google_packages : $(APPENGINE_GOOGLE_PACKAGES_DIR)
 
 appengine : appengine_sdk appengine_packages
 
-
-clean_appengine : clean_appengine_sdk clean_appengine_packages
+clean_appengine : clean_gcloud_sdk clean_appengine_packages
 
 
 ## Local environment
