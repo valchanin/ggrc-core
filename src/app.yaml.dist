@@ -3,8 +3,6 @@
 #
 # See https://developers.google.com/appengine/docs/python/config/appconfig
 
-application: {APPENGINE_INSTANCE}
-version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
