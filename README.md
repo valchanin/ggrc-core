@@ -55,8 +55,8 @@ directory
 
     ```
     git submodule update --init
-    docker-compose up -d
-    docker exec -it ggrccore_dev_1 su vagrant
+    docker-compose --file docker-compose-clean.yml up -d
+    docker exec -it ggrccore_cleandev_1 su
     make -B bower_components
     build_css
     build_assets
@@ -65,6 +65,8 @@ directory
 
 If you see download errors during the `docker-compose up -d` stage, or if any subsequent
 step fails, try running `docker-compose build` (See [Reprovisioning a Docker container](#reprovisioning-a-docker-container) below for more).
+
+If apt-get fails to install anything (for example `Could not resolve 'archive.ubuntu.com'`), try [this](#dns-issues).
 
 _NOTE: Because docker shared volumes do not have permission mappings, you should run these commands as a user with UID 1000, to match the users inside the containers._
 
@@ -373,6 +375,45 @@ development environment (largely for testing purposes).
 
 Most requirements changes should be in either `src/requirements.txt` or
 `src/requirements-dev.txt` and would manifest as module import failures.
+
+### DNS issues
+
+Sometimes build fails due to `Could not resolve 'archive.ubuntu.com'`.
+
+Solution 1:
+
+On the host find out the primary and secondary DNS server addresses:
+```
+$ nmcli dev show | grep 'IP4.DNS'
+IP4.DNS[1]:              10.0.0.2
+IP4.DNS[2]:              10.0.0.3
+```
+Using these addresses, create a file `/etc/docker/daemon.json`:
+```
+$ sudo su root
+# cd /etc/docker
+# touch daemon.json
+```
+Put this in `/etc/docker/daemon.json`:
+```
+{
+   "dns": ["10.0.0.2", "10.0.0.3"]
+}
+```   
+Exit from root:
+```
+# exit
+```
+Now restart docker:
+```
+$ sudo service docker restart
+```
+
+Solution 2:
+- Uncomment the following line in `/etc/default/docker`: `DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"`
+- Restart the Docker service `$ sudo service docker restart`
+- Delete any images which have cached the invalid DNS settings.
+- Build again and the problem should be solved.
 
 ### Environment Variables
 
