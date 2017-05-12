@@ -142,7 +142,10 @@ class SnapshotInstanceColumnHandler(MappingColumnHandler):
       # TODO: is_valid_creation should work with codes instead of ids and it
       # should also be checked on dry runs.
       return items
-    exists_ids = {i for i, in self.snapshoted_instances_query.values("id")}
+    exists_ids = {
+        row.id for row in
+        self.snapshoted_instances_query.values(self.mapping_object.id)
+    }
     import_ids = {i.id for i in items or []}
     to_append_ids = import_ids - exists_ids
     self.is_valid_creation(to_append_ids)
