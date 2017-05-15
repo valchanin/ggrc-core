@@ -10,11 +10,9 @@
       {{#if showAction}}
         <div class="action-toolbar__controls">
         {{#is_allowed 'update' parentInstance context='for'}}
-          <action-toolbar-control>
               <unmap-button {destination}="parentInstance" {source}="document" object-prop="object_documents" mapping-type="ObjectDocument">
-                  <i class="fa fa-trash"></i>
+                 <action-toolbar-control><i class="fa fa-trash"></i></action-toolbar-control>
               </unmap-button>
-          </action-toolbar-control>
         {{/is_allowed}}
         </div>
         {{/if}}

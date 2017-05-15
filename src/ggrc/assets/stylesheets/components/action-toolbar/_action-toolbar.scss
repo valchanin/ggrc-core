@@ -8,8 +8,8 @@
   position: relative;
 
   &__controls {
-    top: 0;
-    right: 16px;
+    top: -4px;
+    right: 8px;
     position: absolute;
   }
 
@@ -41,22 +41,5 @@
       color: $white;
       font-size: 18px;
     }
-  }
-}
-
-.unmap-button {
-  box-shadow: none;
-  border-color: transparent;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
-  width: 28px;
-  border-radius: 14px;
-  background: transparent;
-
-  &:focus {
-    outline: none;
   }
 }
