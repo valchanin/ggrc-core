@@ -80,11 +80,6 @@
       color: $icon-color-hover;
       padding: 0 28px 8px;
     }
-
-    .attachment-list li {
-      margin: 0;
-      line-height: 18px;
-    }
   }
 
   .assessment-controls__extra-controls {
@@ -99,17 +94,7 @@
       padding: 0 16px 0 28px;
       flex: 1 1 50%;
       max-width: 50%;
-    }
-
-    .assesment-attachment-list {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .attach-file-info {
-      margin: -10px 0 16px;
-      font-size: 0.9em;
-      font-style: italic;
+      margin: 0 0 16px;
     }
   }
 }
