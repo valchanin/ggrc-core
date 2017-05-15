@@ -4,13 +4,20 @@
  */
 
 .action-toolbar {
-  display: block;
   position: relative;
+  display: flex;
 
   &__controls {
+    display: flex;
+    flex-direction: row;
+    position: relative;
     top: -4px;
-    right: 8px;
-    position: absolute;
+    min-width: 0;
+  }
+
+  &__content-item {
+    flex: 1;
+    min-width: 0;
   }
 
   &__controls-item {
@@ -22,6 +29,7 @@
     border-radius: 14px;
     background: #333;
     cursor: pointer;
+    margin: 0 0 0 8px;
 
     &:hover {
       background: darken(#333, 10%);

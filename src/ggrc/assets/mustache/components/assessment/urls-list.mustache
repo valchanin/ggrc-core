@@ -5,7 +5,7 @@
 <h6>URL</h6>
 <object-list {items}="mappedItems" {empty-message}="noItemsText">
     <action-toolbar {document}="{.}" class="action-toolbar">
-        <document-object-list-item {instance}="document"></document-object-list-item>
+        <document-object-list-item class="action-toolbar__content-item" {instance}="document"></document-object-list-item>
       {{#if showAction}}
         <div class="action-toolbar__controls">
         {{#is_allowed 'update' instance context='for'}}

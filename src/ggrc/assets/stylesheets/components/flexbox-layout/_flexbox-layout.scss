@@ -53,6 +53,7 @@
 
   [class*="flex-size"] {
     box-sizing: border-box;
+    min-width: 0;
   }
 }
 

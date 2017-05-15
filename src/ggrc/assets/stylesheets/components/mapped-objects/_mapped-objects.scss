@@ -32,7 +32,6 @@ assessment-mapped-controls, assessment-mapped-related-information {
       &.mapped-snapshot-item {
         background: $shapshotBorder;
         box-shadow: 1px 1px 2px 0 $warmGray;
-
       }
     }
   }
@@ -92,9 +91,8 @@ assessment-mapped-controls, assessment-mapped-related-information {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  line-height: 20px;
   padding: 0;
-  margin: 0 0 8px;
+  margin: 0 0 16px;
 
   &.document-object-item__with-icon {
     position: relative;
@@ -115,19 +113,25 @@ assessment-mapped-controls, assessment-mapped-related-information {
 
   .document-object-item__body {
     flex: 0 1;
+    display: flex;
+    flex-direction: column;
 
     .link {
+      font-style: italic;
+      font-size: 13px;
+      display: inline-block;
       line-height: 20px;
       cursor: pointer;
       max-width: 100%;
       overflow: hidden;
+      white-space: nowrap;
       text-overflow: ellipsis;
     }
 
     .date {
       display: block;
       color: #999;
-      line-height: 16px;
+      line-height: 14px;
       font-size: 11px;
       font-style: italic;
     }
@@ -168,6 +172,11 @@ assessment-mapped-controls, assessment-mapped-related-information {
   }
   .comment-object-item__text {
     font-size: 13px;
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
   }
 }
 
