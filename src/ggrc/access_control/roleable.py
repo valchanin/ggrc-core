@@ -92,6 +92,21 @@ class Roleable(object):
     return cls.eager_inclusions(query, Roleable._include_links).options(
         orm.subqueryload('access_control_list'))
 
+  @classmethod
+  def indexed_query(cls):
+    query = super(Roleable, cls).indexed_query()
+    return query.options(
+        orm.subqueryload(
+            'access_control_list'
+        ).subqueryload(
+            "person"
+        ).load_only(
+            "id",
+            "name",
+            "email",
+        )
+    )
+
   def log_json(self):
     """Log custom attribute values."""
     # pylint: disable=not-an-iterable
