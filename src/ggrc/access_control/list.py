@@ -46,5 +46,7 @@ class AccessControlList(mixins.Base, db.Model):
   def _extra_table_args(_):
     return (
         db.UniqueConstraint(
-            'person_id', 'ac_role_id', 'object_id', 'object_type'),
+            'person_id', 'ac_role_id', 'object_id', 'object_type'
+        ),
+        db.Index('idx_object_type_object_idx', 'object_type', 'object_id'),
     )
