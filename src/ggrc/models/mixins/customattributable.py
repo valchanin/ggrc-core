@@ -396,15 +396,19 @@ class CustomAttributable(object):
     """Get all applicable CA definitions (even ones without a value yet)."""
     from ggrc.models.custom_attribute_definition import \
         CustomAttributeDefinition as cad
+
     if cls.__name__ == "Assessment":
-      return cad.query.filter(or_(
+      query = cad.query.filter(or_(
           cad.definition_type == utils.underscore_from_camelcase(cls.__name__),
           cad.definition_type == "assessment_template",
-      )).all()
+      ))
     else:
-      return cad.query.filter(
+      query = cad.query.filter(
           cad.definition_type == utils.underscore_from_camelcase(cls.__name__)
-      ).all()
+      )
+    return query.options(
+        orm.undefer_group('CustomAttributeDefinition_complete')
+    )
 
   @classmethod
   def eager_query(cls):
