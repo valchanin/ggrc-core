@@ -7,7 +7,9 @@
     {{#if extended_folders.length}}
         <ggrc-gdrive-picker-launcher class="attachment-upload-control__button"
                 instance="instance"
-                click_event="trigger_upload_parent">
+                click_event="trigger_upload_parent"
+                {confirmation-callback}="@confirmationCallback"
+                {items-uploaded-callback}="@itemsUploadedCallback">
             Attach
         </ggrc-gdrive-picker-launcher>
     {{else}}
@@ -17,7 +19,9 @@
       </div>
         <ggrc-gdrive-picker-launcher class="attachment-upload-control__button"
                 instance="instance"
-                click_event="trigger_upload">
+                click_event="trigger_upload"
+                {confirmation-callback}="@confirmationCallback"
+                {items-uploaded-callback}="@itemsUploadedCallback">
             Attach
         </ggrc-gdrive-picker-launcher>
     {{/if}}

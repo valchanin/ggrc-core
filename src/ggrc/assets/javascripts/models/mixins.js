@@ -307,4 +307,27 @@
       }
     }
   }, {});
+  /**
+   * Specific Model mixin to check overdue status
+   */
+  can.Model.Mixin('isOverdue', {
+  }, {
+    'after:init': function () {
+      this.attr('isOverdue', this._isOverdue());
+      this.bind('change', function () {
+        this.attr('isOverdue', this._isOverdue());
+      }.bind(this));
+    },
+    _isOverdue: function () {
+      var endDate = moment(
+        this.attr('next_due_date') || this.attr('end_date'));
+      var today = moment().startOf('day');
+      var startOfDate = moment(endDate).startOf('day');
+      var isOverdue = endDate && today.diff(startOfDate, 'days') >= 0;
+      if (this.attr('status') === 'Verified') {
+        return false;
+      }
+      return isOverdue;
+    }
+  });
 })(window.can, window.GGRC);

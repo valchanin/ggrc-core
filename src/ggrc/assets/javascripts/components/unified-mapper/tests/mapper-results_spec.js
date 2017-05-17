@@ -536,6 +536,18 @@ describe('GGRC.Components.mapperResults', function () {
         mockData: 'snapshot'
       }));
     });
+
+    it('set "read" permission if "search_only"', function () {
+      var result;
+      spyOn(viewModel, 'searchOnly')
+        .and.returnValue(true);
+      spyOn(viewModel, 'prepareBaseQuery')
+        .and.returnValue({mockData: 'base'});
+      result = viewModel.getQuery();
+      expect(result.data[0]).toEqual(jasmine.objectContaining({
+        permissions: 'read'
+      }));
+    });
   });
 
   describe('getModelKey() method', function () {

@@ -61,10 +61,9 @@
                           <span class="orange"><em>In progress</em></span>
                         {{/case}}
                       {{/switch}}
-                      {{^if_equals instance.status 'Verified'}}{{#is_overdue instance.end_date}}
+                      {{#if instance.isOverdue}}
                         <span class="error"><em>Overdue</em></span>
-                      {{/is_overdue}}
-                      {{/if_equals}}
+                      {{/if}}
                     </div>
                   </div>
                 </li>

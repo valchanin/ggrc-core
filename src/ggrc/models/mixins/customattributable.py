@@ -55,6 +55,8 @@ class CustomAttributable(object):
         "CustomAttributeDefinition",
         primaryjoin=join_function,
         backref='{0}_custom_attributable_definition'.format(self.__name__),
+        order_by=(CustomAttributeDefinition.definition_id.desc(),
+                  CustomAttributeDefinition.id.asc()),
         viewonly=True,
     )
 

@@ -299,6 +299,7 @@ dashboard-js-files:
   - components/action-toolbar/action-toolbar.js
   - components/action-toolbar-control/action-toolbar-control.js
   - components/unmap-button/unmap-button.js
+  - components/unmap-button/unmap-person-button.js
 
 app-init-files:
   - apps/dashboard.js

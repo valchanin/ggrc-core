@@ -15,8 +15,6 @@
 {{#if_equals status 'InProgress'}}
   <span class="gray"><em>In progress</em></span>
 {{/if_equals}}
-{{^if_equals instance.status 'Verified'}}
-  {{#is_overdue instance.end_date}}
+{{#if instance.isOverdue}}
     <span class="error"><em>Overdue</em></span>
-  {{/is_overdue}}
-{{/if_equals}}
+{{/if}}

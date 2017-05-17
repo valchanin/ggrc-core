@@ -4,6 +4,7 @@
 }}
 
 {{#if isActive}}
+  {{#if showingOverdueDate}}<span class="tree-item__due-date {{dueDateCssClass}}">{{localize_date dueDate}}</span>{{/if}}
   <div class="person-holder">
     <i class="fa {{cssClasses}} person-tooltip-trigger" data-placement="left"></i>
 
@@ -97,8 +98,8 @@
             </div>
             {{/with_mapping_count}}
             <div class="date">
-              <i class="fa fa-clock-o {{#is_overdue instance.end_date instance.status}}red{{else}}color{{/is_overdue}}"></i> Due On:
-              <span {{#is_overdue instance.end_date instance.status}}class="error"{{/is_overdue}}>
+              <i class="fa fa-clock-o {{#if instance.isOverdue}}red{{else}}color{{/if}}"></i> Due On:
+              <span {{#if instance.isOverdue}}class="error"{{/if}}>
                 {{localize_date_today instance.end_date}}
               </span>
             </div>
@@ -130,11 +131,11 @@
               <div class="task-title">
                 {{instance.title}}
               </div>
+              {{#if instance.isOverdue}}
+                  <span class="error">Overdue</span>
+              {{/if}}
               {{#switch instance.status}}
                 {{#case 'Verified'}}
-                  {{#is_overdue instance.end_date}}
-                    <span class="error">Overdue</span>
-                  {{/is_overdue}}
                   <span class="green">Verified</span>
                 {{/case}}
                 {{#case 'Assigned'}}

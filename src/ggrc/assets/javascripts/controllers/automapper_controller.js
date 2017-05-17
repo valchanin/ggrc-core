@@ -3,7 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-;(function (CMS, GGRC, can, $) {
+(function (CMS, GGRC, can, $) {
   var MIN_WAIT = 2000;
   var MAX_WAIT = 5000;
 
@@ -30,8 +30,7 @@
       this.lastRefresh = Date.now();
       this.instanceQueue = [];
       can.each(instances, function (refreshInstance) {
-        rq.enqueue(refreshInstance.source);
-        rq.enqueue(refreshInstance.destination);
+        rq.enqueue(getRefreshableObjects(refreshInstance));
       });
       rq.trigger();
     }
@@ -51,6 +50,7 @@
   var Controller = can.Control({
     '{CMS.Models.Relationship} created': function (model, ev, instance) {
       var limitExceeded;
+      var rq;
       if (instance instanceof CMS.Models.Relationship) {
         limitExceeded = instance.extras &&
           instance.extras.automapping_limit_exceeded;
@@ -59,9 +59,30 @@
         } else {
           refresher.refreshInstance(instance);
         }
+      } else if (instance instanceof CMS.Models.ObjectPerson) {
+        rq = new RefreshQueue();
+        rq.enqueue(instance.personable);
+        rq.trigger();
       }
     }
   });
+
+  function isPersonInstance(instance) {
+    return instance instanceof CMS.Models.ObjectPerson;
+  }
+
+  function getRefreshableObjects(instance) {
+    var result = [];
+
+    if (isPersonInstance(instance) && instance.personable) {
+      result.push(instance.personable);
+    } else {
+      result.push(instance.source);
+      result.push(instance.destination);
+    }
+
+    return result;
+  }
 
   $(function () {
     new Controller();

@@ -346,9 +346,7 @@
           parentInstance.on('change', callback);
         } else if (activeTabModel === instance.type) {
           _refresh(true);
-        } else if (activeTabModel === 'Person' &&
-          _.includes(['ObjectPerson', 'WorkflowPerson', 'UserRole'],
-            instance.type)) {
+        } else if (isPerson(instance)) {
           _refresh();
         }
       }
@@ -359,7 +357,8 @@
         var srcType;
 
         if (_verifyRelationship(instance, activeTabModel) ||
-          instance instanceof CMS.Models[activeTabModel]) {
+          instance instanceof CMS.Models[activeTabModel] ||
+          isPerson(instance)) {
           if (self.attr('showedItems').length === 1) {
             current = self.attr('pageInfo.current');
             self.attr('pageInfo.current',
@@ -413,6 +412,11 @@
           return true;
         }
         return false;
+      }
+
+      function isPerson(instance) {
+        return _.includes(['ObjectPerson', 'WorkflowPerson', 'UserRole'],
+          instance.type);
       }
 
       return function (needDestroy) {

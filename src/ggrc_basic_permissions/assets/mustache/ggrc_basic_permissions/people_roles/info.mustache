@@ -37,16 +37,15 @@
         <li class="border-bottom">
           <clipboard-link title="Get permalink" notify="true" text="{{get_permalink_for_object instance}}" />
         </li>
-        {{^if_instance_of options.parent_instance 'Audit'}}
+        {{^if_instance_of parentInstance 'Audit'}}
           {{#with_program_roles_as "roles" result}}
             {{#if result.mappings}}
               {{#is_allowed_all 'delete' result.mappings}}
                 <li>
-                  <a href="javascript://" class="unmap" data-toggle="unmap">
-                    {{#result}}<span class="result" {{data 'result'}}></span>{{/result}}
-                    <i class="fa fa-ban"></i>
-                    Unmap
-                  </a>
+                    <unmap-person-button {source}="instance" {destination}="parentInstance" class="unmap-link">
+                        <i class="fa fa-ban"></i>
+                        Unmap
+                    </unmap-person-button>
                 </li>
               {{/is_allowed_all}}
             {{/if}}

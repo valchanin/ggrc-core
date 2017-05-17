@@ -5,23 +5,6 @@
 
 (function (can) {
   var _mustachePath;
-  var overdueCompute;
-
-  overdueCompute = function (val) {
-    var date;
-    var today = moment().startOf('day');
-    var startOfDate;
-    if (this.attr('status') === 'Verified') {
-      return '';
-    }
-    date = moment(this.attr('next_due_date') || this.attr('end_date'));
-    startOfDate = moment(date).startOf('day');
-    // TODO: [Overdue] Move this logic to helper.
-    if (date && today.diff(startOfDate, 'days') <= 0) {
-      return '';
-    }
-    return 'overdue';
-  };
 
   function refreshAttr(instance, attr) {
     if (instance.attr(attr).reify().selfLink) {
@@ -88,14 +71,13 @@
     create: 'POST /api/cycles',
     update: 'PUT /api/cycles/{id}',
     destroy: 'DELETE /api/cycles/{id}',
-
+    mixins: ['isOverdue'],
     attributes: {
       workflow: 'CMS.Models.Workflow.stub',
       cycle_task_groups: 'CMS.Models.CycleTaskGroup.stubs',
       modified_by: 'CMS.Models.Person.stub',
       context: 'CMS.Models.Context.stub'
     },
-
     tree_view_options: {
       draw_children: true,
       attr_list: [{
@@ -103,10 +85,15 @@
         attr_name: 'title',
         order: 10
       }, {
+        attr_title: 'State ',
+        attr_name: 'status',
+        order: 15
+      }, {
         attr_title: 'End Date',
         attr_name: 'end_date',
         order: 20
       }],
+      mandatory_attr_name: ['title', 'status', 'end_date'],
       disable_columns_configuration: true
     },
     init: function () {
@@ -159,8 +146,7 @@
             });
         }
       });
-    },
-    overdue: overdueCompute
+    }
   });
 
   _mustachePath = GGRC.mustache_path + '/cycle_task_entries';
@@ -232,7 +218,7 @@
     create: 'POST /api/cycle_task_groups',
     update: 'PUT /api/cycle_task_groups/{id}',
     destroy: 'DELETE /api/cycle_task_groups/{id}',
-
+    mixins: ['isOverdue'],
     attributes: {
       cycle: 'CMS.Models.Cycle.stub',
       task_group: 'CMS.Models.TaskGroup.stub',
@@ -277,15 +263,13 @@
         }
       });
     }
-  }, {
-    overdue: overdueCompute
-  });
+  }, {});
 
   _mustachePath = GGRC.mustache_path + '/cycle_task_group_object_tasks';
   can.Model.Cacheable('CMS.Models.CycleTaskGroupObjectTask', {
     root_object: 'cycle_task_group_object_task',
     root_collection: 'cycle_task_group_object_tasks',
-    mixins: ['timeboxed'],
+    mixins: ['timeboxed', 'isOverdue'],
     category: 'workflow',
     findAll: 'GET /api/cycle_task_group_object_tasks',
     findOne: 'GET /api/cycle_task_group_object_tasks/{id}',
@@ -303,7 +287,10 @@
       cycle: 'CMS.Models.Cycle.stub'
     },
     permalink_options: {
-      url: '<%= base.viewLink %>#current_widget/cycle/<%= instance.cycle.id %>/cycle_task_group/<%= instance.cycle_task_group.id %>/cycle_task_group_object_task/<%= instance.id %>',
+      url: '<%= base.viewLink %>#current_widget' +
+      '/cycle/<%= instance.cycle.id %>' +
+      '/cycle_task_group/<%= instance.cycle_task_group.id %>' +
+      '/cycle_task_group_object_task/<%= instance.id %>',
       base: 'cycle:workflow'
     },
     info_pane_options: {
@@ -382,7 +369,6 @@
       });
     }
   }, {
-    overdue: overdueCompute,
     _workflow: function () {
       return this.refresh_all('cycle', 'workflow').then(function (workflow) {
         return workflow;
@@ -431,7 +417,10 @@
             if (!workflowList.length) {
               $(document.body).trigger(
                 'ajax:flash',
-                {warning: 'No Backlog workflows found! Contact your administrator to enable this functionality.'}
+                {warning: 'No Backlog' +
+                ' workflows found!' +
+                ' Contact your administrator to enable this functionality.'
+                }
               );
               return;
             }
@@ -468,9 +457,8 @@
       var cycle = this.attr('cycle').reify();
       var status = this.attr('status');
 
-      var isEditable = cycle.attr('is_current') &&
-                       !_.contains(['Finished', 'Verified'], status);
-      return isEditable;
+      return cycle.attr('is_current') &&
+        !_.contains(['Finished', 'Verified'], status);
     }
   });
 })(window.can);

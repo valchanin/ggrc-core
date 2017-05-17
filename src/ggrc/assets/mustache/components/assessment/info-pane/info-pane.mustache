@@ -32,7 +32,9 @@
                            data-original-title="Respond to assessment here. Use comments on the right for free text responses."></i>
                     </div>
                     <div class="assessment-controls__extra-controls">
-                        <assessment-attachments-list tooltip="You can upload up to 10 files in a single batch">
+                        <assessment-attachments-list
+                            tooltip="You can upload up to 10 files in a single batch"
+                            {instance}="instance">
                         </assessment-attachments-list>
                         <assessment-urls-list {mapped-items}="documents"></assessment-urls-list>
                     </div>

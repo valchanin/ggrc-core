@@ -16,32 +16,19 @@
     template: template,
     viewModel: {
       define: {
-        isOverdue: {
-          type: 'boolean',
+        statusTitle: {
+          type: 'string',
           get: function () {
-            var resolvedDate = this.attr('instance.end_date');
-            var hashDueDate = this.attr('instance.next_due_date');
-            var nextDueDate = moment(hashDueDate || resolvedDate);
-            var endDate = moment(resolvedDate);
-            var date = moment.min(nextDueDate, endDate);
-            var today = moment().startOf('day');
-            var startOfDate = moment(date).startOf('day');
-            var isBefore = date && today.diff(startOfDate, 'days') >= 0;
-            var status = this.attr('instance.status');
-            return (status !== 'Verified' && isBefore);
+            return this.attr('instance.status') === 'InProgress' ?
+              'In Progress' :
+              this.attr('instance.status');
           }
         },
         statusCSSClass: {
           type: 'string',
           get: function () {
-            var cssClass = [];
-            cssClass.push(this.attr('instance.status') ?
-            'status-' + this.attr('instance.status').toLowerCase() : '');
-            cssClass.push(this.attr('instance.overdue') ?
-            'status-' + this.attr('instance.overdue').toLowerCase() : '');
-            cssClass.push(this.attr('isOverdue') ?
-              'status-overdue' : '');
-            return cssClass.join(' ');
+            return this.attr('instance.status') ?
+            'state-' + this.attr('instance.status').toLowerCase() : '';
           }
         }
       },

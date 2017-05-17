@@ -176,10 +176,6 @@
         displayAttrNames.push('end_date');
       }
 
-      if (!savedAttrList.length && CurrentPage.isMyAssessments()) {
-        displayAttrNames.push('assignees', 'verifiers', 'updated_at');
-      }
-
       displayAttrNames = displayAttrNames.concat(mandatoryAttrNames);
 
       allAttrs.forEach(function (attr) {

@@ -14,11 +14,21 @@
       deferred: '@',
       link_class: '@',
       click_event: '@',
+      itemsUploadedCallback: '@',
+      confirmationCallback: '@',
       pickerActive: false,
       onClickHandler: function () {
         var eventType = this.attr('click_event');
         var handler = this[eventType] || function () {};
-        return handler.apply(this, arguments);
+        var confirmation = _.isFunction(this.confirmationCallback) ?
+          this.confirmationCallback() :
+          null;
+        var args = arguments;
+        var that = this;
+
+        $.when(confirmation).then(function () {
+          handler.apply(that, args);
+        });
       },
       trigger_upload: function (scope, el) {
         // upload files without a parent folder (risk assesment)
@@ -250,13 +260,15 @@
     },
     events: {
       '{viewModel} modal:success': function () {
-        var instance = this.scope.instance;
-        if (instance instanceof CMS.Models.Assessment) {
-          instance.dispatch('refreshInstance');
-          return;
+        var instance = this.viewModel.instance;
+        var itemsUploadedCallback = this.viewModel.itemsUploadedCallback;
+
+        if (_.isFunction(itemsUploadedCallback)) {
+          itemsUploadedCallback();
+        } else {
+          instance.reify();
+          instance.refresh();
         }
-        instance.reify();
-        instance.refresh();
       }
     }
   });

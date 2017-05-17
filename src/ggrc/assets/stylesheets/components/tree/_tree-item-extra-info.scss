@@ -3,10 +3,25 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 tree-item-extra-info {
-  margin-left: auto;
-  margin-right: 15px;
-  width: 16px;
-  line-height: 19px;
+  display: flex;
+  flex-direction: row;
+  padding: 0 16px 0 8px;
+  min-width: 24px;
+  box-sizing: border-box;
+  position: relative;
+
+  .tree-item__due-date {
+    position: absolute;
+    right: 38px;
+    font-weight: 500;
+  }
+
+  * {
+    &.state-overdue {
+    color: $status-declined;
+    }
+  }
+
   i {
     visibility: hidden;
     color: $gray;
@@ -22,6 +37,16 @@ tree-item-extra-info {
     &.state-overdue {
       color: $status-declined;
       visibility: visible;
+    }
+  }
+}
+
+.sub-item-content {
+  &:hover {
+    tree-item-extra-info {
+      .tree-item__due-date {
+        z-index: -1;
+      }
     }
   }
 }

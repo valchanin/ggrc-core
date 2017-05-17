@@ -231,7 +231,8 @@
           query = GGRC.Utils.Snapshots.transformQuery(query);
         }
         // Add Permission check
-        query.permissions = (modelName === 'Person') ? 'read' : 'update';
+        query.permissions = (modelName === 'Person') || this.searchOnly() ?
+          'read' : 'update';
         query.type = queryType || 'values';
 
         if (!relatedQuery) {

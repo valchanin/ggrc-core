@@ -92,7 +92,9 @@
         attr_title: 'Created Date',
         attr_name: 'created_at',
         order: 8
-      }]
+      }],
+      display_attr_names: ['title', 'status', 'assignees', 'verifiers',
+        'updated_at']
     },
     info_pane_options: {
       evidence: {

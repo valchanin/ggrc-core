@@ -2122,26 +2122,6 @@ Mustache.registerHelper("switch", function (value, options) {
       );
     });
 
-  Mustache.registerHelper('is_overdue', function (_date, status, options) {
-    var resolvedDate = resolve_computed(_date);
-    var opts = arguments[arguments.length - 1];
-    var hashDueDate = resolve_computed(opts.hash && opts.hash.next_date);
-    var nextDueDate = moment(hashDueDate || resolvedDate);
-    var endDate = moment(resolvedDate);
-    var date = moment.min(nextDueDate, endDate);
-    var today = moment().startOf('day');
-    var startOfDate = moment(date).startOf('day');
-    var isBefore = date && today.diff(startOfDate, 'days') >= 0;
-    var result;
-    status = arguments.length === 2 ? '' : resolve_computed(status);
-    if (status !== 'Verified' && isBefore) {
-      result = opts.fn(opts.contexts);
-    } else {
-      result = opts.inverse(opts.contexts);
-    }
-    return result;
-  });
-
 Mustache.registerHelper("log", function () {
   var args = can.makeArray(arguments).slice(0, arguments.length - 1);
   console.log.apply(console, ["Mustache log"].concat(_.map(args, function (arg) {

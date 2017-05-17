@@ -231,3 +231,58 @@ class TestAssessmentGeneration(TestCase):
     response = self.assessment_post(template)
     self.assertEqual(response.json["assessment"]["test_plan"],
                      test_plan)
+
+  def test_ca_order(self):
+    """Test LCA/GCA order in Assessment"""
+    template = factories.AssessmentTemplateFactory(
+        test_plan_procedure=False,
+        procedure_description="Assessment Template Test Plan"
+    )
+
+    custom_attribute_definitions = [
+        # Global CAs
+        {
+            "definition_type": "assessment",
+            "title": "rich_test_gca",
+            "attribute_type": "Rich Text",
+            "multi_choice_options": ""
+        },
+        {
+            "definition_type": "assessment",
+            "title": "checkbox1_gca",
+            "attribute_type": "Checkbox",
+            "multi_choice_options": "test checkbox label"
+        },
+        # Local CAs
+        {
+            "definition_type": "assessment_template",
+            "definition_id": template.id,
+            "title": "test text field",
+            "attribute_type": "Text",
+            "multi_choice_options": ""
+        },
+        {
+            "definition_type": "assessment_template",
+            "definition_id": template.id,
+            "title": "test RTF",
+            "attribute_type": "Rich Text",
+            "multi_choice_options": ""
+        },
+        {
+            "definition_type": "assessment_template",
+            "definition_id": template.id,
+            "title": "test checkbox",
+            "attribute_type": "Checkbox",
+            "multi_choice_options": "test checkbox label"
+        },
+    ]
+
+    for attribute in custom_attribute_definitions:
+      factories.CustomAttributeDefinitionFactory(**attribute)
+    response = self.assessment_post(template)
+    self.assertListEqual(
+        [u'test text field', u'test RTF', u'test checkbox', u'rich_test_gca',
+         u'checkbox1_gca'],
+        [cad['title'] for cad in
+         response.json["assessment"]["custom_attribute_definitions"]]
+    )

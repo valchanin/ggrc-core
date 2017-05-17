@@ -11,19 +11,19 @@
                      {child-models-list}="childModelsList"
                      {deep-limit}="limitDepthTree"
   ></tree-item-actions>
-  <tree-item-status-for-workflow {instance}="instance"></tree-item-status-for-workflow>
   <div class="flex-box columns" ($click)="select($element)">
     <span class="title">
       <i class="fa fa-{{instance.class.table_singular}}"></i>
       {{title}}
     </span>
+      <tree-item-status-for-workflow {instance}="instance"></tree-item-status-for-workflow>
   </div>
 
   <cycle-task-actions {instance}="instance"
                       (expand)="onExpand(%event)"
   ></cycle-task-actions>
 
-  <tree-item-extra-info {instance}="instance"></tree-item-extra-info>
+  <tree-item-extra-info {is-sub-tree-item}="true" {instance}="instance"></tree-item-extra-info>
 </div>
 
 <div class="sub-tier">

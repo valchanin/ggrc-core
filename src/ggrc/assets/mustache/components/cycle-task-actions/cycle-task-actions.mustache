@@ -11,41 +11,48 @@
         {{#is_allowed 'update' instance}}
           <div class="request-control">
             {{#if_equals instance.status 'Assigned'}}
-              <button class="btn btn-mini btn-lightBlue change-task-status {{cssClasses}}"
+              <button {{#if disabled}}disabled{{/if}}
+                      class="btn btn-mini btn-lightBlue"
                       ($click)="changeStatus"
                       data-openclose="open"
                       data-value="InProgress">Start</button>
             {{/if_equals}}
             {{#if_equals instance.status 'InProgress'}}
-              <button class="btn btn-mini btn-white change-task-status {{cssClasses}}"
+              <button {{#if disabled}}disabled{{/if}}
+                      class="btn btn-mini btn-white"
                       ($click)="changeStatus"
                       data-value="Finished">Finish</button>
             {{/if_equals}}
             {{#if_equals instance.status 'Declined'}}
               {{#if review_task.object_review}}
-                <button class="btn btn-mini btn-white change-task-status {{cssClasses}}"
+                <button {{#if disabled}}disabled{{/if}}
+                        class="btn btn-mini btn-white"
                         ($click)="changeStatus"
                         data-value="Verified">Finish</button>
               {{else}}
-                <button class="btn btn-mini btn-white change-task-status {{cssClasses}}"
+                <button {{#if disabled}}disabled{{/if}}
+                        class="btn btn-mini btn-white"
                         ($click)="changeStatus"
                         data-value="Finished">Finish</button>
               {{/if}}
             {{/if_equals}}
             {{#if_equals instance.status 'Finished'}}
-              <button class="btn btn-mini btn-danger change-task-status {{cssClasses}}"
+              <button {{#if disabled}}disabled{{/if}}
+                      class="btn btn-mini btn-red"
                       ($click)="changeStatus"
                       data-value="Declined">Decline</button>
-              <button class="btn btn-mini btn-success change-task-status {{cssClasses}}"
+              <button {{#if disabled}}disabled{{/if}}
+                      class="btn btn-mini btn-green"
                       ($click)="changeStatus"
                       data-openclose="close"
                       data-value="Verified">Verify</button>
             {{/if_equals}}
             {{#if oldValues.length}}
               <a href="javascript://" data-name="status"
+                 {{#if disabled}}disabled{{/if}}
                  ($click)="undo"
                  data-undo="true"
-                 class="undo {{cssClasses}}">Undo</a>
+                 class="undo">Undo</a>
             {{/if}}
           </div>
         {{/is_allowed}}
@@ -62,7 +69,7 @@
         <cycle-end-cycle cycle="instance">
           {{#is_allowed 'update' instance.workflow.reify}}
             {{#if instance.is_current}}
-              <button class="btn btn-draft btn-small end-cycle">End Cycle</button>
+              <button class="btn btn-white btn-small end-cycle">End Cycle</button>
             {{/if}}
           {{/is_allowed}}
         </cycle-end-cycle>

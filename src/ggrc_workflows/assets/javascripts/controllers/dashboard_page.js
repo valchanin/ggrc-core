@@ -3,20 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-;(function(CMS, GGRC, can, $) {
-
-  function is_overdue_task(task) {
-    var end_date = new Date(task.instance.end_date || null),
-        today = new Date();
-
-    //Any task that is not finished or verified are subject to overdue
-    if (task.instance.status === "Finished" || task.instance.status === "Verified")
-      return false;
-    // TODO: [Overdue] Move this logic to helper.
-    else if (end_date.getTime() < today.getTime())
-      return true;
-  }
-
+;(function (CMS, GGRC, can, $) {
   can.Component.extend({
     tag: "dashboard-widgets",
     template: "<content/>",

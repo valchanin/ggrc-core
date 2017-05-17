@@ -371,6 +371,7 @@
             var modelInstance;
             var isMapped;
             var isAllowed;
+            var isPersonMapping = type === 'Person';
             // Use simple Relationship Model to map Snapshot
             if (this.scope.attr('mapper.useSnapshots')) {
               modelInstance = new CMS.Models.Relationship({
@@ -389,7 +390,7 @@
             isMapped = GGRC.Utils.is_mapped(instance, destination);
             isAllowed = GGRC.Utils.allowed_to_map(instance, destination);
 
-            if (isMapped || !isAllowed) {
+            if ((!isPersonMapping && isMapped) || !isAllowed) {
               return;
             }
             mapping = GGRC.Mappings.get_canonical_mapping(object, type);

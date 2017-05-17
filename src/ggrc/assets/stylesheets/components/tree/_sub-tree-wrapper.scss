@@ -29,11 +29,9 @@ sub-tree-item {
   display: flex;
   flex-direction: column;
 
-  .tree-item__icon-wrapper {
-    margin: 0 16px 0 8px;
-  }
   .columns {
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
 
     .title {
