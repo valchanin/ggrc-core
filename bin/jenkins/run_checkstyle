@@ -12,7 +12,7 @@ source bin/jenkins/functions.sh
 
 PROJECT=$( project_name "$@" -d "$PROJECT" )
 
-setup $PROJECT
+setup $PROJECT dev
 
 checkstyle_tests $PROJECT && rc=$? || rc=$?
 
