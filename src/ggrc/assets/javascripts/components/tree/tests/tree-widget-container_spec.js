@@ -7,9 +7,11 @@ describe('GGRC.Components.treeWidgetContainer', function () {
   'use strict';
 
   var vm;
+  var CurrentPageUtils;
 
   beforeEach(function () {
     vm = GGRC.Components.getViewModel('treeWidgetContainer');
+    CurrentPageUtils = GGRC.Utils.CurrentPage;
   });
 
   describe('onSort() method', function () {
@@ -90,5 +92,126 @@ describe('GGRC.Components.treeWidgetContainer', function () {
         done();
       });
     });
+  });
+
+  describe('on widget appearing', function () {
+    var _widgetShown;
+
+    beforeEach(function () {
+      _widgetShown = vm._widgetShown.bind(vm);
+      spyOn(vm, '_triggerListeners');
+      spyOn(vm, 'loadItems');
+    });
+
+    describe('for any viewModel except Issue', function () {
+      beforeEach(function () {
+        var modelName = 'Model';
+        spyOn(CurrentPageUtils, 'getCounts').and.returnValue(
+          _.set({}, modelName, 123)
+        );
+        vm.attr({
+          model: {
+            shortName: modelName
+          },
+          modelName: modelName,
+          loaded: {},
+          pageInfo: {
+            total: 123
+          }
+        });
+      });
+
+      it('should only add listeners', function () {
+        _widgetShown();
+        expect(vm._triggerListeners).toHaveBeenCalled();
+        expect(vm.loadItems).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('for Issue viewModel that wasn\'t loaded before', function () {
+      var modelName = 'Issue';
+
+      beforeEach(function () {
+        vm.attr({
+          model: {
+            shortName: modelName
+          },
+          modelName: modelName
+        });
+        vm.attr('loaded', null);
+        vm.attr('pageInfo', {
+          total: 123
+        });
+        spyOn(CurrentPageUtils, 'getCounts').and.returnValue(
+          _.set({}, modelName, 123)
+        );
+      });
+
+      it('should only add listeners', function () {
+        _widgetShown();
+        expect(vm._triggerListeners).toHaveBeenCalled();
+        expect(vm.loadItems).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('for Issue viewModel that was loaded before' +
+      'in case of equality between counts on tab ' +
+      'and total counts in viewModel',
+      function () {
+        var modelName = 'Issue';
+
+        beforeEach(function () {
+          vm.attr({
+            model: {
+              shortName: modelName
+            },
+            modelName: modelName
+          });
+          vm.attr('loaded', {});
+          vm.attr('pageInfo', {
+            total: 123
+          });
+          spyOn(CurrentPageUtils, 'getCounts').and.returnValue(
+            _.set({}, modelName, 123)
+          );
+        });
+
+        it('should only add listeners', function () {
+          _widgetShown();
+          expect(vm._triggerListeners).toHaveBeenCalled();
+          expect(vm.loadItems).not.toHaveBeenCalled();
+        });
+      }
+    );
+
+    describe('for Issue viewModel that was loaded before' +
+      'in case of inequality between counts on tab ' +
+      'and total counts in viewModel',
+      function () {
+        var modelName = 'Issue';
+
+        beforeEach(function () {
+          vm.attr({
+            model: {
+              shortName: modelName
+            },
+            modelName: modelName
+          });
+          vm.attr('loaded', {});
+          vm.attr('pageInfo', {
+            total: 123
+          });
+          spyOn(CurrentPageUtils, 'getCounts').and.returnValue(
+            _.set({}, modelName, 124)
+          );
+        });
+
+        it('should add listeners and update viewModel', function () {
+          _widgetShown();
+          expect(vm._triggerListeners).toHaveBeenCalled();
+          expect(vm.loadItems).toHaveBeenCalled();
+        });
+      }
+    );
   });
 });
