@@ -20,7 +20,7 @@ from ggrc.models import Issue
 from ggrc.models import Person
 from ggrc.models import Relationship
 from ggrc.models import Snapshot
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -44,7 +44,7 @@ def _preload_roles(related, roles=None):
 def init_hook():
   """ Initialize hooks"""
   # pylint: disable=unused-variable
-  @Restful.collection_posted.connect_via(Assessment)
+  @signals.Restful.collection_posted.connect_via(Assessment)
   def handle_assessment_post(sender, objects=None, sources=None):
     # pylint: disable=unused-argument
     """Apply custom attribute definitions and map people roles
@@ -89,8 +89,8 @@ def init_hook():
             test_plan = template.procedure_description
           obj.test_plan = test_plan
 
-  @Restful.model_put.connect_via(Assessment)
-  @Restful.model_put.connect_via(Issue)
+  @signals.Restful.model_put.connect_via(Assessment)
+  @signals.Restful.model_put.connect_via(Issue)
   def handle_assessment_put(sender, obj=None, src=None, service=None):
     # pylint: disable=unused-argument
     if inspect(obj).attrs["audit"].history.added or \
@@ -98,7 +98,7 @@ def init_hook():
       raise ValueError("Audit field should not be changed")
 
 
-@Restful.collection_posted.connect_via(Issue)
+@signals.Restful.collection_posted.connect_via(Issue)
 def handle_issue_post(sender, objects=None, sources=None):
   # pylint: disable=unused-argument
   """Map issue to audit. This makes sure an auditor is able to create

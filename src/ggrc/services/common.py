@@ -38,7 +38,7 @@ from ggrc.models.revision import Revision
 from ggrc.models.exceptions import ValidationError, translate_message
 from ggrc.rbac import permissions, context_query_filter
 from ggrc.services.attribute_query import AttributeQueryBuilder
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 from ggrc.models.background_task import BackgroundTask, create_task
 from ggrc import settings
 
@@ -883,7 +883,8 @@ class Resource(ModelView):
       if hasattr(obj, "validate_custom_attributes"):
         obj.validate_custom_attributes()
     with benchmark("Send PUT event"):
-      Restful.model_put.send(obj.__class__, obj=obj, src=src, service=self)
+      signals.Restful.model_put.send(
+          obj.__class__, obj=obj, src=src, service=self)
     with benchmark("Get modified objects"):
       modified_objects = get_modified_objects(db.session)
     with benchmark("Update custom attribute values"):
@@ -902,8 +903,8 @@ class Resource(ModelView):
     with benchmark("Update memcache after commit for collection PUT"):
       update_memcache_after_commit(self.request)
     with benchmark("Send PUT - after commit event"):
-      Restful.model_put_after_commit.send(obj.__class__, obj=obj, src=src,
-                                          service=self, event=event)
+      signals.Restful.model_put_after_commit.send(
+          obj.__class__, obj=obj, src=src, service=self, event=event)
       # Note: Some data is created in listeners for model_put_after_commit
       # (like updates to snapshots), so we need to commit the changes
       db.session.commit()
@@ -941,7 +942,8 @@ class Resource(ModelView):
         return header_error
       db.session.delete(obj)
       with benchmark("Send DELETEd event"):
-        Restful.model_deleted.send(obj.__class__, obj=obj, service=self)
+        signals.Restful.model_deleted.send(
+            obj.__class__, obj=obj, service=self)
       with benchmark("Get modified objects"):
         modified_objects = get_modified_objects(db.session)
       with benchmark("Log event"):
@@ -956,8 +958,8 @@ class Resource(ModelView):
       with benchmark("Update memcache after commit for collection DELETE"):
         update_memcache_after_commit(self.request)
       with benchmark("Send DELETEd - after commit event"):
-        Restful.model_deleted_after_commit.send(obj.__class__, obj=obj,
-                                                service=self, event=event)
+        signals.Restful.model_deleted_after_commit.send(
+            obj.__class__, obj=obj, service=self, event=event)
       with benchmark("Query for object"):
         object_for_json = self.object_for_json(obj)
       with benchmark("Make response"):
@@ -1297,8 +1299,8 @@ class Resource(ModelView):
         with benchmark("Deserialize object"):
           self.json_create(obj, src)
         with benchmark("Send model POSTed event"):
-          Restful.model_posted.send(obj.__class__, obj=obj, src=src,
-                                    service=self)
+          signals.Restful.model_posted.send(
+              obj.__class__, obj=obj, src=src, service=self)
         with benchmark("Update custom attribute values"):
           set_ids_for_new_custom_attributes(obj)
 
@@ -1309,8 +1311,8 @@ class Resource(ModelView):
     with benchmark("Check create permissions"):
       self._check_post_permissions(objects)
     with benchmark("Send collection POSTed event"):
-      Restful.collection_posted.send(obj.__class__, objects=objects,
-                                     sources=sources)
+      signals.Restful.collection_posted.send(
+          obj.__class__, objects=objects, sources=sources)
     with benchmark("Flush posted objects"):
       db.session.flush()
     with benchmark("Validate custom attributes"):
@@ -1337,8 +1339,8 @@ class Resource(ModelView):
 
     with benchmark("Send model POSTed - after commit event"):
       for obj, src in itertools.izip(objects, sources):
-        Restful.model_posted_after_commit.send(obj.__class__, obj=obj, src=src,
-                                               service=self, event=event)
+        signals.Restful.model_posted_after_commit.send(
+            obj.__class__, obj=obj, src=src, service=self, event=event)
         # Note: In model_posted_after_commit necessary mapping and
         # relationships are set, so need to commit the changes
       db.session.commit()

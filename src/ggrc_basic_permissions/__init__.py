@@ -26,7 +26,7 @@ from ggrc.models.object_owner import ObjectOwner
 from ggrc.rbac import permissions as rbac_permissions
 from ggrc.rbac.permissions_provider import DefaultUserPermissions
 from ggrc.services.common import _get_cache_manager
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 from ggrc.services.registry import service
 from ggrc.utils import benchmark
 from ggrc_basic_permissions import basic_roles
@@ -853,7 +853,7 @@ def _get_or_create_personal_context(user):
   return personal_context
 
 
-@Restful.model_posted.connect_via(Program)
+@signals.Restful.model_posted.connect_via(Program)
 def handle_program_post(sender, obj=None, src=None, service=None):
   db.session.flush()
   # get the personal context for this logged in user
@@ -953,7 +953,7 @@ def create_audit_context(audit):
   audit.context = context
 
 
-@Restful.collection_posted.connect_via(Audit)
+@signals.Restful.collection_posted.connect_via(Audit)
 def handle_audit_post(sender, objects=None, sources=None):
   for obj, src in itertools.izip(objects, sources):
     if not src.get("operation", None):
@@ -961,7 +961,7 @@ def handle_audit_post(sender, objects=None, sources=None):
       create_audit_context(obj)
 
 
-@Restful.model_deleted.connect
+@signals.Restful.model_deleted.connect
 def handle_resource_deleted(sender, obj=None, service=None):
   if obj.context \
      and obj.context.related_object_id \

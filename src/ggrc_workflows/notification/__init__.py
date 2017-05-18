@@ -1,7 +1,7 @@
 # Copyright (C) 2017 Google Inc.
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 from ggrc_workflows.models import (
     Workflow,
     Cycle,
@@ -40,20 +40,20 @@ def contributed_notifications():
 
 def register_listeners():
 
-  @Restful.model_put.connect_via(Workflow)
+  @signals.Restful.model_put.connect_via(Workflow)
   def workflow_put_listener(sender, obj=None, src=None, service=None):
     handle_workflow_modify(sender, obj, src, service)
 
-  @Restful.model_put.connect_via(CycleTaskGroupObjectTask)
+  @signals.Restful.model_put.connect_via(CycleTaskGroupObjectTask)
   def cycle_task_group_object_task_put_listener(
           sender, obj=None, src=None, service=None):
     handle_cycle_task_group_object_task_put(obj)
 
-  @Restful.model_put.connect_via(Cycle)
+  @signals.Restful.model_put.connect_via(Cycle)
   def cycle_put_listener(sender, obj=None, src=None, service=None):
     handle_cycle_modify(sender, obj, src, service)
 
-  @Restful.model_posted.connect_via(Cycle)
+  @signals.Restful.model_posted.connect_via(Cycle)
   def cycle_post_listener(sender, obj=None, src=None, service=None):
     handle_cycle_created(sender, obj, src, service, True)
 

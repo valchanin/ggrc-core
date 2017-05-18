@@ -13,7 +13,7 @@ from ggrc.converters import get_importables
 from ggrc.login import get_current_user_id
 from ggrc.models.reflection import AttributeInfo
 from ggrc.rbac import permissions
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 
 
 class RowConverter(object):
@@ -197,14 +197,14 @@ class RowConverter(object):
     service_class = getattr(ggrc.services, self.object_class.__name__)
     service_class.model = self.object_class
     if self.is_delete:
-      Restful.model_deleted_after_commit.send(
+      signals.Restful.model_deleted_after_commit.send(
           self.object_class, obj=self.obj, service=service_class, event=event)
     elif self.is_new:
-      Restful.model_posted_after_commit.send(
+      signals.Restful.model_posted_after_commit.send(
           self.object_class, obj=self.obj, src={}, service=service_class,
           event=event)
     else:
-      Restful.model_put_after_commit.send(
+      signals.Restful.model_put_after_commit.send(
           self.object_class, obj=self.obj, src={}, service=service_class,
           event=event)
 
@@ -221,13 +221,13 @@ class RowConverter(object):
     service_class = getattr(ggrc.services, self.object_class.__name__)
     service_class.model = self.object_class
     if self.is_delete:
-      Restful.model_deleted.send(
+      signals.Restful.model_deleted.send(
           self.object_class, obj=self.obj, service=service_class)
     elif self.is_new:
-      Restful.model_posted.send(
+      signals.Restful.model_posted.send(
           self.object_class, obj=self.obj, src={}, service=service_class)
     else:
-      Restful.model_put.send(
+      signals.Restful.model_put.send(
           self.object_class, obj=self.obj, src={}, service=service_class)
 
   def insert_object(self):

@@ -14,7 +14,7 @@ from ggrc.login import get_current_user
 from ggrc.models.relationship import Relationship
 from ggrc.rbac.permissions import is_allowed_update
 from ggrc.services.common import get_cache
-from ggrc.services.signals import Restful
+from ggrc.services import signals
 from ggrc.utils import benchmark, with_nop
 
 
@@ -244,7 +244,7 @@ def register_automapping_listeners():
   """Register event listeners for auto mapper."""
   # pylint: disable=unused-variable,unused-argument
 
-  @Restful.collection_posted.connect_via(Relationship)
+  @signals.Restful.collection_posted.connect_via(Relationship)
   def handle_relationship_collection_post(sender, objects=None, **kwargs):
     """Handle bulk creation of relationships.
 

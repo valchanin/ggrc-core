@@ -3,11 +3,8 @@
 
 """Register various listeners needed for snapshot operation"""
 
-from ggrc.services.signals import Restful
-
 from ggrc import models
-
-
+from ggrc.services import signals
 from ggrc.snapshotter import create_snapshots
 from ggrc.snapshotter import upsert_snapshots
 from ggrc.snapshotter.datastructures import Stub
@@ -41,5 +38,7 @@ def register_snapshot_listeners():
   # Initialize listening on parent objects
   for type_ in rules.rules.keys():
     model = getattr(models.all_models, type_)
-    Restful.model_posted_after_commit.connect(create_all, model, weak=False)
-    Restful.model_put_after_commit.connect(upsert_all, model, weak=False)
+    signals.Restful.model_posted_after_commit.connect(
+        create_all, model, weak=False)
+    signals.Restful.model_put_after_commit.connect(
+        upsert_all, model, weak=False)
