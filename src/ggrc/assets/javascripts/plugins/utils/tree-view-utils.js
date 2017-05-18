@@ -208,7 +208,7 @@
      */
     function setColumnsForModel(modelType, columnNames, displayPrefs) {
       var availableColumns =
-        getColumnsForModel(modelType, displayPrefs).available;
+        getColumnsForModel(modelType, displayPrefs, true).available;
       var selectedColumns = [];
       var selectedNames = [];
 
