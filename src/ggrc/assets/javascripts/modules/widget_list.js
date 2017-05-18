@@ -72,14 +72,12 @@
           descriptors[widgetId] = GGRC.WidgetDescriptor.make_tree_view(
             options && (options.instance || options.parent_instance) || widget.instance,
             options && options.model || widget.far_model || widget.model,
-            options && options.mapping || widget.mapping,
             widget
           );
         } else if (widget.widgetType === 'treeview') {
           descriptors[widgetId] = GGRC.WidgetDescriptor.make_tree_view(
             options && (options.instance || options.parent_instance) || widget.instance,
             options && options.model || widget.far_model || widget.model,
-            options && options.mapping || widget.mapping,
             widget,
             widgetId
           );

@@ -90,13 +90,12 @@
       You must provide:
       instance - an instance that is a subclass of can.Model.Cacheable
       farModel - a can.Model.Cacheable class
-      mapping - a mapping object taken from the instance
       extenders [optional] - an array of objects that will extend the default widget config.
     */
-    make_tree_view: function (instance, farModel, mapping, extenders, id) {
+    make_tree_view: function (instance, farModel, extenders, id) {
       var descriptor;
       // Should not even try to create descriptor if configuration options are missing
-      if (!instance || !farModel || !mapping) {
+      if (!instance || !farModel) {
         console
           .debug('Arguments are missing or have incorrect format', arguments);
         return null;
@@ -138,10 +137,7 @@
         content_controller_options: {
           draw_children: true,
           parent_instance: instance,
-          model: farModel,
-          list_loader: function () {
-            return mapping.refresh_list();
-          }
+          model: farModel
         }
       };
 
