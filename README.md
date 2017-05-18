@@ -1,8 +1,6 @@
 Governance, Risk and Compliance (GGRC)
 =========
 
-[![Build Status](https://jenkins.reciprocitylabs.com/job/ggrc_develop_build/badge/icon)](https://jenkins.reciprocitylabs.com/job/ggrc_develop_build/)
-
 Governance, Risk Management, and Compliance are activities necessary for any organization with regulatory or contractual obligations.
 
 Governance refers to management structure, policies, procedures, shareholder relations, etc.
