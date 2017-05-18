@@ -1,3 +1,6 @@
+# Copyright (C) 2017 Google Inc.
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+
 set -o nounset
 set -o errexit
 
@@ -23,4 +26,3 @@ $CURRENT_SCRIPTPATH/../bin/jenkins/run_selenium -p    || EXIT=$?
 cd "${CURRENT_SCRIPTPATH}/../"
 git clean -xdfq --exclude="test/*.xml" --exclude="test/*.out"
 exit $EXIT
-echo "Test successful."
