@@ -364,7 +364,8 @@
           .then(function (list) {
             var newList = list.filter(function (item) {
               return !snapshots.isSnapshotModel(item.instance.type) &&
-                  item.instance.type !== 'Comment';
+                  item.instance.type !== 'Comment' &&
+                  item.instance.type !== 'Document'; // exclude urls
             });
             newList.forEach(function (item) {
               var query;

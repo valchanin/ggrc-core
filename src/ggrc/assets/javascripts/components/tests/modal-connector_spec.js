@@ -328,6 +328,12 @@ describe('GGRC.Components.modalConnector', function () {
             type: 'Snapshot',
             id: 123
           }
+        },
+        {
+          instance: {
+            type: 'Document',
+            id: 432
+          }
         }
       ]);
 
@@ -371,6 +377,23 @@ describe('GGRC.Components.modalConnector', function () {
 
           expect(snapshotItem.attr('title')).toEqual(responseSnapshotTitle);
           expect(snapshotItem.attr('viewLink')).toEqual(responseSnapshotUrl);
+          done();
+        });
+      }
+    );
+
+    it('result list should not contain objects with "Document" type',
+      function (done) {
+        var dfd = handler();
+
+        dfd.done(function (list) {
+          list = _.map(list, function (item) {
+            return item.instance;
+          });
+          expect(list)
+            .not.toContain(jasmine.objectContaining({
+              type: 'Document'
+            }));
           done();
         });
       }
