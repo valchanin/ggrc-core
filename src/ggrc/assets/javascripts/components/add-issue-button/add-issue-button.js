@@ -3,8 +3,9 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-(function (can) {
+(function (can, GGRC, CMS) {
   'use strict';
+  var CurrentPageUtils = GGRC.Utils.CurrentPage;
 
   GGRC.Components('addIssueButton', {
     tag: 'add-issue-button',
@@ -47,9 +48,20 @@
       }
     },
     events: {
-      '{window} modal:success': function () {
+      '{window} modal:success': function (window, event, instance) {
+        var pageInstance;
+
+        if (instance instanceof CMS.Models.Issue) {
+          pageInstance = GGRC.page_instance();
+          CurrentPageUtils.initCounts(
+            ['Issue'],
+            pageInstance.type,
+            pageInstance.id
+          );
+        }
+
         this.viewModel.attr('relatedInstance').dispatch('refreshInstance');
       }
     }
   });
-})(window.can);
+})(window.can, window.GGRC, window.CMS);

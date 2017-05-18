@@ -328,6 +328,15 @@
       this._triggerListeners(true);
     },
     _widgetShown: function () {
+      var modelName = this.attr('modelName');
+      var loaded = this.attr('loaded');
+      var total = this.attr('pageInfo.total');
+      var counts = _.get(CurrentPageUtils.getCounts(), modelName);
+
+      if ((modelName === 'Issue') && !_.isNull(loaded) && (total !== counts)) {
+        this.loadItems();
+      }
+
       this._triggerListeners();
     },
     _triggerListeners: (function () {
