@@ -170,11 +170,11 @@
 
     /**
      * Converts CA values array to form fields.
-     * @param {Object|undefined} customAttributeValues - Custom attributes values
+     * @param {can.List|undefined} customAttributeValues - Custom attributes values
      * @return {Array} From fields array
      */
     function convertValuesToFormFields(customAttributeValues) {
-      return can.makeArray(customAttributeValues)
+      return (customAttributeValues || new can.List([]))
         .map(function (attr) {
           var options = attr.def.multi_choice_options;
           return {
@@ -193,7 +193,9 @@
             helptext: attr.def.helptext,
             validation: attr.validation,
             errorsMap: attr.errorsMap,
-            valueId: attr.id
+            valueId: can.compute(function () {
+              return attr.attr('id');
+            })
           };
         });
     }

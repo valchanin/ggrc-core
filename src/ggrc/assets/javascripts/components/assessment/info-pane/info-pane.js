@@ -183,7 +183,7 @@
           content: data,
           caIds: {
             defId: scope.attr('id'),
-            valueId: scope.attr('valueId')
+            valueId: scope.attr('valueId')()
           },
           modalTitle: title,
           state: {}
