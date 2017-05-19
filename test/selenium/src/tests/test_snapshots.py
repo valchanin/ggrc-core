@@ -330,3 +330,40 @@ class TestSnapshots(base.Test):
         src_obj=audit, dest_objs=[expected_ctrl])
     assert (((expected_ctrl in actual_ctrls) and
             (expected_map_status in actual_map_status)) is is_found)
+
+  @pytest.mark.smoke_tests
+  def test_mapping_control_to_existing_audit(
+      self, new_audit_rest, new_control_rest, selenium
+  ):
+    """Check if Control can be mapped to existing Audit and mapping
+    between Control and Program of this Audit automatically created.
+    Preconditions:
+    - Audit and program, and different control created via REST API
+    """
+    audit, program = new_audit_rest
+    expected_control = new_control_rest
+    (webui_service.ControlsService(selenium).map_objs_via_tree_view(
+        src_obj=audit, dest_objs=[new_control_rest]))
+    actual_controls_count_in_tab_audit = (
+        webui_service.ControlsService(selenium).
+        get_count_objs_from_tab(src_obj=audit))
+    actual_control_in_audit = (
+        webui_service.ControlsService(selenium).
+        get_list_objs_from_tree_view(src_obj=audit))
+    actual_controls_count_in_tab_program = (
+        webui_service.ControlsService(selenium).
+        get_count_objs_from_tab(src_obj=program))
+    actual_control_in_program = (
+        webui_service.ControlsService(selenium).
+        get_list_objs_from_tree_view(src_obj=program))
+
+    assert (len([expected_control]) ==
+            actual_controls_count_in_tab_audit ==
+            actual_controls_count_in_tab_program)
+
+    assert ([expected_control] ==
+            actual_control_in_audit ==
+            actual_control_in_program), messages.ERR_MSG_TRIPLE_FORMAT.format(
+                expected_control,
+                actual_control_in_audit,
+                actual_control_in_program)

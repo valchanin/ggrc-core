@@ -19,6 +19,7 @@ class TemplateProvider(object):
     (items (kwargs): key=value).
     Return dictionary like as {type: {key: value, ...}}.
     """
+    json_tmpl_name = json_tmpl_name.lower()
     path = os.path.join(
         os.path.dirname(__file__), "template/{0}.json".format(json_tmpl_name))
     with open(path) as json_file:

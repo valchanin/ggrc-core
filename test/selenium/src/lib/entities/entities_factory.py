@@ -21,13 +21,14 @@ from lib.utils.string_utils import (random_list_strings, random_string,
 class EntitiesFactory(object):
   """Common factory class for entities."""
   # pylint: disable=too-few-public-methods
-  obj_person = objects.get_singular(objects.PEOPLE)
-  obj_program = objects.get_singular(objects.PROGRAMS)
-  obj_control = objects.get_singular(objects.CONTROLS)
-  obj_audit = objects.get_singular(objects.AUDITS)
-  obj_asmt_tmpl = objects.get_singular(objects.ASSESSMENT_TEMPLATES)
-  obj_asmt = objects.get_singular(objects.ASSESSMENTS)
-  obj_issue = objects.get_singular(objects.ISSUES)
+  obj_person = objects.get_singular(objects.PEOPLE, title=True)
+  obj_program = objects.get_singular(objects.PROGRAMS, title=True)
+  obj_control = objects.get_singular(objects.CONTROLS, title=True)
+  obj_audit = objects.get_singular(objects.AUDITS, title=True)
+  obj_asmt_tmpl = objects.get_singular(objects.ASSESSMENT_TEMPLATES,
+                                       title=True)
+  obj_asmt = objects.get_singular(objects.ASSESSMENTS, title=True)
+  obj_issue = objects.get_singular(objects.ISSUES, title=True)
   obj_ca = objects.get_singular(objects.CUSTOM_ATTRIBUTES)
 
   all_objs_attrs_names = tuple(entity.Entity().attrs_names_all_entities())

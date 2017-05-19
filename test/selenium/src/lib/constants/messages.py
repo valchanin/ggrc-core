@@ -3,4 +3,5 @@
 """Message templates for stdout (e.g. print, assert, etc.)."""
 
 ERR_MSG_FORMAT = "Expected: '{}', Got: '{}'\n"
+ERR_MSG_TRIPLE_FORMAT = "Expected: '{}', First Got: '{}', Second Got: '{}'\n"
 ERR_VALUE_OF_ARGUMENT = "The argument does not contain numbers\n"

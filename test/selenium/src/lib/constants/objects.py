@@ -67,11 +67,16 @@ def _get_singular(plurals):
   return singulars
 
 
-def get_singular(plural):
-  """Transform object name to singular and lower form.
+def get_singular(plural, title=False):
+  """Transform object name to singular and lower or title form.
  Example: risk_assessments -> risk_assessment
  """
-  return _get_singular([plural])[0].lower()
+  _singular = _get_singular([plural])[0]
+  if title:
+    _singular = _singular.title()
+  else:
+    _singular = _singular.lower()
+  return _singular
 
 
 def get_normal_form(obj_name, with_space=True):
