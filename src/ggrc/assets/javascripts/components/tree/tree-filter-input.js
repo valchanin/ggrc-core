@@ -9,6 +9,10 @@
   var template = can.view(GGRC.mustache_path +
     '/components/tree/tree-filter-input.mustache');
   var viewModel = can.Map.extend({
+    advancedSearch: {
+      open: false,
+      items: []
+    },
     define: {
       filter: {
         type: 'string',
@@ -62,6 +66,20 @@
         filter.expression.op.name !== 'text_search' &&
         filter.expression.op.name !== 'exclude_text_search';
       this.attr('isExpression', isExpression);
+    },
+    openAdvancedFilter: function () {
+      var initialFilters = GGRC.Utils.AdvancedSearch
+        .buildExpressionList(this.attr('filter'));
+
+      this.attr('advancedSearch.items', initialFilters);
+      this.attr('advancedSearch.open', true);
+    },
+    applyFilters: function () {
+      var filterString = GGRC.Utils.AdvancedSearch
+        .getFilterFromArray(this.advancedSearch.items);
+
+      this.attr('filter', filterString);
+      this.attr('advancedSearch.open', false);
     }
   });
 

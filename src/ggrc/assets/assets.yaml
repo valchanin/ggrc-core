@@ -44,6 +44,7 @@ dashboard-js-files:
   - apps/base_widgets.js
   - application.js
   - plugins/ggrc_utils.js
+  - plugins/utils/advanced-search-utils.js
   - plugins/utils/ca-utils.js
   - plugins/utils/query-api-utils.js
   - plugins/utils/current-page-utils.js
@@ -150,6 +151,9 @@ dashboard-js-files:
   - apps/business_objects.js
   - apps/custom_attributes.js
   # Components
+  - components/advanced-search/advanced-search-filter-attribute.js
+  - components/advanced-search/advanced-search-filter-group.js
+  - components/advanced-search/advanced-search-filter-operator.js
   - components/state-colors-map/state-colors-map.js
   - components/spinner/spinner.js
   - components/modal-connector.js
@@ -508,6 +512,9 @@ dashboard-js-template-files:
   - components/auto-save-form/field-views/checkbox-form-field-view.mustache
   - components/auto-save-form/field-views/date-form-field-view.mustache
   - components/auto-save-form/field-views/person-form-field-view.mustache
+  - components/advanced-search/advanced-search-filter-attribute.mustache
+  - components/advanced-search/advanced-search-filter-group.mustache
+  - components/advanced-search/advanced-search-filter-operator.mustache
   - custom_attributes/modal_content.mustache
   - custom_attributes/info.mustache
   - custom_attribute_definitions/modal_content.mustache
