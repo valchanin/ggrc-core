@@ -11,6 +11,14 @@
 </div>
 <div class="flex-box tree-filter__actions">
   <button type="submit" class="btn btn-small btn-lightBlue" ($click)="submit()">Filter</button>
+  <button class="btn btn-small btn-lightBlue" ($click)="openAdvancedFilter()">Advanced</button>
+  <simple-modal {state}="advancedSearch">
+    <advanced-search-filter-group
+      {(items)}="advancedSearch.items"
+      {initial}="true"
+    ></advanced-search-filter-group>
+    <button class="btn btn-small btn-lightBlue" ($click)="applyFilters()">Apply Filters</button>
+  </simple-modal>
   <button type="reset" class="btn btn-small btn-white" ($click)="reset()">Reset</button>
 
   <a id="page-help" class="popover-template" data-get-template="help/filters_helper_content" href="javascript://">

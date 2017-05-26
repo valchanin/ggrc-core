@@ -1,0 +1,45 @@
+{{!
+    Copyright (C) 2017 Google Inc.
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+}}
+
+<div class="group-container">
+  <div class="group-content">
+    {{#each items}}
+      {{#switch type}}
+        {{#case "attribute"}}
+          <advanced-search-filter-attribute
+            {(attribute)}="value"
+            (remove)="removeItem(../)">
+          </advanced-search-filter-attribute>
+        {{/case}}
+        {{#case "group"}}
+          <advanced-search-filter-group
+            {(items)}="value"
+            (remove)="removeItem(../)">
+          </advanced-search-filter-group>
+        {{/case}}
+        {{#case "operator"}}
+          <advanced-search-filter-operator
+            {(operator)}="value">
+          </advanced-search-filter-operator>
+        {{/case}}
+      {{/switch}}
+    {{/each}}
+  </div>
+  <div class="group-footer">
+    <div>
+      <button class="btn btn-small btn-lightBlue" ($click)="addItem('attribute')">Add Attribute</button>
+      <button class="btn btn-small btn-lightBlue" ($click)="addItem('group')">Add Group</button>
+      {{^initial}}
+      <button class="btn btn-small btn-red" ($click)="remove()">X</button>
+      {{/initial}}
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
