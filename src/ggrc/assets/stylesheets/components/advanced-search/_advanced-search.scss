@@ -3,32 +3,42 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-advanced-search-filter-group {
+advanced-search-filter-container {
+  .container-content{
+    select {
+      width: auto;
+    }
 
-  input {
-    width: 100%;
-  }
-  .flex-box{
-    justify-content: space-between;
-  }
-
-  .attr-cell{
-    width: 30%;
-  }
-  .op-cell{
-    width: 10%;
-  }
-  .action-cell{
-    width: 10%;
-  }
-
-  .group-container{
-    border: 1px;
-    border-style: solid;
-    padding: 10px;
+    .filter-item{
+      &:first-child{
+        width:100%;
+      }
+    }
 
     .group-container{
+      padding: 10px;
       margin-bottom: 10px;
+      background: #eee;
+    }
+
+    .advanced-search-operator{
+      width: auto;
+    }
+
+    .remove-filter-item{
+      border: 0;
+      background-color: transparent;
+      display: block;
+      i {
+        color: $gray;
+      }
+      &:hover i {
+        color: $black;
+      }
+      &:focus {
+        outline: none;
+      }
     }
   }
+
 }

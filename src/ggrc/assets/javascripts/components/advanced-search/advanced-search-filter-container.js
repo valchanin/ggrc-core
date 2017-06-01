@@ -7,17 +7,17 @@
   'use strict';
 
   var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-filter-group.mustache');
+    '/components/advanced-search/advanced-search-filter-container.mustache');
 
   var viewModel = can.Map.extend({
     items: [],
     availableAttributes: [],
-    addAttribute: function () {
+    addItem: function (type) {
       var items = this.attr('items');
       if (items.length) {
         items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
       }
-      items.push(GGRC.Utils.AdvancedSearch.create.attribute());
+      items.push(GGRC.Utils.AdvancedSearch.create[type]());
     },
     removeItem: function (item) {
       var items = this.attr('items');
@@ -32,8 +32,8 @@
     }
   });
 
-  GGRC.Components('advancedSearchFilterGroup', {
-    tag: 'advanced-search-filter-group',
+  GGRC.Components('advancedSearchFilterContainer', {
+    tag: 'advanced-search-filter-container',
     template: template,
     viewModel: viewModel
   });

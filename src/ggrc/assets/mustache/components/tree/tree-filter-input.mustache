@@ -4,22 +4,25 @@
 }}
 
 <div class="tree-filter__expression-holder width-100">
-  <input type="text" class="tree-filter__input width-100" {($value)}="filter">
+  <input type="text" 
+         class="tree-filter__input width-100" 
+         {($value)}="filter" 
+         {{#disabled}}disabled{{/disabled}}
+         placeholder="Type for search here...">
   <span class="tree-filter_is-expression {{#if isExpression}}valid{{/if}}">
     <i class="fa fa-check-circle{{#unless isExpression}}-o{{/unless}}"></i>
   </span>
+  <a href="javascript://" class="advanced-filter" ($click)="openAdvancedFilter()">
+    <i class="fa fa-bars"></i>
+  </a>
 </div>
 <div class="flex-box tree-filter__actions">
-  <button type="submit" class="btn btn-small btn-lightBlue" ($click)="submit()">Filter</button>
-  <button class="btn btn-small btn-lightBlue" ($click)="openAdvancedFilter()">Advanced</button>
-  <simple-modal {state}="advancedSearch">
-    <advanced-search-filter-group
-      {(items)}="advancedSearch.items"
-      {initial}="true"
-    ></advanced-search-filter-group>
-    <button class="btn btn-small btn-lightBlue" ($click)="applyFilters()">Apply Filters</button>
-  </simple-modal>
-  <button type="reset" class="btn btn-small btn-white" ($click)="reset()">Reset</button>
+  <button type="submit" 
+          class="btn btn-small btn-lightBlue"
+          ($click)="submit()"
+          {{#disabled}}disabled{{/disabled}}>
+    Search
+  </button>
 
   <a id="page-help" class="popover-template" data-get-template="help/filters_helper_content" href="javascript://">
     <i class="fa fa-question-circle"></i>

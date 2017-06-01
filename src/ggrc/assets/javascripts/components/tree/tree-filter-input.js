@@ -9,10 +9,6 @@
   var template = can.view(GGRC.mustache_path +
     '/components/tree/tree-filter-input.mustache');
   var viewModel = can.Map.extend({
-    advancedSearch: {
-      open: false,
-      items: []
-    },
     define: {
       filter: {
         type: 'string',
@@ -35,6 +31,7 @@
         value: false
       }
     },
+    disbled: false,
     options: {},
     filters: null,
     init: function () {
@@ -55,10 +52,6 @@
     submit: function () {
       this.dispatch('filter');
     },
-    reset: function () {
-      this.attr('filter', '');
-      this.submit();
-    },
     onFilterChange: function (newValue) {
       var filter = GGRC.query_parser.parse(newValue);
       var isExpression =
@@ -68,18 +61,7 @@
       this.attr('isExpression', isExpression);
     },
     openAdvancedFilter: function () {
-      var initialFilters = GGRC.Utils.AdvancedSearch
-        .buildExpressionList(this.attr('filter'));
-
-      this.attr('advancedSearch.items', initialFilters);
-      this.attr('advancedSearch.open', true);
-    },
-    applyFilters: function () {
-      var filterString = GGRC.Utils.AdvancedSearch
-        .getFilterFromArray(this.advancedSearch.items);
-
-      this.attr('filter', filterString);
-      this.attr('advancedSearch.open', false);
+      this.dispatch('advanced');
     }
   });
 

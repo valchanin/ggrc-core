@@ -4,24 +4,30 @@
 }}
 
 <div class="flex-box">
-  <div class="flex-box attr-cell">
-    <input tabindex="1" placeholder="left" name="left" type="text" {($value)}="attribute@left">
-  </div>
-  <div class="flex-box op-cell">
-    <select {($value)}="attribute@op">
-      <option value="~">~</option>
-      <option value="=">=</option>
-      <option value="!~">!~</option>
-      <option value="!=">!=</option>
-      <option value="&gt;">&gt;</option>
-      <option value="&lt;">&lt;</option>
+  <div class="flex-box">
+    <select {($value)}="attribute@left">
+      {{#each availableAttributes}}
+      <option value="{{lowercase attr_title}}">{{attr_title}}</option>
+      {{/each}}
     </select>
   </div>
-  <div class="flex-box attr-cell">
-    <input tabindex="3" placeholder="right" name="right" type="text" {($value)}="attribute@right">
+  <div class="flex-box">
+    <select {($value)}="attribute@op">
+      <option value="~">Contains</option>
+      <option value="=">Equals</option>
+      <option value="!~">Does not contain</option>
+      <option value="!=">Is not equal</option>
+      <option value="&gt;">Lesser than </option>
+      <option value="&lt;">Greater than</option>
+    </select>
+  </div>
+  <div class="flex-box">
+    <input tabindex="3" placeholder="Type here..." name="right" type="text" {($value)}="attribute@right">
   </div>
   <div class="flex-box action-cell">
-    <button class="btn btn-small btn-red" ($click)="remove()">X</button>
+    <button class="remove-filter-item" ($click)="remove()">
+        <i class="fa fa-trash"></i>
+    </button>
   </div>
 </div>
 
