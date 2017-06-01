@@ -29,11 +29,16 @@
       currentFilter: {
         type: String,
         get: function () {
-          var filters = can.makeArray(this.attr('filters'));
+          var filters;
           var additionalFilter = this.attr('additionalFilter');
-
           if (additionalFilter) {
             additionalFilter = GGRC.query_parser.parse(additionalFilter);
+          }
+
+          if (this.attr('advancedSearch.applied')) {
+            filters = can.makeArray(this.attr('advancedSearch.filters'));
+          } else {
+            filters = can.makeArray(this.attr('filters'));
           }
 
           return filters.filter(function (options) {
@@ -453,7 +458,37 @@
           can.Model.Cacheable.bind('destroyed', onDestroyed);
         }
       };
-    })()
+    })(),
+
+    advancedSearch: {
+      applied: false,
+      open: false,
+      items: [],
+      filters: []
+    },
+    openAdvancedFilter: function () {
+      this.attr('advancedSearch.open', true);
+    },
+    applyAdvancedFilters: function () {
+      var filterString = GGRC.Utils.AdvancedSearch
+        .getFilterFromArray(this.advancedSearch.items);
+
+      this.attr('advancedSearch.filters', [{
+        filter: filterString,
+        operation: 'AND',
+        isExpression: true,
+        depth: false
+      }]);
+      this.attr('advancedSearch.open', false);
+      this.attr('advancedSearch.applied', true);
+      this.onFilter();
+    },
+    resetAdvancedFilters: function () {
+      this.attr('advancedSearch.items', []);
+      this.attr('advancedSearch.applied', false);
+      this.attr('advancedSearch.open', false);
+      this.onFilter();
+    }
   });
 
   /**

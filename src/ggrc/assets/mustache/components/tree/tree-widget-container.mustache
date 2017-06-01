@@ -9,6 +9,8 @@
       <tree-filter-input class="flex-size-1"
                          {register-filter}="@registerFilter"
                          (filter)="onFilter"
+                         (advanced)="openAdvancedFilter"
+                         {disabled}="advancedSearch.applied"
       ></tree-filter-input>
       {{#if statusFilterVisible}}
         <tree-status-filter {model-name}="modelName"
@@ -70,6 +72,19 @@
       </div>
       {{/if}}
     </div>
+
+    <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
+      <div class="simple-modal__body">
+        <advanced-search-filter-container
+          {(items)}="advancedSearch.items"
+          {available-attributes}="columns.available">
+        </advanced-search-filter-container>
+      </div>
+      <div class="simple-modal__footer">
+        <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
+        <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
+      </div>
+    </simple-modal>
 
     <tree-header {selected-columns}="columns.selected"
                  {available-columns}="columns.available"

@@ -3,8 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="group-container">
-  <div class="group-content">
+<div class="filter-container">
+  <div class="container-content flex-box flex-box-multi">
     {{#each items}}
       {{#switch type}}
         {{#case "attribute"}}
@@ -14,6 +14,13 @@
             {available-attributes}="availableAttributes">
           </advanced-search-filter-attribute>
         {{/case}}
+        {{#case "group"}}
+          <advanced-search-filter-group
+            {(items)}="value"
+            (remove)="removeItem(../)"
+            {available-attributes}="availableAttributes">
+          </advanced-search-filter-group>
+        {{/case}}
         {{#case "operator"}}
           <advanced-search-filter-operator
             {(operator)}="value">
@@ -22,10 +29,10 @@
       {{/switch}}
     {{/each}}
   </div>
-  <div class="group-footer">
+  <div class="container-footer">
     <div>
-      <button class="btn btn-small btn-lightBlue" ($click)="addAttribute()">Add Attribute</button>
-      <button class="btn btn-small btn-red" ($click)="remove()">X</button>
+      <button class="btn btn-small btn-lightBlue" ($click)="addItem('attribute')">Add Attribute</button>
+      <button class="btn btn-small btn-lightBlue" ($click)="addItem('group')">Add Group</button>
     </div>
   </div>
 </div>

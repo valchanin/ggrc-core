@@ -222,17 +222,28 @@ tree-filter-input {
   align-items: center;
   padding-right: 16px;
 
-  .tree-filter_is-expression {
-    opacity: .25;
-    position: absolute;
-    right: 6px;
-    top: 1px;
+  .tree-filter__expression-holder {
+    input {
+      padding-left: 20px;
+    }
+    .tree-filter_is-expression {
+      opacity: .25;
+      position: absolute;
+      left: 6px;
+      top: 1px;
 
-    &.valid {
-      opacity: 1;
-      i {
-        color: $green;
+      &.valid {
+        opacity: 1;
+        i {
+          color: $green;
+        }
       }
+    }
+    .advanced-filter{
+      opacity: .25;
+      position: absolute;
+      right: 6px;
+      top: 1px;
     }
   }
 

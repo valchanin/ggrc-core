@@ -10,6 +10,7 @@
     '/components/advanced-search/advanced-search-filter-attribute.mustache');
 
   var viewModel = can.Map.extend({
+    availableAttributes: [],
     attribute: {
       left: 'string',
       op: 'string',
