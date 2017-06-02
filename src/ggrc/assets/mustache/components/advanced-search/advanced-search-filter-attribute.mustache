@@ -3,15 +3,15 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="flex-box">
-  <div class="flex-box">
+<div class="filter-content flex-box flex-box-multi">
+  <div class="filter-name">
     <select {($value)}="attribute@left">
       {{#each availableAttributes}}
       <option value="{{lowercase attr_title}}">{{attr_title}}</option>
       {{/each}}
     </select>
   </div>
-  <div class="flex-box">
+  <div class="filter-operator">
     <select {($value)}="attribute@op">
       <option value="~">Contains</option>
       <option value="=">Equals</option>
@@ -21,14 +21,17 @@
       <option value="&lt;">Greater than</option>
     </select>
   </div>
-  <div class="flex-box">
+  <div class="filter-value">
     <input tabindex="3" placeholder="Type here..." name="right" type="text" {($value)}="attribute@right">
   </div>
-  <div class="flex-box action-cell">
-    <button class="remove-filter-item" ($click)="remove()">
-        <i class="fa fa-trash"></i>
-    </button>
+  <div class="filter-action">
+    <button class="remove-filter-item" ($click)="remove()"><i class="fa fa-trash"></i></button>
   </div>
+  {{#extendable}}
+  <div class="filter-action">
+    <a href="javascript://" class="advanced-filter" ($click)="createGroup()">+ Add Group Expression</a>
+  </div>
+  {{/extendable}}
 </div>
 
 

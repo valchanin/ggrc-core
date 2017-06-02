@@ -3,26 +3,77 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-advanced-search-filter-container {
-  .container-content{
-    select {
-      width: auto;
+advanced-search-filter-state {
+  select, input{
+    margin: 0 auto;
+  }
+  .filter-content {
+    margin-bottom: 15px;
+    align-items: center;
+    .filter-name {
+      margin-right: 15px;
+      width: 35px;
     }
+    .filter-operator {
+      margin-right: 15px;
+      select {
+        width: 170px;
+      }
+    }
+  }
+}
 
-    .filter-item{
+advanced-search-filter-container {
+  .content {
+    select, input{
+      margin: 0 auto;
+    }
+    .filter-content {
+      margin-bottom: 15px;
+      align-items: center;
+      .filter-name, .filter-operator {
+        margin-right: 15px;
+        select {
+          width: 150px;
+        }
+      }
+    }
+    .operator-container {
+      float: left;
+    }
+    .attribute-container, .group-container {
+      margin-left: 70px;
       &:first-child{
-        width:100%;
+        margin: 0 auto;
       }
     }
 
-    .group-container{
-      padding: 10px;
-      margin-bottom: 10px;
+    .filter-group-container{
+      padding: 15px;
+      margin-bottom: 15px;
       background: #eee;
+      .filter-group-header {
+        position: relative;
+        .close-btn {
+          position: absolute;
+          right: 0;
+          opacity: 0.3;
+          &:hover{
+            opacity: 1;
+          }
+        }
+      }
+      .filter-group-content {
+        .remove-filter-item {
+          margin-right: 15px;
+        }
+      }
     }
 
-    .advanced-search-operator{
-      width: auto;
+    .advanced-search-operator {
+      select {
+        width: 55px;
+      }
     }
 
     .remove-filter-item{
@@ -40,5 +91,8 @@ advanced-search-filter-container {
       }
     }
   }
+}
 
+.advanced-search-controls {
+  float: right;
 }
