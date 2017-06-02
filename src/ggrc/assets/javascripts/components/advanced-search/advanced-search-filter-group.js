@@ -10,8 +10,8 @@
     '/components/advanced-search/advanced-search-filter-group.mustache');
 
   var viewModel = can.Map.extend({
-    items: [],
-    availableAttributes: [],
+    items: can.List(),
+    availableAttributes: can.List(),
     addAttribute: function () {
       var items = this.attr('items');
       if (items.length) {

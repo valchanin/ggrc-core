@@ -75,14 +75,20 @@
 
     <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
       <div class="simple-modal__body">
+        <advanced-search-filter-state
+          {model-name}="modelName"
+          {(state)}="advancedSearch.state">
+        </advanced-search-filter-state>
         <advanced-search-filter-container
           {(items)}="advancedSearch.items"
           {available-attributes}="columns.available">
         </advanced-search-filter-container>
       </div>
       <div class="simple-modal__footer">
-        <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
-        <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
+        <div class="advanced-search-controls">
+          <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
+          <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
+        </div>
       </div>
     </simple-modal>
 

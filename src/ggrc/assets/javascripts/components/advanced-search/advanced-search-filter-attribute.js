@@ -11,13 +11,24 @@
 
   var viewModel = can.Map.extend({
     availableAttributes: [],
+    extendable: false,
     attribute: {
       left: 'string',
       op: 'string',
       right: 'string'
     },
+    init: function () {
+      var availableAttributes = this.attr('availableAttributes');
+      if (availableAttributes.length && availableAttributes[0].attr_title) {
+        this.attr('attribute.left',
+          availableAttributes[0].attr_title.toLowerCase());
+      }
+    },
     remove: function () {
       this.dispatch('remove');
+    },
+    createGroup: function () {
+      this.dispatch('createGroup');
     }
   });
 

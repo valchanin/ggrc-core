@@ -26,6 +26,12 @@
           type: 'operator',
           value: value || ''
         };
+      },
+      state: function (value) {
+        return {
+          type: 'state',
+          value: value || { }
+        };
       }
     };
 

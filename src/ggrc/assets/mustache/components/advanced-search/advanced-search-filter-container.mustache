@@ -4,35 +4,42 @@
 }}
 
 <div class="filter-container">
-  <div class="container-content flex-box flex-box-multi">
+  <div class="content">
     {{#each items}}
       {{#switch type}}
+        {{#case "operator"}}
+        <div class="operator-container">
+          <advanced-search-filter-operator
+            {(operator)}="value">
+          </advanced-search-filter-operator>
+        </div>
+        {{/case}}
         {{#case "attribute"}}
+        <div class="attribute-container">
           <advanced-search-filter-attribute
             {(attribute)}="value"
             (remove)="removeItem(../)"
-            {available-attributes}="availableAttributes">
+            {available-attributes}="availableAttributes"
+            {extendable}="true",
+            (createGroup)="createGroup(../)">
           </advanced-search-filter-attribute>
+        </div>
         {{/case}}
         {{#case "group"}}
+        <div class="group-container">
           <advanced-search-filter-group
             {(items)}="value"
             (remove)="removeItem(../)"
             {available-attributes}="availableAttributes">
           </advanced-search-filter-group>
-        {{/case}}
-        {{#case "operator"}}
-          <advanced-search-filter-operator
-            {(operator)}="value">
-          </advanced-search-filter-operator>
+        </div>
         {{/case}}
       {{/switch}}
     {{/each}}
   </div>
   <div class="container-footer">
     <div>
-      <button class="btn btn-small btn-lightBlue" ($click)="addItem('attribute')">Add Attribute</button>
-      <button class="btn btn-small btn-lightBlue" ($click)="addItem('group')">Add Group</button>
+      <button class="btn btn-small btn-white" ($click)="addAttribute()">Add Attribute</button>
     </div>
   </div>
 </div>

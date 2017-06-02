@@ -463,8 +463,9 @@
     advancedSearch: {
       applied: false,
       open: false,
-      items: [],
-      filters: []
+      items: can.List(),
+      filters: [],
+      state: { }
     },
     openAdvancedFilter: function () {
       this.attr('advancedSearch.open', true);
@@ -484,7 +485,7 @@
       this.onFilter();
     },
     resetAdvancedFilters: function () {
-      this.attr('advancedSearch.items', []);
+      this.attr('advancedSearch.items', can.List());
       this.attr('advancedSearch.applied', false);
       this.attr('advancedSearch.open', false);
       this.onFilter();
