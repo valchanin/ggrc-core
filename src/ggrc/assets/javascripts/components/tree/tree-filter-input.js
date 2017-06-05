@@ -61,7 +61,10 @@
       this.attr('isExpression', isExpression);
     },
     openAdvancedFilter: function () {
-      this.dispatch('advanced');
+      this.dispatch('openAdvanced');
+    },
+    resetAdvancedFilters: function () {
+      this.dispatch('resetAdvanced');
     }
   });
 
