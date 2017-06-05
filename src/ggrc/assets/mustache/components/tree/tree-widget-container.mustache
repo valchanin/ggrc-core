@@ -79,10 +79,10 @@
         <div class="advanced-search">
           <advanced-search-filter-state
             {model-name}="modelName"
-            {(state)}="advancedSearch.state">
+            {(state-model)}="advancedSearch.stateItem">
           </advanced-search-filter-state>
           <advanced-search-filter-container
-            {(items)}="advancedSearch.items"
+            {(items)}="advancedSearch.filterItems"
             {available-attributes}="columns.available">
           </advanced-search-filter-container>
         </div>

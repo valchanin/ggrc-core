@@ -35,77 +35,49 @@
       }
     };
 
-    function buildExpressionList(filterString) {
-      var fo = GGRC.query_parser.parse(filterString);
-      var initialFilters;
-
-      if (_.isEmpty(fo.expression)) {
-        return [];
+    var richOperators = {
+      ANY: function (values) {
+        return _.map(values, function (value) {
+          return '"Status"="' + value + '"';
+        }).join(' OR ');
+      },
+      NONE: function (values) {
+        return _.map(values, function (value) {
+          return '"Status"!="' + value + '"';
+        }).join(' AND ');
       }
-
-      initialFilters = makeConsistent(fo.expression);
-      return _.isArray(initialFilters.value) ?
-        initialFilters.value : [initialFilters];
-    }
-    function makeConsistent(item) {
-      var leftResult;
-      var rightResult;
-      var operator;
-      var resultArray;
-
-      // if it's an attribute
-      if (_.isString(item.left) && _.isString(item.right)) {
-        return create.attribute({
-          left: item.left,
-          right: item.right,
-          op: item.op.name
-        });
-      }
-      // else group
-      leftResult = makeConsistent(item.left);
-      rightResult = makeConsistent(item.right);
-      operator = create.operator(item.op.name);
-
-      resultArray = addGroupToResult([], leftResult, operator.value);
-      resultArray.push(operator);
-      resultArray = addGroupToResult(resultArray, rightResult, operator.value);
-
-      return create.group(resultArray, item.op.name);
-    }
-    function addGroupToResult(resultArray, group, operator) {
-      if (group.groupOperator === operator) {
-        resultArray = resultArray.concat(group.value);
-      } else {
-        resultArray.push(group);
-      }
-      return resultArray;
-    }
+    };
+    var builders = {
+      attribute: attributeToFilter,
+      operator: operatorToFilter,
+      state: stateToFilter,
+      group: buildFilterString
+    };
 
     function attributeToFilter(attribute) {
-      return [attribute.left, attribute.op, attribute.right].join(' ');
+      return '"' + attribute.field +
+             '" ' + attribute.operator +
+             ' "' + attribute.value + '"';
     }
     function operatorToFilter(operator) {
       return ' ' + operator + ' ';
     }
-    function getFilterFromArray(items) {
+    function stateToFilter(state) {
+      return '(' + GGRC.Utils.State.buildStatusFilter(
+        state.items,
+        richOperators[state.operator],
+        state.modelName) + ')';
+    }
+    function buildFilterString(items) {
       var result = '';
-      _.forEach(items, function (item) {
-        if (item.type === 'attribute') {
-          result += attributeToFilter(item.value);
-        }
-        if (item.type === 'group' && item.value && item.value.length) {
-          result += '( ' + getFilterFromArray(item.value) + ' )';
-        }
-        if (item.type === 'operator') {
-          result += operatorToFilter(item.value);
-        }
+      _.each(items, function (item) {
+        result += builders[item.type](item.value);
       });
       return result;
     }
 
     return {
-      buildExpressionList: buildExpressionList,
-      getFilterFromArray: getFilterFromArray,
+      buildFilterString: buildFilterString,
       create: create
     };
   })();

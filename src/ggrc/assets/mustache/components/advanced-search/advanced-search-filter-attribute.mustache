@@ -5,14 +5,14 @@
 
 <div class="filter-content flex-box flex-box-multi">
   <div class="filter-name">
-    <select {($value)}="attribute@left">
+    <select {($value)}="attribute.field">
       {{#each availableAttributes}}
       <option value="{{lowercase attr_title}}">{{attr_title}}</option>
       {{/each}}
     </select>
   </div>
   <div class="filter-operator">
-    <select {($value)}="attribute@op">
+    <select {($value)}="attribute.operator">
       <option value="~">Contains</option>
       <option value="=">Equals</option>
       <option value="!~">Does not contain</option>
@@ -22,7 +22,7 @@
     </select>
   </div>
   <div class="filter-value">
-    <input tabindex="3" placeholder="Type here..." name="right" type="text" {($value)}="attribute@right">
+    <input tabindex="3" placeholder="Type here..." name="right" type="text" {($value)}="attribute.value">
   </div>
   <div class="filter-action">
     <button class="remove-filter-item" ($click)="remove()"><i class="fa fa-trash"></i></button>

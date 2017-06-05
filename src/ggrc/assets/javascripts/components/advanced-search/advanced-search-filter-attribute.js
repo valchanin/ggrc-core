@@ -13,14 +13,14 @@
     availableAttributes: [],
     extendable: false,
     attribute: {
-      left: 'string',
-      op: 'string',
-      right: 'string'
+      field: 'string',
+      operator: 'string',
+      value: 'string'
     },
     init: function () {
       var availableAttributes = this.attr('availableAttributes');
       if (availableAttributes.length && availableAttributes[0].attr_title) {
-        this.attr('attribute.left',
+        this.attr('attribute.field',
           availableAttributes[0].attr_title.toLowerCase());
       }
     },

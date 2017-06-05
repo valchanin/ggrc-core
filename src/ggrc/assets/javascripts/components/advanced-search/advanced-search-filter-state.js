@@ -14,13 +14,12 @@
   var viewModel = can.Map.extend({
     modelName: null,
     filterStates: [],
-    state: {
-      items: null,
-      operator: null
-    },
+    stateModel: { },
     init: function () {
       var filterStates = StateUtils.getStatesForModel(this.attr('modelName'));
-      var selectedStates = this.attr('state.items');
+      var selectedStates = this.attr('stateModel.value.items');
+
+      this.attr('stateModel.value.modelName', this.attr('modelName'));
 
       this.attr('filterStates', filterStates.map(function (state) {
         return {
@@ -29,8 +28,8 @@
         };
       }));
 
-      if (!(this.attr('state.operator'))) {
-        this.attr('state.operator', 'ANY');
+      if (!(this.attr('stateModel.value.operator'))) {
+        this.attr('stateModel.value.operator', 'ANY');
       }
     },
     saveTreeStates: function (selectedStates) {
@@ -41,11 +40,9 @@
         return;
       }
 
-      states = selectedStates.map(function (state) {
-        return state.value;
-      });
+      states = _.pluck(selectedStates, 'value');
 
-      this.attr('state.items', states);
+      this.attr('stateModel.value.items', states);
     }
   });
 
