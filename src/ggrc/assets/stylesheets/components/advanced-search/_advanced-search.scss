@@ -6,17 +6,19 @@
 .advanced-search {
   select, input{
     margin: 0 auto;
+    background: $white;
   }
   .filter-content {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     align-items: center;
   }
   .filter-name, .filter-operator {
-    margin-right: 15px;
+    margin-right: 16px;
   }
 
   advanced-search-filter-state {
     .filter-content {
+      margin-bottom: 24px;
       .filter-name {
         width: 35px;
       }
@@ -47,9 +49,14 @@
         }
       }
       .filter-group-container{
-        padding: 15px;
-        margin-bottom: 15px;
-        background: #eee;
+        padding: 16px;
+        margin-bottom: 16px;
+        background: $tabBgnd;
+        border: solid 1px;
+        border-color: $itemBorder;
+        input, select {
+          background: $white;
+        }
         .filter-group-header {
           position: relative;
           .close-btn {
@@ -63,7 +70,7 @@
         }
         .filter-group-content {
           .remove-filter-item {
-            margin-right: 15px;
+            margin-right: 24px;
           }
         }
       }
@@ -86,6 +93,9 @@
           outline: none;
         }
       }
+    }
+    .container-footer {
+      margin-top: 24px;
     }
   }
 }
