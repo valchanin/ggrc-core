@@ -100,7 +100,7 @@
      */
     function statusFilter(statuses, filterString, modelName) {
       var filter = modelName === 'Assessment' ?
-        buildAssessmentFilter(statuses) :
+        buildAssessmentFilter(statuses, buildStatusesFilterString) :
         buildStatusesFilterString(statuses);
 
       filterString = filterString || '';
@@ -112,6 +112,20 @@
       }
 
       return filterString;
+    }
+
+    /**
+     * Transform query for objects into query which filter them by state.
+     * @param {Array} statuses - array of active statuses
+     * @param {function} builder - function building a query
+     * @param {String} modelName - model name
+     * @return {String} The transformed query
+     */
+    function buildStatusFilter(statuses, builder, modelName) {
+      var filter = modelName === 'Assessment' ?
+        buildAssessmentFilter(statuses, builder) :
+        builder(statuses);
+      return filter;
     }
 
     /**
@@ -129,9 +143,10 @@
     /**
      * Build statuses filter for Assessment model
      * @param {Array} statuses - array of active statuses
+     * @param {function} builder - function building a query
      * @return {String} statuses filter
      */
-    function buildAssessmentFilter(statuses) {
+    function buildAssessmentFilter(statuses, builder) {
       var verifiedIndex = statuses.indexOf('Completed and Verified');
       var completedIndex = statuses.indexOf('Completed (no verification)');
       var isVerified = false;
@@ -142,7 +157,7 @@
 
       // do not update statuses
       if (verifiedIndex === -1 && completedIndex === -1) {
-        return buildStatusesFilterString(statuses);
+        return builder(statuses);
       }
 
       if (verifiedIndex > -1 && completedIndex > -1) {
@@ -154,7 +169,7 @@
         // remove it
         statuses.splice(verifiedIndex, 1);
 
-        return buildStatusesFilterString(statuses);
+        return builder(statuses);
       }
 
       if (completedIndex > -1 && verifiedIndex === -1) {
@@ -165,7 +180,7 @@
         statuses.push('Completed');
       }
 
-      filter = buildStatusesFilterString(statuses);
+      filter = builder(statuses);
       return filter + ' AND verified=' + isVerified;
     }
 
@@ -185,7 +200,8 @@
       hasFilter: hasFilter,
       statusFilter: statusFilter,
       getStatesForModel: getStatesForModel,
-      getDefaultStatesForModel: getDefaultStatesForModel
+      getDefaultStatesForModel: getDefaultStatesForModel,
+      buildStatusFilter: buildStatusFilter
     };
   })();
 })(window.GGRC);

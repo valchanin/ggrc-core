@@ -463,16 +463,19 @@
     advancedSearch: {
       applied: false,
       open: false,
-      items: can.List(),
+      filterItems: can.List(),
       filters: [],
-      state: { }
+      stateItem: GGRC.Utils.AdvancedSearch.create.state()
     },
     openAdvancedFilter: function () {
       this.attr('advancedSearch.open', true);
     },
     applyAdvancedFilters: function () {
-      var filterString = GGRC.Utils.AdvancedSearch
-        .getFilterFromArray(this.advancedSearch.items);
+      var filterString;
+      var filters = this.attr('advancedSearch.filterItems').slice();
+      filters.unshift(this.attr('advancedSearch.stateItem'));
+
+      filterString = GGRC.Utils.AdvancedSearch.buildFilterString(filters);
 
       this.attr('advancedSearch.filters', [{
         filter: filterString,
@@ -485,7 +488,7 @@
       this.onFilter();
     },
     resetAdvancedFilters: function () {
-      this.attr('advancedSearch.items', can.List());
+      this.attr('advancedSearch.filterItems', can.List());
       this.attr('advancedSearch.applied', false);
       this.attr('advancedSearch.open', false);
       this.onFilter();
