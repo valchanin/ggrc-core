@@ -9,7 +9,8 @@
       <tree-filter-input class="flex-size-1"
                          {register-filter}="@registerFilter"
                          (filter)="onFilter"
-                         (advanced)="openAdvancedFilter"
+                         (openAdvanced)="openAdvancedFilter"
+                         (resetAdvanced)="resetAdvancedFilters"
                          {disabled}="advancedSearch.applied"
       ></tree-filter-input>
       {{#if statusFilterVisible}}
@@ -75,14 +76,16 @@
 
     <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
       <div class="simple-modal__body">
-        <advanced-search-filter-state
-          {model-name}="modelName"
-          {(state)}="advancedSearch.state">
-        </advanced-search-filter-state>
-        <advanced-search-filter-container
-          {(items)}="advancedSearch.items"
-          {available-attributes}="columns.available">
-        </advanced-search-filter-container>
+        <div class="advanced-search">
+          <advanced-search-filter-state
+            {model-name}="modelName"
+            {(state)}="advancedSearch.state">
+          </advanced-search-filter-state>
+          <advanced-search-filter-container
+            {(items)}="advancedSearch.items"
+            {available-attributes}="columns.available">
+          </advanced-search-filter-container>
+        </div>
       </div>
       <div class="simple-modal__footer">
         <div class="advanced-search-controls">

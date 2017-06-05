@@ -248,6 +248,19 @@ tree-filter-input {
       right: 6px;
       top: 1px;
     }
+    .advanced-filter-controls {
+      position: absolute;
+      right: 6px;
+      top: 5px;
+      background: #03A9F4;
+      border-radius: 15px;
+      line-height: 18px;
+      padding: 0 5px 0 5px;
+      a, i {
+        color: #fff;
+        font-size: 12px;
+      }
+    }
   }
 
   .tree-filter__actions {

@@ -3,91 +3,88 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-advanced-search-filter-state {
+.advanced-search {
   select, input{
     margin: 0 auto;
   }
   .filter-content {
     margin-bottom: 15px;
     align-items: center;
-    .filter-name {
-      margin-right: 15px;
-      width: 35px;
-    }
-    .filter-operator {
-      margin-right: 15px;
-      select {
-        width: 170px;
+  }
+  .filter-name, .filter-operator {
+    margin-right: 15px;
+  }
+
+  advanced-search-filter-state {
+    .filter-content {
+      .filter-name {
+        width: 35px;
+      }
+      .filter-operator {
+        select {
+          width: 170px;
+        }
       }
     }
   }
-}
 
-advanced-search-filter-container {
-  .content {
-    select, input{
-      margin: 0 auto;
-    }
-    .filter-content {
-      margin-bottom: 15px;
-      align-items: center;
-      .filter-name, .filter-operator {
-        margin-right: 15px;
-        select {
-          width: 150px;
-        }
-      }
-    }
-    .operator-container {
-      float: left;
-    }
-    .attribute-container, .group-container {
-      margin-left: 70px;
-      &:first-child{
-        margin: 0 auto;
-      }
-    }
-
-    .filter-group-container{
-      padding: 15px;
-      margin-bottom: 15px;
-      background: #eee;
-      .filter-group-header {
-        position: relative;
-        .close-btn {
-          position: absolute;
-          right: 0;
-          opacity: 0.3;
-          &:hover{
-            opacity: 1;
+  advanced-search-filter-container {
+    .container-content {
+      .filter-content {
+        .filter-name, .filter-operator {
+          select {
+            width: 150px;
           }
         }
       }
-      .filter-group-content {
-        .remove-filter-item {
-          margin-right: 15px;
+      .operator-container {
+        float: left;
+      }
+      .attribute-container, .group-container {
+        margin-left: 70px;
+        &:first-child{
+          margin: 0 auto;
         }
       }
-    }
-
-    .advanced-search-operator {
-      select {
-        width: 55px;
+      .filter-group-container{
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #eee;
+        .filter-group-header {
+          position: relative;
+          .close-btn {
+            position: absolute;
+            right: 0;
+            opacity: 0.3;
+            &:hover{
+              opacity: 1;
+            }
+          }
+        }
+        .filter-group-content {
+          .remove-filter-item {
+            margin-right: 15px;
+          }
+        }
       }
-    }
-
-    .remove-filter-item{
-      border: 0;
-      background-color: transparent;
-      display: block;
-      i {
-        color: $gray;
+      .advanced-search-operator {
+        select {
+          width: 55px;
+        }
       }
-      &:hover i {
-        color: $black;
-      }
-      &:focus {
-        outline: none;
+      .remove-filter-item{
+        border: 0;
+        background-color: transparent;
+        display: block;
+        i {
+          color: $gray;
+        }
+        &:hover i {
+          color: $black;
+        }
+        &:focus {
+          outline: none;
+        }
       }
     }
   }
