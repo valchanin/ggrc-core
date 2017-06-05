@@ -225,6 +225,10 @@ tree-filter-input {
   .tree-filter__expression-holder {
     input {
       padding-left: 20px;
+      &[disabled] {
+        opacity: 0.47;
+        background: $white;
+      }
     }
     .tree-filter_is-expression {
       opacity: .25;
