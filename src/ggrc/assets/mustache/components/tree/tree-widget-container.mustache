@@ -11,7 +11,7 @@
                          (filter)="onFilter"
                          (openAdvanced)="openAdvancedFilter"
                          (resetAdvanced)="resetAdvancedFilters"
-                         {disabled}="advancedSearch.applied"
+                         {disabled}="advancedSearch.filters.length"
       ></tree-filter-input>
       {{#if statusFilterVisible}}
         <tree-status-filter {model-name}="modelName"
@@ -74,26 +74,23 @@
       {{/if}}
     </div>
 
-    <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
-      <div class="simple-modal__body">
-        <div class="advanced-search">
-          <advanced-search-filter-state
-            {model-name}="modelName"
-            {(state-model)}="advancedSearch.stateItem">
-          </advanced-search-filter-state>
+    <div class="advanced-search">
+      <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
+        <div class="simple-modal__body">
           <advanced-search-filter-container
             {(items)}="advancedSearch.filterItems"
-            {available-attributes}="columns.available">
+            {available-attributes}="columns.available"
+            {model-name}="modelName">
           </advanced-search-filter-container>
         </div>
-      </div>
-      <div class="simple-modal__footer">
-        <div class="advanced-search-controls">
-          <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
-          <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
+        <div class="simple-modal__footer">
+          <div class="advanced-search-controls">
+            <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
+            <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
+          </div>
         </div>
-      </div>
-    </simple-modal>
+      </simple-modal>
+    </div>
 
     <tree-header {selected-columns}="columns.selected"
                  {available-columns}="columns.available"

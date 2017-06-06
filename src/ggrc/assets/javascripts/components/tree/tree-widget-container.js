@@ -35,7 +35,7 @@
             additionalFilter = GGRC.query_parser.parse(additionalFilter);
           }
 
-          if (this.attr('advancedSearch.applied')) {
+          if (this.attr('advancedSearch.filters.length')) {
             filters = can.makeArray(this.attr('advancedSearch.filters'));
           } else {
             filters = can.makeArray(this.attr('filters'));
@@ -461,22 +461,18 @@
     })(),
 
     advancedSearch: {
-      applied: false,
       open: false,
       filterItems: can.List(),
-      filters: [],
-      stateItem: GGRC.Utils.AdvancedSearch.create.state()
+      filters: []
     },
     openAdvancedFilter: function () {
       this.attr('advancedSearch.open', true);
     },
     applyAdvancedFilters: function () {
       var filterString;
-      var filters = this.attr('advancedSearch.filterItems').slice();
-      filters.unshift(this.attr('advancedSearch.stateItem'));
+      var filters = this.attr('advancedSearch.filterItems');
 
       filterString = GGRC.Utils.AdvancedSearch.buildFilterString(filters);
-
       this.attr('advancedSearch.filters', [{
         filter: filterString,
         operation: 'AND',
@@ -484,12 +480,11 @@
         depth: false
       }]);
       this.attr('advancedSearch.open', false);
-      this.attr('advancedSearch.applied', true);
       this.onFilter();
     },
     resetAdvancedFilters: function () {
       this.attr('advancedSearch.filterItems', can.List());
-      this.attr('advancedSearch.applied', false);
+      this.attr('advancedSearch.filters', []);
       this.attr('advancedSearch.open', false);
       this.onFilter();
     }

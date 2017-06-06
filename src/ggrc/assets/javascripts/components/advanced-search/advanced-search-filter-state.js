@@ -17,9 +17,9 @@
     stateModel: { },
     init: function () {
       var filterStates = StateUtils.getStatesForModel(this.attr('modelName'));
-      var selectedStates = this.attr('stateModel.value.items');
+      var selectedStates = this.attr('stateModel.items');
 
-      this.attr('stateModel.value.modelName', this.attr('modelName'));
+      this.attr('stateModel.modelName', this.attr('modelName'));
 
       this.attr('filterStates', filterStates.map(function (state) {
         return {
@@ -28,8 +28,8 @@
         };
       }));
 
-      if (!(this.attr('stateModel.value.operator'))) {
-        this.attr('stateModel.value.operator', 'ANY');
+      if (!(this.attr('stateModel.operator'))) {
+        this.attr('stateModel.operator', 'ANY');
       }
     },
     saveTreeStates: function (selectedStates) {
@@ -42,7 +42,7 @@
 
       states = _.pluck(selectedStates, 'value');
 
-      this.attr('stateModel.value.items', states);
+      this.attr('stateModel.items', states);
     }
   });
 
