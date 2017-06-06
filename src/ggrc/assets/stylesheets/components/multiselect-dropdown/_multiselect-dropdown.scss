@@ -32,7 +32,10 @@
 
     &:focus {
       @extend .dropdown-focus;
-     }
+    }
+    &[disabled] {
+      cursor: not-allowed;
+    }
   }
 
   input.multiselect-dropdown__input::-webkit-input-placeholder{
@@ -103,6 +106,13 @@
 
       &:focus {
         @extend .dropdown-focus;
+      }
+      &.disabled {
+        opacity: 0.47;
+        cursor: not-allowed;
+        background-color: #eee;
+        border-color: #ddd;
+        outline: none;
       }
     }
   }

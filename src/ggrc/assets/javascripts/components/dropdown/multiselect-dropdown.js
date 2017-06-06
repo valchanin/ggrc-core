@@ -13,6 +13,7 @@
       '/components/dropdown/multiselect_dropdown.mustache'
     ),
     viewModel: {
+      disabled: false,
       _stateWasUpdated: '',
       selected: [],
       plural: '@',
@@ -123,6 +124,9 @@
         }
       },
       openDropdown: function (el) {
+        if (this.attr('disabled')) {
+          return;
+        }
         // we should save element of component.
         // it necessary for 'can.trigger'
         if (el && !this.element) {
@@ -149,6 +153,9 @@
         this.viewModel.updateSelected(target);
       },
       '{window} click': function () {
+        if (this.viewModel.attr('disabled')) {
+          return;
+        }
         this.viewModel.changeOpenCloseState();
       }
     }
