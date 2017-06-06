@@ -21,7 +21,8 @@
           <multiselect-dropdown
             {options}="filterStates"
             placeholder="Filter by State"
-            plural="States">
+            plural="States"
+            {disabled}="advancedSearch.filters.length">
           </multiselect-dropdown>
         </tree-status-filter>
       {{/if}}

@@ -5,14 +5,15 @@
 
 <div class="multiselect-dropdown flex-box flex-col">
   <!-- HACK: using of tabindex can set styles on focus -->
-  <div tabindex="-1" class="multiselect-dropdown__input-container" ($click)="openDropdown($element, %event)">
+  <div tabindex="-1" class="multiselect-dropdown__input-container {{#disabled}}disabled{{/disabled}}" ($click)="openDropdown($element, %event)">
     <input
       type="text"
       readonly="readonly"
       class="multiselect-dropdown__input {{#if isOpen}}dropdown-focus{{/if}}"
       placeholder="{{placeholder}}"
       value="{{_displayValue}}"
-      size="{{_inputSize}}"/>
+      size="{{_inputSize}}"
+      {{#disabled}}disabled{{/disabled}}/>
     <span class="multiselect-dropdown__icon">
       <i class="fa fa-caret-down"></i>
     </span>
