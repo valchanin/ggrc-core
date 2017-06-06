@@ -7,6 +7,14 @@
   <div class="container-content">
     {{#each items}}
       {{#switch type}}
+        {{#case "state"}}
+        <div class="state-container">
+          <advanced-search-filter-state
+            {model-name}="modelName"
+            {(state-model)}="value">
+          </advanced-search-filter-state>
+        </div>
+        {{/case}}
         {{#case "operator"}}
         <div class="operator-container">
           <advanced-search-filter-operator

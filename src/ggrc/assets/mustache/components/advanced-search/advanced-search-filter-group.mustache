@@ -3,43 +3,35 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="filter-group-container">
-  <div class="filter-group-header">
-    <a class="close-btn" href="javascript://" ($click)="remove()">
-      <i class="fa fa-remove"></i>
-    </a>
-  </div>
-  <div class="filter-group-content">
-    {{#each items}}
-      {{#switch type}}
-        {{#case "attribute"}}
-        <div class="attribute-container">
-          <advanced-search-filter-attribute
-            {(attribute)}="value"
-            (remove)="removeItem(../)"
-            {available-attributes}="availableAttributes">
-          </advanced-search-filter-attribute>
-        </div>
-        {{/case}}
-        {{#case "operator"}}
-        <div class="operator-container">
-          <advanced-search-filter-operator
-            {(operator)}="value">
-          </advanced-search-filter-operator>
-        </div>
-        {{/case}}
-      {{/switch}}
-    {{/each}}
-  </div>
-  <div class="filter-group-footer">
-    <div>
-      <button class="btn btn-small btn-white" ($click)="addAttribute()">Add Attribute</button>
-    </div>
+<div class="filter-group-header">
+  <a class="close-btn" href="javascript://" ($click)="remove()">
+    <i class="fa fa-remove"></i>
+  </a>
+</div>
+<div class="filter-group-content">
+  {{#each items}}
+    {{#switch type}}
+      {{#case "attribute"}}
+      <div class="attribute-container">
+        <advanced-search-filter-attribute
+          {(attribute)}="value"
+          (remove)="removeItem(../)"
+          {available-attributes}="availableAttributes">
+        </advanced-search-filter-attribute>
+      </div>
+      {{/case}}
+      {{#case "operator"}}
+      <div class="operator-container">
+        <advanced-search-filter-operator
+          {(operator)}="value">
+        </advanced-search-filter-operator>
+      </div>
+      {{/case}}
+    {{/switch}}
+  {{/each}}
+</div>
+<div class="filter-group-footer">
+  <div>
+    <button class="btn btn-small btn-white" ($click)="addAttribute()">Add Attribute</button>
   </div>
 </div>
-
-
-
-
-
-
