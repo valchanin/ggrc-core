@@ -6,6 +6,8 @@
 (function (can, GGRC) {
   'use strict';
 
+  var StateUtils = GGRC.Utils.State;
+
   var template = can.view(GGRC.mustache_path +
     '/components/advanced-search/advanced-search-filter-container.mustache');
 
@@ -15,7 +17,9 @@
     availableAttributes: can.List(),
     init: function () {
       if (!this.attr('items.length')) {
-        this.attr('items').push(GGRC.Utils.AdvancedSearch.create.state());
+        this.attr('items').push(GGRC.Utils.AdvancedSearch.create.state({
+          items: StateUtils.getDefaultStatesForModel(this.attr('modelName'))
+        }));
       }
     },
     addAttribute: function () {
