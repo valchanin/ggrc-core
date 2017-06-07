@@ -12,14 +12,14 @@
   var viewModel = can.Map.extend({
     items: can.List(),
     availableAttributes: can.List(),
-    addAttribute: function () {
+    addFilterCriterion: function () {
       var items = this.attr('items');
       if (items.length) {
         items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
       }
       items.push(GGRC.Utils.AdvancedSearch.create.attribute());
     },
-    removeItem: function (item) {
+    removeFilterCriterion: function (item) {
       var items = this.attr('items');
       var index = items.indexOf(item);
       if (items.length === index + 1) {

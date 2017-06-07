@@ -15,7 +15,7 @@
       <div class="attribute-container">
         <advanced-search-filter-attribute
           {(attribute)}="value"
-          (remove)="removeItem(../)"
+          (remove)="removeFilterCriterion(../)"
           {available-attributes}="availableAttributes">
         </advanced-search-filter-attribute>
       </div>
@@ -32,6 +32,6 @@
 </div>
 <div class="filter-group-footer">
   <div>
-    <button class="btn btn-small btn-white" ($click)="addAttribute()">Add Attribute</button>
+    <button class="btn btn-small btn-white" ($click)="addFilterCriterion()">Add Attribute</button>
   </div>
 </div>

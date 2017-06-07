@@ -22,21 +22,18 @@
         }));
       }
     },
-    addAttribute: function () {
+    addFilterCriterion: function () {
       var items = this.attr('items');
       items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
       items.push(GGRC.Utils.AdvancedSearch.create.attribute());
     },
-    removeItem: function (item) {
+    removeFilterCriterion: function (item) {
       var items = this.attr('items');
       var index = items.indexOf(item);
       if (items.length === index + 1) {
         index--;
       }
       items.splice(index, 2);
-    },
-    remove: function () {
-      this.dispatch('remove');
     },
     createGroup: function (attribute) {
       var items = this.attr('items');

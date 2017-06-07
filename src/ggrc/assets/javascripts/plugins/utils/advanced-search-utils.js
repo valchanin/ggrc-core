@@ -14,11 +14,10 @@
           value: value || { }
         };
       },
-      group: function (value, groupOperator) {
+      group: function (value) {
         return {
           type: 'group',
-          value: value || [],
-          groupOperator: groupOperator
+          value: value || []
         };
       },
       operator: function (value) {
@@ -51,7 +50,7 @@
       attribute: attributeToFilter,
       operator: operatorToFilter,
       state: stateToFilter,
-      group: buildFilterString
+      group: groupToFilter
     };
 
     function attributeToFilter(attribute) {
@@ -67,6 +66,9 @@
         state.items,
         richOperators[state.operator],
         state.modelName) + ')';
+    }
+    function groupToFilter(items) {
+      return '(' + buildFilterString(items) + ')';
     }
     function buildFilterString(items) {
       var result = '';
