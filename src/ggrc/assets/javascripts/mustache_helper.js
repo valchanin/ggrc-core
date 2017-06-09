@@ -1345,6 +1345,12 @@ Mustache.registerHelper("lowercase", function (value, options) {
   return value.toLowerCase();
 });
 
+  Mustache.registerHelper('modal', function () {
+    return function (el) {
+      $(el).modal();
+    };
+  });
+
   Mustache.registerHelper('assignee_types', function (value, options) {
     function capitalizeFirst(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);

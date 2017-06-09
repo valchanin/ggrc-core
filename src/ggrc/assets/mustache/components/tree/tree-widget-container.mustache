@@ -75,23 +75,21 @@
       {{/if}}
     </div>
 
-    <div class="advanced-search">
-      <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'">
-        <div class="simple-modal__body">
-          <advanced-search-filter-container
-            {(items)}="advancedSearch.filterItems"
-            {available-attributes}="columns.available"
-            {model-name}="modelName">
-          </advanced-search-filter-container>
+    <simple-modal {state}="advancedSearch" modal-title="'{{modelName}} Advanced Filter'" extra-css-class="advanced-search">
+      <div class="simple-modal__body">
+        <advanced-search-filter-container
+          {(items)}="advancedSearch.filterItems"
+          {available-attributes}="columns.available"
+          {model-name}="modelName">
+        </advanced-search-filter-container>
+      </div>
+      <div class="simple-modal__footer">
+        <div class="advanced-search-controls">
+          <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
+          <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
         </div>
-        <div class="simple-modal__footer">
-          <div class="advanced-search-controls">
-            <button type="reset" class="btn btn-small btn-white" ($click)="resetAdvancedFilters()">Reset</button>
-            <button type="submit" class="btn btn-small btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
-          </div>
-        </div>
-      </simple-modal>
-    </div>
+      </div>
+    </simple-modal>
 
     <tree-header {selected-columns}="columns.selected"
                  {available-columns}="columns.available"
