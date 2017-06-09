@@ -25,12 +25,10 @@ class Widget(base.Widget):
     # Filter
     self.cls_without_state_filtering = (AssessmentTemplates, )
     # Persons, Workflows, TaskGroups, Cycles, CycleTaskGroupObjectTasks
-    self.common_filter_locators = dict(
-        text_box_locator=self._locators_filter.TEXTFIELD_TO_FILTER,
-        bt_submit_locator=self._locators_filter.BUTTON_FILTER,
-        bt_clear_locator=self._locators_filter.BUTTON_RESET)
     self.button_help = base.Button(driver, self._locators_filter.BUTTON_HELP)
-    self.filter = base.FilterCommon(driver, **self.common_filter_locators)
+    self.filter = base.FilterCommon(
+        driver, text_box_locator=self._locators_filter.TEXTFIELD_TO_FILTER,
+        bt_submit_locator=self._locators_filter.BUTTON_FILTER)
     if self.__class__ not in self.cls_without_state_filtering:
       self.dropdown_states = base.DropdownStatic(
           driver, dropdown_locator=self._locators_filter.DROPDOWN,

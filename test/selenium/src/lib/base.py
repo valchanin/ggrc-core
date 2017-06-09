@@ -389,13 +389,10 @@ class Modal(Component):
 class FilterCommon(Component):
   """Common filter elements for LHN and Tree View."""
 
-  def __init__(self, driver, text_box_locator, bt_submit_locator,
-               bt_clear_locator):
+  def __init__(self, driver, text_box_locator, bt_submit_locator):
     super(FilterCommon, self).__init__(driver)
     self.text_box = TextInputField(driver, text_box_locator)
     self.button_submit = Button(driver, bt_submit_locator)
-    # for LHN the clear button is only visible after a query is entered
-    self.button_clear = driver.find_element(*bt_clear_locator)
 
   def enter_query(self, query):
     """Enter query to field."""
@@ -406,15 +403,26 @@ class FilterCommon(Component):
     self.button_submit.click()
     selenium_utils.wait_for_js_to_load(self._driver)
 
-  def clear_query(self):
-    """Clear query that was entered to field."""
-    self.button_clear.click()
-    selenium_utils.wait_for_js_to_load(self._driver)
-
   def perform_query(self, query):
     """Clear filtering field, enter query and click submit."""
     self.enter_query(query)
     self.submit_query()
+
+
+class FilterLHN(FilterCommon):
+  """Filter elements for LHN."""
+
+  def __init__(self, driver, text_box_locator,
+               bt_submit_locator, bt_clear_locator):
+    super(FilterLHN, self).__init__(driver, text_box_locator,
+                                    bt_submit_locator)
+    # clear button is only visible after a query is entered
+    self.button_clear = driver.find_element(*bt_clear_locator)
+
+  def clear_query(self):
+    """Clear query that was entered to field."""
+    self.button_clear.click()
+    selenium_utils.wait_for_js_to_load(self._driver)
 
 
 class AbstractPage(Component):
