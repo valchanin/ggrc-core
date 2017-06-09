@@ -952,9 +952,6 @@ class BaseWidgetGeneric(object):
       cls.BUTTON_FILTER = (
           By.CSS_SELECTOR,
           str(_FILTER_BUTTON + ' [type="submit"]').format(cls._object_name))
-      cls.BUTTON_RESET = (
-          By.CSS_SELECTOR,
-          str(_FILTER_BUTTON + ' [type="reset"]').format(cls._object_name))
       cls.BUTTON_HELP = (
           By.CSS_SELECTOR,
           str(_FILTER_BUTTON + " #page-help").format(cls._object_name))

@@ -469,7 +469,7 @@ class Menu(base.AnimatedComponent):
   def reload_elements(self):
     """Each dropdown in LHN has count of members in brackets which we
     update."""
-    self.filter = base.FilterCommon(
+    self.filter = base.FilterLHN(
         self._driver, locator.LhnMenu.FILTER_TEXT_BOX,
         locator.LhnMenu.FILTER_SUBMIT_BUTTON,
         locator.LhnMenu.FILTER_CLEAR_BUTTON)
