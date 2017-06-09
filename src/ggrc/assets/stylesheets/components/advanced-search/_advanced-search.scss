@@ -4,9 +4,10 @@
  */
 
 .advanced-search {
-  .simple-modal{
+  &.simple-modal{
     .simple-modal__body {
       padding-right: 48px;
+      overflow: visible;
     }
     .simple-modal__header  {
       padding-top: 24px;
