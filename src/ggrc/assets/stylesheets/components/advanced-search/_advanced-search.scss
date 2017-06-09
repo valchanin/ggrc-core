@@ -49,6 +49,11 @@
               width: 170px;
             }
           }
+          .filter-value {
+            .multiselect-dropdown {
+              width: 320px;
+            }
+          }
         }
       }
       .operator-container {
@@ -109,5 +114,9 @@
 
   .advanced-search-controls {
     float: right;
+    button {
+      height: 24px;
+      padding: 0px 12px;
+    }
   }
 }
