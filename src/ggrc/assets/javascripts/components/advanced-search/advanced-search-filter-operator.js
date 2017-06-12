@@ -10,7 +10,7 @@
     '/components/advanced-search/advanced-search-filter-operator.mustache');
 
   var viewModel = can.Map.extend({
-    operator: 'string'
+    operator: ''
   });
 
   GGRC.Components('advancedSearchFilterOperator', {

@@ -13,9 +13,9 @@
     availableAttributes: [],
     extendable: false,
     attribute: {
-      field: 'string',
-      operator: 'string',
-      value: 'string'
+      field: '',
+      operator: '',
+      value: ''
     },
     init: function () {
       var availableAttributes = this.attr('availableAttributes');
