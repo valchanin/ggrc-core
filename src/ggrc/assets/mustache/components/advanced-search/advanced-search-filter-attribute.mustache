@@ -27,11 +27,11 @@
   <div class="filter-action">
     <button class="remove-filter-item" ($click)="remove()"><i class="fa fa-trash"></i></button>
   </div>
-  {{#extendable}}
+  {{#if extendable}}
   <div class="filter-action">
     <a href="javascript://" class="advanced-filter" ($click)="createGroup()">+ Add Group Expression</a>
   </div>
-  {{/extendable}}
+  {{/if}}
 </div>
 
 
