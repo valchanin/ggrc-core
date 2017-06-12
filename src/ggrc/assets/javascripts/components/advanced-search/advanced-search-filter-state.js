@@ -12,26 +12,30 @@
     '/components/advanced-search/advanced-search-filter-state.mustache');
 
   var viewModel = can.Map.extend({
+    define: {
+      stateModel: {
+        type: '*',
+        set: function (state) {
+          var filterStates =
+            StateUtils.getStatesForModel(this.attr('modelName'));
+          var selectedStates = state.items;
+          this.attr('filterStates', filterStates.map(function (state) {
+            return {
+              value: state,
+              checked: (selectedStates && (selectedStates.indexOf(state) > -1))
+            };
+          }));
+
+          state.operator = state.operator || 'ANY';
+          state.modelName = this.attr('modelName');
+
+          return state;
+        }
+      }
+    },
     modelName: null,
     filterStates: [],
     stateModel: { },
-    init: function () {
-      var filterStates = StateUtils.getStatesForModel(this.attr('modelName'));
-      var selectedStates = this.attr('stateModel.items');
-
-      this.attr('stateModel.modelName', this.attr('modelName'));
-
-      this.attr('filterStates', filterStates.map(function (state) {
-        return {
-          value: state,
-          checked: (selectedStates && (selectedStates.indexOf(state) > -1))
-        };
-      }));
-
-      if (!(this.attr('stateModel.operator'))) {
-        this.attr('stateModel.operator', 'ANY');
-      }
-    },
     saveTreeStates: function (selectedStates) {
       var states;
 

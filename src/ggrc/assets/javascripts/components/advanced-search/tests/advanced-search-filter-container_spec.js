@@ -12,17 +12,16 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
     spyOn(GGRC.Utils.State, 'getDefaultStatesForModel')
       .and.returnValue(['state']);
     viewModel = GGRC.Components.getViewModel('advancedSearchFilterContainer');
-    viewModel.attr('items', can.List());
   });
 
-  describe('init() method', function () {
+  describe('items set() method', function () {
     it('initializes "items" property with state filter if it is empty',
     function () {
       var items;
-
-      viewModel.init();
+      viewModel.attr('items', []);
 
       items = viewModel.attr('items');
+
       expect(items.length).toBe(1);
       expect(items[0].type).toBe('state');
     });
@@ -35,9 +34,9 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
       viewModel.addFilterCriterion();
 
       items = viewModel.attr('items');
-      expect(items.length).toBe(2);
-      expect(items[0].type).toBe('operator');
-      expect(items[1].type).toBe('attribute');
+      expect(items.length).toBe(3);
+      expect(items[1].type).toBe('operator');
+      expect(items[2].type).toBe('attribute');
     });
   });
 
@@ -80,11 +79,11 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
   describe('createGroup() method', function () {
     it('transforms attribute to group with attribute inside', function () {
       var viewItems;
-      viewModel.attr('items', [
+      viewModel.attr('items', new can.List([
         GGRC.Utils.AdvancedSearch.create.attribute({field: 'first'}),
         GGRC.Utils.AdvancedSearch.create.operator(),
         GGRC.Utils.AdvancedSearch.create.attribute({field: 'second'})
-      ]);
+      ]));
       viewItems = viewModel.attr('items');
 
       viewModel.createGroup(viewItems[0]);

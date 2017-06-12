@@ -1345,7 +1345,7 @@ Mustache.registerHelper("lowercase", function (value, options) {
   return value.toLowerCase();
 });
 
-  Mustache.registerHelper('modal', function () {
+  Mustache.registerHelper('modalWrapper', function () {
     return function (el) {
       $(el).modal();
     };

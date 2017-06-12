@@ -10,20 +10,23 @@
     '/components/advanced-search/advanced-search-filter-attribute.mustache');
 
   var viewModel = can.Map.extend({
-    availableAttributes: [],
-    extendable: false,
-    attribute: {
-      field: '',
-      operator: '',
-      value: ''
-    },
-    init: function () {
-      var availableAttributes = this.attr('availableAttributes');
-      if (availableAttributes.length && availableAttributes[0].attr_title) {
-        this.attr('attribute.field',
-          availableAttributes[0].attr_title.toLowerCase());
+    define: {
+      availableAttributes: {
+        type: '*',
+        Value: can.List,
+        set: function (attributes) {
+          var attribute = this.attr('attribute');
+          if (attributes.length &&
+            attributes[0].attr_title &&
+            !attribute.field) {
+            attribute.field = attributes[0].attr_title;
+          }
+          return attributes;
+        }
       }
     },
+    attribute: {},
+    extendable: false,
     remove: function () {
       this.dispatch('remove');
     },

@@ -12,16 +12,22 @@
     '/components/advanced-search/advanced-search-filter-container.mustache');
 
   var viewModel = can.Map.extend({
-    modelName: null,
-    items: can.List(),
-    availableAttributes: can.List(),
-    init: function () {
-      if (!this.attr('items.length')) {
-        this.attr('items').push(GGRC.Utils.AdvancedSearch.create.state({
-          items: StateUtils.getDefaultStatesForModel(this.attr('modelName'))
-        }));
+    define: {
+      items: {
+        type: '*',
+        Value: can.List,
+        set: function (items) {
+          if (!items.length) {
+            items.push(GGRC.Utils.AdvancedSearch.create.state({
+              items: StateUtils.getDefaultStatesForModel(this.attr('modelName'))
+            }));
+          }
+          return items;
+        }
       }
     },
+    modelName: null,
+    availableAttributes: can.List(),
     addFilterCriterion: function () {
       var items = this.attr('items');
       items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));

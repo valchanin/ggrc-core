@@ -12,16 +12,24 @@ describe('GGRC.Components.advancedSearchFilterAttribute', function () {
     viewModel = GGRC.Components.getViewModel('advancedSearchFilterAttribute');
   });
 
-  describe('init() method', function () {
+  describe('availableAttributes set() method', function () {
     it('initializes "attribute.field" property with first available attribute',
     function () {
       viewModel.attr('availableAttributes', [{
-        attr_title: 'Title'
+        attr_title: 'FirstAttr'
       }]);
 
-      viewModel.init();
+      expect(viewModel.attr('attribute').field).toBe('FirstAttr');
+    });
 
-      expect(viewModel.attr('attribute.field')).toBe('title');
+    it('does not intialize "attribute.field" when it is already initialized',
+    function () {
+      viewModel.attr('attribute.field', 'Field');
+      viewModel.attr('availableAttributes', [{
+        attr_title: 'FirstAttr'
+      }]);
+
+      expect(viewModel.attr('attribute').field).toBe('Field');
     });
   });
 
