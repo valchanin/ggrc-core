@@ -24,19 +24,27 @@
 }
 
 .advanced-search {
+  $simple-modal-header-height: 48px;
+  $simple-modal-footer-height: 64px;
+
   &.simple-modal {
+    max-height: 85%;
     .simple-modal__body {
       padding-right: 48px;
-      overflow: visible;
+      overflow: auto;
+      height: calc(100% - #{$simple-modal-header-height} - #{$simple-modal-footer-height});
+      min-height: 200px;
     }
     .simple-modal__header  {
-      padding-top: 24px;
+      height: $simple-modal-header-height;
+      padding-top: 12px;
       border: none;
       .simple-modal__header-text {
         font-size: 24px;
       }
     }
     .simple-modal__footer {
+      height: $simple-modal-footer-height;
       border: none;
       padding: 16px 24px 24px 16px;
     }
