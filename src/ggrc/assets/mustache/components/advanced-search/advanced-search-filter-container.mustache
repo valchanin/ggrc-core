@@ -4,11 +4,11 @@
 }}
 
 <div class="filter-container">
-  <div class="container-content">
+  <div class="filter-container__content">
     {{#each items}}
       {{#switch type}}
         {{#case "state"}}
-        <div class="state-container">
+        <div class="filter-container__state">
           <advanced-search-filter-state
             {model-name}="modelName"
             {(state-model)}="value">
@@ -16,14 +16,14 @@
         </div>
         {{/case}}
         {{#case "operator"}}
-        <div class="operator-container">
+        <div class="filter-container__operator">
           <advanced-search-filter-operator
             {(operator)}="value">
           </advanced-search-filter-operator>
         </div>
         {{/case}}
         {{#case "attribute"}}
-        <div class="attribute-container">
+        <div class="filter-container__attribute">
           <advanced-search-filter-attribute
             {(attribute)}="value"
             (remove)="removeFilterCriterion(../)"
@@ -34,7 +34,7 @@
         </div>
         {{/case}}
         {{#case "group"}}
-        <div class="group-container">
+        <div class="filter-container__group">
           <advanced-search-filter-group
             {(items)}="value"
             (remove)="removeFilterCriterion(../)"
@@ -45,7 +45,7 @@
       {{/switch}}
     {{/each}}
   </div>
-  <div class="container-footer">
+  <div class="filter-container__footer">
     <div>
       <button class="btn btn-small btn-white" ($click)="addFilterCriterion()">Add Attribute</button>
     </div>

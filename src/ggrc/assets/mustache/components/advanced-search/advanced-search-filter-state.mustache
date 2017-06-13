@@ -3,17 +3,17 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="filter-content flex-box flex-box-multi">
-  <div class="filter-name">
+<div class="filter-state flex-box flex-box-multi">
+  <div class="filter-state__name">
     <h6>State</h6>
   </div>
-  <div class="filter-operator">
+  <div class="filter-state__operator">
     <select {($value)}="stateModel.operator">
       <option value="ANY">Any of</option>
       <option value="NONE">None Of</option>
     </select>
   </div>
-  <div class="filter-value">
+  <div class="filter-state__value">
     <multiselect-dropdown
             {options}="filterStates"
             placeholder="Filter by State"

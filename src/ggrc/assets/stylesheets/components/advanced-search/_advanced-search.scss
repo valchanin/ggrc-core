@@ -3,8 +3,28 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+@mixin element-attribute {
+  margin-left: 70px;
+  margin-bottom: 16px;
+  &:first-child{
+    margin-left: 0;
+  }
+}
+
+@mixin element-operator {
+  float: left;
+}
+
+@mixin advanced-search-controls {
+  align-items: center;
+  select, input{
+    margin: 0 auto;
+    background: $white;
+  }
+}
+
 .advanced-search {
-  &.simple-modal{
+  &.simple-modal {
     .simple-modal__body {
       padding-right: 48px;
       overflow: visible;
@@ -21,102 +41,112 @@
       padding: 16px 24px 24px 16px;
     }
   }
-
-  advanced-search-filter-container {
-    select, input{
-      margin: 0 auto;
-      background: $white;
-    }
-    .filter-content {
-      align-items: center;
-      .filter-name, .filter-operator {
-        margin-right: 16px;
-        select {
-          width: 150px;
-        }
-      }
-    }
-
-    .container-content {
-      .state-container {
-        margin-bottom: 24px;
-        .filter-content {
-          .filter-name {
-            width: 35px;
-          }
-          .filter-operator {
-            select {
-              width: 170px;
-            }
-          }
-          .filter-value {
-            .multiselect-dropdown {
-              width: 320px;
-            }
-          }
-        }
-      }
-      .operator-container {
-        float: left;
-        select {
-          width: 55px;
-        }
-      }
-      .attribute-container, .group-container {
-        margin-left: 70px;
-        margin-bottom: 16px;
-        &:first-child{
-          margin-left: 0;
-        }
-      }
-      .group-container {
-        padding: 16px;
-        background: $tabBgnd;
-        border: solid 1px;
-        border-color: $itemBorder;
-        .filter-group-header {
-          position: relative;
-          .close-btn {
-            position: absolute;
-            right: 0;
-            opacity: 0.3;
-            &:hover{
-              opacity: 1;
-            }
-          }
-        }
-        .filter-group-content {
-          .remove-filter-item {
-            margin-right: 24px;
-          }
-        }
-      }
-      .remove-filter-item{
-        border: 0;
-        background-color: transparent;
-        display: block;
-        i {
-          color: $gray;
-        }
-        &:hover i {
-          color: $black;
-        }
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-
-    .container-footer {
-      margin-top: 24px;
-    }
-  }
-
-  .advanced-search-controls {
+  &__controls {
     float: right;
     button {
       height: 24px;
       padding: 0px 12px;
+      line-height: 12px;
     }
+  }
+}
+
+.filter-attribute {
+  @include advanced-search-controls;
+  &__name, &__operator {
+    margin-right: 16px;
+    select {
+      width: 150px;
+    }
+  }
+  &__value {
+    .multiselect-dropdown {
+      width: 320px;
+    }
+  }
+  &__remove {
+    border: 0;
+    background-color: transparent;
+    i {
+      color: $gray;
+    }
+    &:hover i {
+      color: $black;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.filter-state {
+  @include advanced-search-controls;
+  >* {
+    margin-right: 16px;
+  }
+  &__name {
+    width: 35px;
+  }
+  &__operator {
+    select {
+      width: 170px;
+    }
+  }
+  &__value {
+    .multiselect-dropdown {
+      width: 320px;
+    }
+  }
+}
+
+.filter-operator {
+  @include advanced-search-controls;
+  &__content {
+    select {
+      width: 55px;
+    }
+  }
+}
+
+.filter-container {
+  &__state {
+    margin-bottom: 24px;
+  }
+  &__operator {
+    @include element-operator;
+  }
+  &__attribute {
+    @include element-attribute;
+  }
+  &__group {
+    @include element-attribute;
+    padding: 16px;
+    background: $tabBgnd;
+    border: solid 1px;
+    border-color: $itemBorder;
+  }
+  &__footer {
+    margin-top: 24px;
+  }
+}
+
+.filter-group {
+  &__header {
+    position: relative;
+    .close-btn {
+      position: absolute;
+      right: 0;
+      opacity: 0.3;
+      &:hover{
+        opacity: 1;
+      }
+    }
+  }
+  &__operator {
+    @include element-operator;
+  }
+  &__attribute {
+    @include element-attribute;
+    margin-right: 24px;
   }
 }

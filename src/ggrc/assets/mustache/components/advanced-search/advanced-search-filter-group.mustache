@@ -3,35 +3,38 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="filter-group-header">
-  <a class="close-btn" href="javascript://" ($click)="remove()">
-    <i class="fa fa-remove"></i>
-  </a>
-</div>
-<div class="filter-group-content">
-  {{#each items}}
-    {{#switch type}}
-      {{#case "attribute"}}
-      <div class="attribute-container">
-        <advanced-search-filter-attribute
-          {(attribute)}="value"
-          (remove)="removeFilterCriterion(../)"
-          {available-attributes}="availableAttributes">
-        </advanced-search-filter-attribute>
-      </div>
-      {{/case}}
-      {{#case "operator"}}
-      <div class="operator-container">
-        <advanced-search-filter-operator
-          {(operator)}="value">
-        </advanced-search-filter-operator>
-      </div>
-      {{/case}}
-    {{/switch}}
-  {{/each}}
-</div>
-<div class="filter-group-footer">
-  <div>
-    <button class="btn btn-small btn-white" ($click)="addFilterCriterion()">Add Attribute</button>
+<div class="filter-group">
+  <div class="filter-group__header">
+    <a class="close-btn" href="javascript://" ($click)="remove()">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+  <div class="filter-group__content">
+    {{#each items}}
+      {{#switch type}}
+        {{#case "attribute"}}
+        <div class="filter-group__attribute">
+          <advanced-search-filter-attribute
+            {(attribute)}="value"
+            (remove)="removeFilterCriterion(../)"
+            {available-attributes}="availableAttributes">
+          </advanced-search-filter-attribute>
+        </div>
+        {{/case}}
+        {{#case "operator"}}
+        <div class="filter-group__operator">
+          <advanced-search-filter-operator
+            {(operator)}="value">
+          </advanced-search-filter-operator>
+        </div>
+        {{/case}}
+      {{/switch}}
+    {{/each}}
+  </div>
+  <div class="filter-group__footer">
+    <div>
+      <button class="btn btn-small btn-white" ($click)="addFilterCriterion()">Add Attribute</button>
+    </div>
   </div>
 </div>
+
