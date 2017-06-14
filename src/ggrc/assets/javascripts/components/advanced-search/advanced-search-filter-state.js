@@ -55,7 +55,7 @@
     template: template,
     viewModel: viewModel,
     events: {
-      'multiselect-dropdown multiselect:closed': function (el, ev, selected) {
+      'multiselect-dropdown multiselect:changed': function (el, ev, selected) {
         ev.stopPropagation();
         this.viewModel.saveTreeStates(selected);
       }

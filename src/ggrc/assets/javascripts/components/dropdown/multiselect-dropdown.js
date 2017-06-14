@@ -151,6 +151,9 @@
         }
 
         this.viewModel.updateSelected(target);
+
+        can.trigger(this.element, 'multiselect:changed',
+          [this.viewModel.attr('selected')]);
       },
       '{window} click': function () {
         if (this.viewModel.attr('disabled')) {
