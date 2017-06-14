@@ -31,7 +31,7 @@
         value: false
       }
     },
-    disbled: false,
+    disabled: false,
     options: {},
     filters: null,
     init: function () {
@@ -80,6 +80,9 @@
           this.viewModel.submit();
         }
         ev.stopPropagation();
+      },
+      '{viewModel} disabled': function () {
+        this.viewModel.attr('filter', '');
       }
     }
   });

@@ -26,9 +26,7 @@
         type: '*',
         set: function (selected) {
           this.attr('filterStates').forEach(function (item) {
-            if (selected.indexOf(item.value) > -1) {
-              item.attr('checked', true);
-            }
+            item.attr('checked', (selected.indexOf(item.value) > -1));
           });
 
           this.attr('options.filter',
@@ -36,6 +34,7 @@
         }
       }
     },
+    disabled: false,
     options: {},
     filters: null,
     filterStates: [],
@@ -116,6 +115,13 @@
         ev.stopPropagation();
         this.viewModel.saveTreeStates(selected);
         this.viewModel.dispatch('filter');
+      },
+      '{viewModel} disabled': function () {
+        if (this.viewModel.attr('disabled')) {
+          this.viewModel.attr('selectedStates', []);
+        } else {
+          this.viewModel.loadTreeStates(this.viewModel.attr('modelName'));
+        }
       }
     }
   });

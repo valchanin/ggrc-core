@@ -17,6 +17,7 @@
         <tree-status-filter {model-name}="modelName"
                             {register-filter}="@registerFilter"
                             (filter)="onFilter"
+                            {disabled}="advancedSearch.filters.length"
         >
           <multiselect-dropdown
             {options}="filterStates"
