@@ -70,5 +70,18 @@ describe('GGRC.Components.advancedSearchFilterGroup', function () {
       expect(viewItems[0].type).toBe('attribute');
       expect(viewItems[0].value.field).toBe('first');
     });
+
+    it('removes group if single attribute was removed', function () {
+      var viewItems;
+      viewModel.attr('items', [
+        GGRC.Utils.AdvancedSearch.create.attribute({field: 'single'})
+      ]);
+      viewItems = viewModel.attr('items');
+      spyOn(viewModel, 'remove');
+
+      viewModel.removeFilterCriterion(viewItems[0]);
+
+      expect(viewModel.remove).toHaveBeenCalled();
+    });
   });
 });

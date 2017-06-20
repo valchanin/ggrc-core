@@ -77,7 +77,8 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
   });
 
   describe('createGroup() method', function () {
-    it('transforms attribute to group with attribute inside', function () {
+    it('transforms attribute to group with 2 attributes and operator inside',
+    function () {
       var viewItems;
       viewModel.attr('items', new can.List([
         GGRC.Utils.AdvancedSearch.create.attribute({field: 'first'}),
@@ -92,8 +93,11 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
       expect(viewItems[0].type).toBe('group');
       expect(viewItems[1].type).toBe('operator');
       expect(viewItems[2].type).toBe('attribute');
-      expect(viewItems[0].value.length).toBe(1);
+      expect(viewItems[0].value.length).toBe(3);
+      expect(viewItems[0].value[0].type).toBe('attribute');
       expect(viewItems[0].value[0].value.field).toBe('first');
+      expect(viewItems[0].value[1].type).toBe('operator');
+      expect(viewItems[0].value[2].type).toBe('attribute');
     });
   });
 });

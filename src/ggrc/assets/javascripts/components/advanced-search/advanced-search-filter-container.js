@@ -44,7 +44,11 @@
     createGroup: function (attribute) {
       var items = this.attr('items');
       var index = items.indexOf(attribute);
-      items.attr(index, GGRC.Utils.AdvancedSearch.create.group([attribute]));
+      items.attr(index, GGRC.Utils.AdvancedSearch.create.group([
+        attribute,
+        GGRC.Utils.AdvancedSearch.create.operator('AND'),
+        GGRC.Utils.AdvancedSearch.create.attribute()
+      ]));
     }
   });
 
