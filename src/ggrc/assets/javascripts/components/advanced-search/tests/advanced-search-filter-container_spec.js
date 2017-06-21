@@ -41,7 +41,7 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
   });
 
   describe('removeFilterCriterion() method', function () {
-    it('removes attribute and operator in front if item is first',
+    it('removes attribute and operator behind if item is first',
     function () {
       var viewItems;
       viewModel.attr('items', [
@@ -58,7 +58,7 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
       expect(viewItems[0].value.field).toBe('second');
     });
 
-    it('removes attribute and operator behind if item is not first',
+    it('removes attribute and operator in front if item is not first',
     function () {
       var viewItems;
       viewModel.attr('items', [

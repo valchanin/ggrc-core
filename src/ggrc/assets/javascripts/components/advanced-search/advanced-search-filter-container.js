@@ -36,7 +36,8 @@
     removeFilterCriterion: function (item) {
       var items = this.attr('items');
       var index = items.indexOf(item);
-      if (items.length === index + 1) {
+      // we have to remove operator in front of each item except the first
+      if (index > 0) {
         index--;
       }
       items.splice(index, 2);

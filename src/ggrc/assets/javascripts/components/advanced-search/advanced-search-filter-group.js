@@ -22,6 +22,10 @@
     removeFilterCriterion: function (item) {
       var items = this.attr('items');
       var index = items.indexOf(item);
+      // we have to remove operator in front of each item except the first
+      if (index > 0) {
+        index--;
+      }
 
       // if there is only 1 item in group we have to remove a whole group
       if (items.length === 1) {
@@ -29,10 +33,6 @@
         return;
       }
 
-      // we have to remove operator before last item in group
-      if (items.length === index + 1) {
-        index--;
-      }
       items.splice(index, 2);
     },
     remove: function () {
