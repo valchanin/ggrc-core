@@ -63,8 +63,8 @@
     openAdvancedFilter: function () {
       this.dispatch('openAdvanced');
     },
-    resetAdvancedFilters: function () {
-      this.dispatch('resetAdvanced');
+    removeAdvancedFilters: function () {
+      this.dispatch('removeAdvanced');
     }
   });
 

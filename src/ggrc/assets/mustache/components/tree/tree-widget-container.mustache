@@ -10,7 +10,7 @@
                          {register-filter}="@registerFilter"
                          (filter)="onFilter"
                          (openAdvanced)="openAdvancedFilter"
-                         (resetAdvanced)="resetAdvancedFilters"
+                         (removeAdvanced)="removeAdvancedFilters"
                          {disabled}="advancedSearch.filters.length"
       ></tree-filter-input>
       {{#if statusFilterVisible}}
@@ -86,7 +86,7 @@
       </div>
       <div class="simple-modal__footer">
         <div class="advanced-search__controls">
-          <button type="reset" class="btn btn-white" ($click)="resetAdvancedFilters()">Reset</button>
+          <button type="reset" class="btn btn-white" ($click)="resetAdvancedFilters()">Reset to Defaults</button>
           <button type="submit" class="btn btn-lightBlue" ($click)="applyAdvancedFilters()">Apply</button>
         </div>
       </div>

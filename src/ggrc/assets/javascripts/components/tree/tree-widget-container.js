@@ -473,11 +473,14 @@
       this.attr('advancedSearch.open', false);
       this.onFilter();
     },
-    resetAdvancedFilters: function () {
+    removeAdvancedFilters: function () {
       this.attr('advancedSearch.appliedFilterItems', can.List());
       this.attr('advancedSearch.filters', []);
       this.attr('advancedSearch.open', false);
       this.onFilter();
+    },
+    resetAdvancedFilters: function () {
+      this.attr('advancedSearch.filterItems', can.List());
     }
   });
 
