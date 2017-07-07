@@ -8,25 +8,19 @@
 
   GGRC.Models.MapperModel = can.Map.extend({
     define: {
-      typeGroups: {
-        value: {
-          entities: {
-            name: 'People/Groups',
-            items: []
-          },
-          business: {
-            name: 'Assets/Business',
-            items: []
-          },
-          governance: {
-            name: 'Governance',
-            items: []
-          }
-        }
-      },
       types: {
         get: function () {
-          return this.initTypes();
+          var exclude = [];
+          var include = [];
+          var snapshots = GGRC.Utils.Snapshots;
+          if (this.attr('search_only')) {
+            include = ['TaskGroupTask', 'TaskGroup',
+              'CycleTaskGroupObjectTask'];
+          } else {
+            exclude = snapshots.inScopeModels;
+          }
+          return GGRC.Mappings.getMappingTypes(
+            this.attr('object'), include, exclude);
         }
       },
       parentInstance: {
@@ -82,58 +76,6 @@
       }
       return GGRC.Utils.Snapshots.isSnapshotParent(this.attr('object')) ||
         GGRC.Utils.Snapshots.isSnapshotParent(this.attr('type'));
-    },
-    prepareCorrectTypeFormat: function (cmsModel) {
-      return {
-        category: cmsModel.category,
-        name: cmsModel.title_plural,
-        value: cmsModel.model_singular,
-        singular: cmsModel.model_singular,
-        plural: cmsModel.title_plural.toLowerCase().replace(/\s+/, '_'),
-        table_plural: cmsModel.table_plural,
-        title_singular: cmsModel.title_singular,
-        isSelected: cmsModel.model_singular === this.attr('type')
-      };
-    },
-    addFormattedType: function (modelName, groups) {
-      var group;
-      var type;
-      var cmsModel;
-      cmsModel = GGRC.Utils.getModelByType(modelName);
-      if (!cmsModel || !cmsModel.title_singular ||
-        cmsModel.title_singular === 'Reference') {
-        return;
-      }
-      type = this.prepareCorrectTypeFormat(cmsModel);
-      group = !groups[type.category] ?
-        groups.governance :
-        groups[type.category];
-
-      group.items.push(type);
-    },
-    getModelNamesList: function (object) {
-      var exclude = [];
-      var include = [];
-      var snapshots = GGRC.Utils.Snapshots;
-      if (this.attr('search_only')) {
-        include = ['TaskGroupTask', 'TaskGroup',
-          'CycleTaskGroupObjectTask'];
-      } else {
-        exclude = snapshots.inScopeModels;
-      }
-      return GGRC.Mappings
-        .getMappingList(object, include, exclude);
-    },
-    initTypes: function (objectType) {
-      var object = objectType || this.attr('object');
-      // Can.JS wrap all objects with can.Map by default
-      var groups = this.attr('typeGroups').attr();
-      var list = this.getModelNamesList(object);
-
-      list.forEach(function (modelName) {
-        return this.addFormattedType(modelName, groups);
-      }.bind(this));
-      return groups;
     },
     modelFromType: function (type) {
       var types = _.reduce(_.values(

@@ -595,15 +595,7 @@
      */
     _choosableObjectTypes: function () {
       var ignoreTypes = this._NON_RELEVANT_OBJ_TYPES;
-      var mapper;
-      var MapperModel = GGRC.Models.MapperModel;
-      var objectTypes;
-
-      mapper = new MapperModel({
-        object: 'MultitypeSearch',
-        search_only: true
-      });
-      objectTypes = mapper.initTypes('AssessmentTemplate');
+      var objectTypes = GGRC.Mappings.getMappingTypes('AssessmentTemplate');
       // remove ignored types and sort the rest
       _.each(objectTypes, function (objGroup) {
         objGroup.items = _.filter(objGroup.items, function (item) {

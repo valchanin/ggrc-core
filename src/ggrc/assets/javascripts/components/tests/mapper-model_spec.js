@@ -7,150 +7,41 @@ describe('GGRC.Models.MapperModel', function () {
   'use strict';
 
   var mapper;
-  var allTypes = [];
-  var notMappableModels = [];
-  var modules = {
-    core: {
-      models: [
-        'AccessGroup',
-        'Assessment',
-        'AssessmentTemplate',
-        'Audit',
-        'Clause',
-        'Contract',
-        'Control',
-        'DataAsset',
-        'Facility',
-        'Issue',
-        'Market',
-        'Objective',
-        'OrgGroup',
-        'Person',
-        'Policy',
-        'Process',
-        'Product',
-        'Program',
-        'Project',
-        'Regulation',
-        'Section',
-        'Standard',
-        'System',
-        'Vendor',
-        'Risk',
-        'Threat'
-      ],
-      notMappable: ['Assessment', 'Issue', 'AssessmentTemplate']
-    },
-    risk_assessments: {
-      models: ['RiskAssessment'],
-      notMappable: ['RiskAssessment']
-    },
-    workflows: {
-      models: [
-        'TaskGroup',
-        'Workflow',
-        'CycleTaskEntry',
-        'CycleTaskGroupObjectTask',
-        'CycleTaskGroupObject',
-        'CycleTaskGroup'
-      ],
-      notMappable: [
-        'CycleTaskEntry',
-        'CycleTaskGroupObjectTask',
-        'CycleTaskGroupObject',
-        'CycleTaskGroup'
-      ]
-    }
-  };
-  var directives = ['Contract', 'Policy', 'Regulation', 'Standard'];
-  var mappingRules;
-  var filtered;
-  var treeViewSettingsBackup;
-
-  function getModelsFromGroups(groups, groupNames) {
-    var models = [];
-    groupNames.forEach(function (groupName) {
-      var groupModels = groups[groupName].items.map(function (item) {
-        return item.singular;
-      });
-      models = models.concat(groupModels);
-    });
-    return models;
-  }
-
-  Object.keys(modules).forEach(function (module) {
-    allTypes = allTypes.concat(modules[module].models);
-    notMappableModels = notMappableModels.concat(modules[module].notMappable);
-  });
-
-  filtered = _.difference(allTypes, notMappableModels);
-
-  mappingRules = {
-    AccessGroup: _.difference(filtered, ['AccessGroup']),
-    Assessment: _.difference(filtered, ['Audit', 'Person', 'Program', 'Project',
-      'TaskGroup', 'Workflow']),
-    AssessmentTemplate: _.difference(filtered, ['Audit', 'Person', 'Program',
-      'Project', 'TaskGroup', 'Workflow']),
-    Audit: _.difference(filtered, ['Audit', 'Person', 'Program', 'Project',
-      'TaskGroup', 'Workflow']),
-    Clause: _.difference(filtered, ['Clause']),
-    Contract: _.difference(filtered, directives),
-    Control: filtered,
-    CycleTaskGroupObjectTask: _.difference(filtered, ['Person',
-      'TaskGroup', 'Workflow']),
-    DataAsset: filtered,
-    Facility: filtered,
-    Issue: _.difference(filtered, ['Audit', 'Person', 'Program', 'Project',
-      'TaskGroup', 'Workflow']),
-    Market: filtered,
-    Objective: filtered,
-    OrgGroup: filtered,
-    Person: _.difference(filtered, ['Person', 'Audit', 'TaskGroup',
-      'Workflow']),
-    Policy: _.difference(filtered, directives),
-    Process: filtered,
-    Product: filtered,
-    Program: _.difference(allTypes, ['Program'].concat(modules.core.notMappable,
-      modules.workflows.notMappable)),
-    Project: filtered,
-    Regulation: _.difference(filtered, directives),
-    Risk: filtered,
-    RiskAssessment: [],
-    Section: filtered,
-    Standard: _.difference(filtered, directives),
-    System: filtered,
-    TaskGroup: _.difference(filtered, ['Audit', 'Person',
-      'TaskGroup', 'Workflow']),
-    Threat: filtered,
-    Vendor: filtered
-  };
-
-  beforeAll(function () {
-    treeViewSettingsBackup = new can.Map(GGRC.tree_view);
-    // init all modules
-    can.each(GGRC.extensions, function (extension) {
-      if (modules[extension.name] && extension.init_widgets) {
-        extension.init_widgets();
-      }
-    });
-  });
-
-  afterAll(function () {
-    GGRC.tree_view = treeViewSettingsBackup;
-  });
 
   beforeEach(function () {
     mapper = GGRC.Models.MapperModel();
   });
 
   describe('get() for mapper.types', function () {
-    beforeEach(function () {
-      spyOn(mapper, 'initTypes')
-        .and.returnValue('types');
+    var originalInScopeModels;
+    beforeAll(function () {
+      originalInScopeModels = GGRC.Utils.Snapshots.inScopeModels;
+      GGRC.Utils.Snapshots.inScopeModels = ['test1', 'test2'];
+    });
+    afterAll(function () {
+      GGRC.Utils.Snapshots.inScopeModels = originalInScopeModels;
     });
 
-    it('returns types', function () {
-      var result = mapper.attr('types');
+    beforeEach(function () {
+      spyOn(GGRC.Mappings, 'getMappingTypes').and.returnValue('types');
+      mapper.attr('object', 'testObject');
+    });
+
+    it('correctly calls getMappingTypes it is search', function () {
+      var result;
+      mapper.attr('search_only', true);
+      result = mapper.attr('types');
+      expect(GGRC.Mappings.getMappingTypes).toHaveBeenCalledWith('testObject',
+        ['TaskGroupTask', 'TaskGroup', 'CycleTaskGroupObjectTask'], []);
+      expect(result).toEqual('types');
+    });
+
+    it('correctly calls getMappingTypes it is not search', function () {
+      var result;
+      mapper.attr('search_only', false);
+      result = mapper.attr('types');
+      expect(GGRC.Mappings.getMappingTypes).toHaveBeenCalledWith('testObject',
+        [], ['test1', 'test2']);
       expect(result).toEqual('types');
     });
   });
@@ -297,193 +188,6 @@ describe('GGRC.Models.MapperModel', function () {
     });
   });
 
-  describe('prepareCorrectTypeFormat() method', function () {
-    var cmsModel = {
-      category: 'category',
-      title_plural: 'title_plural',
-      model_singular: 'model_singular',
-      table_plural: 'table_plural',
-      title_singular: 'title_singular'
-    };
-    var expectedResult = {
-      category: 'category',
-      name: 'title_plural',
-      value: 'model_singular',
-      plural: 'title_plural',
-      singular: 'model_singular',
-      table_plural: 'table_plural',
-      title_singular: 'title_singular',
-      isSelected: true
-    };
-
-    it('returns specified object', function () {
-      var result;
-      mapper.attr('type', 'model_singular');
-      result = mapper.prepareCorrectTypeFormat(cmsModel);
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('converts models plural title to a snake_case', function () {
-      var result;
-      var cmsModel1 = _.assign({}, cmsModel, {
-        title_plural: 'Title Plural'
-      });
-      mapper.attr('type', 'model_singular');
-      result = mapper.prepareCorrectTypeFormat(cmsModel1);
-      expect(result.plural).toEqual(expectedResult.plural);
-    });
-
-    it('is not selected if not equals the mapper type', function () {
-      var result;
-      mapper.attr('type', 'model_singular_');
-      result = mapper.prepareCorrectTypeFormat(cmsModel);
-      expect(result.isSelected).toEqual(false);
-    });
-  });
-
-  describe('addFormattedType() method', function () {
-    var groups;
-    var type = {
-      category: 'category'
-    };
-
-    beforeEach(function () {
-      groups = {
-        governance: {
-          items: []
-        },
-        category: {
-          items: []
-        }
-      };
-      spyOn(mapper, 'prepareCorrectTypeFormat')
-        .and.returnValue(type);
-    });
-
-    it('adds type to governance group if no group with category of this type',
-      function () {
-        groups.category = undefined;
-        spyOn(GGRC.Utils, 'getModelByType')
-          .and.returnValue({
-            title_singular: 'title_singular'
-          });
-        mapper.addFormattedType('name', groups);
-        expect(groups.governance.items[0]).toEqual(type);
-      });
-
-    it('adds type to group of category of this type if this group exist',
-      function () {
-        groups.governance = undefined;
-        spyOn(GGRC.Utils, 'getModelByType')
-          .and.returnValue({
-            title_singular: 'title_singular'
-          });
-        mapper.addFormattedType('name', groups);
-        expect(groups[type.category].items[0]).toEqual(type);
-      });
-
-    it('does nothing if cmsModel is not defined', function () {
-      spyOn(GGRC.Utils, 'getModelByType');
-      mapper.addFormattedType('name', groups);
-      expect(groups.governance.items.length).toEqual(0);
-      expect(groups[type.category].items.length).toEqual(0);
-    });
-    it('does nothing if singular title of cmsModel is not defined',
-      function () {
-        spyOn(GGRC.Utils, 'getModelByType')
-          .and.returnValue({});
-        mapper.addFormattedType('name', groups);
-        expect(groups.governance.items.length).toEqual(0);
-        expect(groups[type.category].items.length).toEqual(0);
-      });
-    it('does nothing if singular title of cmsModel is "Reference"',
-      function () {
-        spyOn(GGRC.Utils, 'getModelByType')
-          .and.returnValue({
-            title_singular: 'Reference'
-          });
-        mapper.addFormattedType('name', groups);
-        expect(groups.governance.items.length).toEqual(0);
-        expect(groups[type.category].items.length).toEqual(0);
-      });
-  });
-
-  describe('getModelNamesList() method', function () {
-    var object = 'object';
-    var include = ['TaskGroupTask', 'TaskGroup',
-      'CycleTaskGroupObjectTask'];
-    beforeEach(function () {
-      spyOn(GGRC.Mappings, 'getMappingList')
-        .and.returnValue('mappingList');
-    });
-
-    it('returns names list excluding in-scope snapshots models' +
-    ' if it is not search only', function () {
-      var result = mapper.getModelNamesList(object);
-      expect(result).toEqual('mappingList');
-      expect(GGRC.Mappings.getMappingList)
-        .toHaveBeenCalledWith(object, [], GGRC.Utils.Snapshots.inScopeModels);
-    });
-
-    it('returns names list if it is search only', function () {
-      var result;
-      mapper.attr('search_only', true);
-      result = mapper.getModelNamesList(object);
-      expect(result).toEqual('mappingList');
-      expect(GGRC.Mappings.getMappingList)
-        .toHaveBeenCalledWith(object, include, []);
-    });
-  });
-
-  describe('initTypes() method', function () {
-    var groups = {
-      mockData: 123
-    };
-
-    beforeEach(function () {
-      spyOn(mapper, 'getModelNamesList')
-        .and.returnValue([321]);
-      spyOn(mapper, 'addFormattedType');
-    });
-
-    it('returns groups', function () {
-      var result;
-      mapper.attr('typeGroups', groups);
-      result = mapper.initTypes();
-      expect(result).toEqual(groups);
-      expect(mapper.addFormattedType)
-        .toHaveBeenCalledWith(321, groups);
-    });
-  });
-
-  describe('initTypes() method', function () {
-    var initTypes;
-    var EXPECTED_GROUPS = ['entities', 'business', 'governance'];
-    var modelsForTests = _.difference(allTypes, [
-      'CycleTaskEntry',
-      'CycleTaskGroup',
-      'CycleTaskGroupObject',
-      'Workflow'
-    ]);
-
-    beforeEach(function () {
-      initTypes = mapper.initTypes.bind(mapper);
-      mapper.attr('search_only', false);
-    });
-
-    modelsForTests.forEach(function (type) {
-      it('returns mappable types for ' + type, function () {
-        var expectedModels = mappingRules[type];
-        var result = initTypes(type);
-        var resultGroups = Object.keys(result);
-        var resultModels = getModelsFromGroups(result, EXPECTED_GROUPS);
-
-        expect(EXPECTED_GROUPS).toEqual(resultGroups);
-        expect(expectedModels.sort()).toEqual(resultModels.sort());
-      });
-    });
-  });
-
   describe('modelFromType() method', function () {
     it('returns undefined if no models', function () {
       var result = mapper.modelFromType('program');
@@ -504,7 +208,7 @@ describe('GGRC.Models.MapperModel', function () {
         }
       };
 
-      spyOn(mapper, 'initTypes')
+      spyOn(GGRC.Mappings, 'getMappingTypes')
         .and.returnValue(types);
 
       result = mapper.modelFromType('v2');
