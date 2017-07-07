@@ -484,28 +484,6 @@ describe('GGRC.Models.MapperModel', function () {
     });
   });
 
-  describe('getBindingName() method', function () {
-    var instance;
-
-    it('returns binding name with prefix "related_" if instance has no binding',
-      function () {
-        var result = mapper.getBindingName(instance, 'mock');
-        expect(result).toEqual('related_mock');
-      });
-
-    it('returns binding name without prefix if instance has binding',
-      function () {
-        var result;
-        instance = {
-          has_binding: function () {
-            return true;
-          }
-        };
-        result = mapper.getBindingName(instance, 'mock');
-        expect(result).toEqual('mock');
-      });
-  });
-
   describe('modelFromType() method', function () {
     it('returns undefined if no models', function () {
       var result = mapper.modelFromType('program');

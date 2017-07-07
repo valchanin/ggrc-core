@@ -14,13 +14,11 @@
     tag: 'object-generator',
     template: can.view(GGRC.mustache_path +
       '/components/object-generator/object-generator.mustache'),
-    scope: function (attrs, parentScope, el) {
-      var $el = $(el);
-
+    scope: function (attrs, parentScope) {
       var data = {
-        object: $el.attr('object'),
-        join_object_id: Number($el.attr('join-object-id')),
-        type: $el.attr('type')
+        object: attrs.object,
+        join_object_id: attrs.joinObjectId,
+        type: attrs.type
       };
 
       return {

@@ -17,6 +17,7 @@
       dropdown_options: [],
       statuses: [],
       mapper: {},
+      type: '',
       isLoading: false,
       totalObjects: 0,
       objectsPlural: false,
@@ -42,7 +43,7 @@
         this.dispatch('submit');
       },
       getModelName: function () {
-        var Model = CMS.Models[this.attr('mapper.type')];
+        var Model = CMS.Models[this.attr('type')];
         return Model.model_singular;
       },
       setStatusFilter: function () {
@@ -73,7 +74,7 @@
 
           this.attr('dropdown_options', dropdownOptions);
           this.attr('statusFilter', GGRC.Utils.State
-            .statusFilter(statuses, '', this.attr('mapper.type')));
+            .statusFilter(statuses, '', this.attr('type')));
 
           this.attr('statuses', statuses);
         } else {
@@ -98,7 +99,7 @@
           this.viewModel.attr('totalObjects', 0);
         }
       },
-      '{viewModel.mapper} type': function () {
+      '{viewModel} type': function () {
         this.viewModel.setStatusFilter();
       },
       'multiselect-dropdown multiselect:closed': function (el, ev, selected) {
@@ -108,7 +109,7 @@
         this.viewModel.attr('statuses', selectedStatuses);
 
         this.viewModel.attr('statusFilter', GGRC.Utils.State.statusFilter(
-          selectedStatuses, '', this.viewModel.attr('mapper.type')));
+          selectedStatuses, '', this.viewModel.attr('type')));
         ev.stopPropagation();
       }
     }

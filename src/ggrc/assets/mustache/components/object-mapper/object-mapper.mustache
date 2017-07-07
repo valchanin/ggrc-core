@@ -20,17 +20,19 @@
     </div>
   {{/if}}
   <mapper-toolbar class="flex-box search-toolbar flex-box-multi"
-                  mapper="mapper"
-                  is-loading="mapper.is_loading"
-                  {(filter)}="mapper.filter"
-                  (submit)="mapper.onSubmit()"
-                  total-objects="totalObjects"
-                  {(status-filter)}="mapper.statusFilter">
+    mapper="mapper"
+    {type}="mapper.type"
+    is-loading="mapper.is_loading"
+    {(filter)}="mapper.filter"
+    (submit)="mapper.onSubmit()"
+    total-objects="totalObjects"
+    {(status-filter)}="mapper.statusFilter">
   </mapper-toolbar>
   <hr/>
   <mapper-results
     class="{{#mapper.useSnapshots}}snapshot-list{{/mapper.useSnapshots}}
       {{^mapper.afterSearch}}hidden{{/mapper.afterSearch}}"
+    deferred-list="deferred_list"
     base-instance="mapper.parentInstance"
     {(is-loading)}="mapper.is_loading"
     object="mapper.object"

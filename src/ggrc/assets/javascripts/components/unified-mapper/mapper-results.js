@@ -351,7 +351,7 @@
         return dfd;
       },
       buildRelatedData: function (relatedData, type) {
-        var deferredList = this.attr('mapper.deferred_list');
+        var deferredList = this.attr('deferredList');
         var ids;
 
         if (!deferredList || !deferredList.length) {

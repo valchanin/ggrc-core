@@ -1080,7 +1080,7 @@ describe('GGRC.Components.mapperResults', function () {
       }
     );
 
-    it('method should return data from "deferred_list" array',
+    it('method should return data from "deferredList" array',
       function () {
         var relatedData = {
           Snapshot: {
@@ -1089,7 +1089,7 @@ describe('GGRC.Components.mapperResults', function () {
         };
         var result;
 
-        viewModel.attr('mapper.deferred_list', [
+        viewModel.attr('deferredList', [
           {id: 5, type: 'Snapshot'},
           {id: 25, type: 'Snapshot'}
         ]);
@@ -1101,11 +1101,11 @@ describe('GGRC.Components.mapperResults', function () {
       }
     );
 
-    it('return data from "deferred_list" array. RelatedData is undefined',
+    it('return data from "deferredList" array. RelatedData is undefined',
       function () {
         var result;
 
-        viewModel.attr('mapper.deferred_list', [
+        viewModel.attr('deferredList', [
           {id: 5, type: 'Snapshot'},
           {id: 25, type: 'Snapshot'}
         ]);

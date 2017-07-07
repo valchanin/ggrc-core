@@ -44,8 +44,6 @@
       }
     },
     type: 'Control', // We set default as Control
-    deferred: '@',
-    deferred_to: '@',
     filter: '',
     statusFilter: '',
     object: '',
@@ -63,10 +61,8 @@
     relevant: [],
     submitCbs: $.Callbacks(),
     afterSearch: false,
-    deferred_list: [],
     afterShown: function () {
       this.onSubmit();
-      document.body.classList.remove('no-events');
     },
     allowedToCreate: function () {
       var isSearch = this.attr('search_only');
@@ -138,11 +134,6 @@
         return this.addFormattedType(modelName, groups);
       }.bind(this));
       return groups;
-    },
-    getBindingName: function (instance, plural) {
-      return (instance && instance.has_binding(plural) ?
-          '' :
-          'related_') + plural;
     },
     modelFromType: function (type) {
       var types = _.reduce(_.values(

@@ -95,7 +95,7 @@ describe('GGRC.Components.mapperToolbar', function () {
   describe('getModelName() method', function () {
     it('returns model name', function () {
       var result;
-      viewModel.attr('mapper.type', 'Program');
+      viewModel.attr('type', 'Program');
       result = viewModel.getModelName();
       expect(result).toEqual(CMS.Models.Program.model_singular);
     });
