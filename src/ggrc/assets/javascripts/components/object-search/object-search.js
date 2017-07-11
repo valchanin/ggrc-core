@@ -12,17 +12,16 @@
       '/components/object-search/object-search.mustache'),
     viewModel: function () {
       var data = {
-        search_only: true,
+        searchOnly: true,
         object: 'MultitypeSearch',
         type: 'Program'
       };
 
-      return {
+      return new GGRC.Models.MapperModel(can.extend(data, {
         isLoadingOrSaving: function () {
-          return this.attr('mapper.is_loading');
-        },
-        mapper: new GGRC.Models.MapperModel(data)
-      };
+          return this.attr('is_loading');
+        }
+      }));
     },
     events: {
       inserted: function () {
@@ -30,10 +29,10 @@
         this.viewModel.attr('mapper').afterShown();
       },
       setModel: function () {
-        var type = this.viewModel.attr('mapper.type');
+        var type = this.viewModel.attr('type');
 
         this.viewModel.attr(
-          'mapper.model', this.viewModel.mapper.modelFromType(type));
+          'model', this.viewModel.mapper.modelFromType(type));
       },
       '{mapper} type': function () {
         var mapper = this.viewModel.attr('mapper');

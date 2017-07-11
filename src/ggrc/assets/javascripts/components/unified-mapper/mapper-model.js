@@ -13,7 +13,7 @@
           var exclude = [];
           var include = [];
           var snapshots = GGRC.Utils.Snapshots;
-          if (this.attr('search_only')) {
+          if (this.attr('searchOnly')) {
             include = ['TaskGroupTask', 'TaskGroup',
               'CycleTaskGroupObjectTask'];
           } else {
@@ -46,7 +46,7 @@
     is_loading: false,
     is_saving: false,
     assessmentTemplate: '',
-    search_only: false,
+    searchOnly: false,
     join_object_id: '',
     selected: [],
     entries: [],
@@ -59,7 +59,7 @@
       this.onSubmit();
     },
     allowedToCreate: function () {
-      var isSearch = this.attr('search_only');
+      var isSearch = this.attr('searchOnly');
       // Don't allow to create new instances for "In Scope" Objects
       var isInScopeModel =
         GGRC.Utils.Snapshots.isInScopeModel(this.attr('object'));
@@ -71,7 +71,7 @@
         return false;
       }
       // In case we generate assessments or in search only mode this should be false no matter what objects should be mapped to assessments
-      if (this.attr('assessmentGenerator') || this.attr('search_only')) {
+      if (this.attr('assessmentGenerator') || this.attr('searchOnly')) {
         return false;
       }
       return GGRC.Utils.Snapshots.isSnapshotParent(this.attr('object')) ||

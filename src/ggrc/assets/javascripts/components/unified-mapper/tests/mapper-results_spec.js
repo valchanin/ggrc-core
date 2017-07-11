@@ -55,7 +55,7 @@ describe('GGRC.Components.mapperResults', function () {
     it('returns true if it is search only case', function () {
       var result;
       viewModel.attr('mapper', {
-        search_only: true
+        searchOnly: true
       });
       result = viewModel.searchOnly();
       expect(result).toEqual(true);
@@ -63,7 +63,7 @@ describe('GGRC.Components.mapperResults', function () {
     it('returns false if it is not search-only case', function () {
       var result;
       viewModel.attr('mapper', {
-        search_only: false
+        searchOnly: false
       });
       result = viewModel.searchOnly();
       expect(result).toEqual(false);
@@ -96,7 +96,7 @@ describe('GGRC.Components.mapperResults', function () {
 
     it('updates viewModel.selected', function () {
       viewModel.attr('selected', []);
-      viewModel.attr('mapper.newEntries', [
+      viewModel.attr('newEntries', [
           {id: 'mockId', type: 'mockType'}
       ]);
       spyOn(viewModel, 'transformValue')
@@ -121,7 +121,7 @@ describe('GGRC.Components.mapperResults', function () {
 
     it('updates viewModel.prevSelected', function () {
       viewModel.attr('prevSelected', []);
-      viewModel.attr('mapper.newEntries', [
+      viewModel.attr('newEntries', [
           {id: 'mockId', type: 'mockType'}
       ]);
       spyOn(viewModel, 'transformValue')
@@ -163,9 +163,9 @@ describe('GGRC.Components.mapperResults', function () {
     });
 
     it('sets mapper.afterSearch to true', function () {
-      viewModel.attr('mapper.afterSearch', false);
+      viewModel.attr('afterSearch', false);
       viewModel.showNewEntries();
-      expect(viewModel.attr('mapper.afterSearch')).toEqual(true);
+      expect(viewModel.attr('afterSearch')).toEqual(true);
     });
   });
 
@@ -194,10 +194,10 @@ describe('GGRC.Components.mapperResults', function () {
     });
 
     it('sets data of loaded items to viewModel.mapper.entries', function () {
-      viewModel.attr('mapper.entries', []);
+      viewModel.attr('entries', []);
       viewModel.setItems();
-      expect(viewModel.attr('mapper.entries').length).toEqual(1);
-      expect(viewModel.attr('mapper.entries')[0])
+      expect(viewModel.attr('entries').length).toEqual(1);
+      expect(viewModel.attr('entries')[0])
         .toEqual('mockData');
     });
 
@@ -266,14 +266,14 @@ describe('GGRC.Components.mapperResults', function () {
 
     it('sets relatedAssessments.show to false if it is use-snapshots case',
       function () {
-        viewModel.attr('mapper.useSnapshots', true);
+        viewModel.attr('useSnapshots', true);
         viewModel.setRelatedAssessments();
         expect(viewModel.attr('relatedAssessments.show')).toEqual(false);
       });
 
     it('updates relatedAssessments.show if it is not use-snapshots case',
       function () {
-        viewModel.attr('mapper.useSnapshots', false);
+        viewModel.attr('useSnapshots', false);
         viewModel.setRelatedAssessments();
         expect(viewModel.attr('relatedAssessments.show')).toEqual(true);
       });
@@ -353,7 +353,7 @@ describe('GGRC.Components.mapperResults', function () {
       id: 123
     }];
     beforeEach(function () {
-      viewModel.attr('mapper.relevant', relevantList);
+      viewModel.attr('relevant', relevantList);
     });
     it('returns relevant filters from mapper', function () {
       var result = viewModel.prepareRelevantFilters();
@@ -537,7 +537,7 @@ describe('GGRC.Components.mapperResults', function () {
       }));
     });
 
-    it('set "read" permission if "search_only"', function () {
+    it('set "read" permission if "searchOnly"', function () {
       var result;
       spyOn(viewModel, 'searchOnly')
         .and.returnValue(true);
@@ -846,7 +846,7 @@ describe('GGRC.Components.mapperResults', function () {
     it('rerturns promise with items', function (done) {
       var responseArr = [data, filters];
       dfdRequest.resolve(responseArr);
-      viewModel.attr('mapper.assessmentGenerator', true);
+      viewModel.attr('assessmentGenerator', true);
       resultDfd = viewModel.loadAllItemsIds();
       expect(resultDfd.state()).toEqual('resolved');
       resultDfd.then(function (result) {
@@ -859,7 +859,7 @@ describe('GGRC.Components.mapperResults', function () {
       function (done) {
         var responseArr = [data, filters];
         dfdRequest.resolve(responseArr);
-        viewModel.attr('mapper.assessmentGenerator', false);
+        viewModel.attr('assessmentGenerator', false);
         resultDfd = viewModel.loadAllItemsIds();
         expect(resultDfd.state()).toEqual('resolved');
         resultDfd.then(function (result) {
@@ -871,7 +871,7 @@ describe('GGRC.Components.mapperResults', function () {
     it('rerturns promise with empty array if fail',
       function (done) {
         dfdRequest.reject();
-        viewModel.attr('mapper.assessmentGenerator', true);
+        viewModel.attr('assessmentGenerator', true);
         resultDfd = viewModel.loadAllItemsIds();
         expect(resultDfd.state()).toEqual('resolved');
         resultDfd.then(function (result) {

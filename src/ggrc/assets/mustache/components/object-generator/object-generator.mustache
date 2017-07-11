@@ -13,31 +13,36 @@
 </div>
 <div class="modal-filter modal-body">
   <mapper-toolbar class="flex-box search-toolbar flex-box-multi"
-    mapper="mapper"
-    {type}="mapper.type"
-    is-loading="mapper.is_loading"
-    {(filter)}="mapper.filter"
-    (submit)="mapper.onSubmit()"
+    {type}="type"
+    is-loading="is_loading"
+    {(filter)}="filter"
+    (submit)="onSubmit()"
     total-objects="totalObjects"
-    {(status-filter)}="mapper.statusFilter">
+    {(status-filter)}="statusFilter">
   </mapper-toolbar>
   <hr/>
   <mapper-results
-    class="{{#mapper.useSnapshots}}snapshot-list{{/mapper.useSnapshots}}
-      {{^mapper.afterSearch}}hidden{{/mapper.afterSearch}}"
-    base-instance="mapper.parentInstance"
-    {(is-loading)}="mapper.is_loading"
-    object="mapper.object"
-    mapper="mapper"
-    type="mapper.type"
-    selected="mapper.selected"
-    filter="mapper.filter"
-    submit-cbs="mapper.submitCbs"
+    class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}
+      {{^afterSearch}}hidden{{/afterSearch}}"
+    base-instance="parentInstance"
+    {(is-loading)}="is_loading"
+    object="object"
+    search-only="searchOnly"
+    use-snapshots="useSnapshots"
+    new-entries="newEntries"
+    after-search="afterSearch"
+    relevant="relevant"
+    assessment-generator="assessmentGenerator"
+    entries="entries"
+    type="type"
+    selected="selected"
+    filter="filter"
+    submit-cbs="submitCbs"
     {^paging.total}="totalObjects"
-    status-filter="mapper.statusFilter">
+    status-filter="statusFilter">
   </mapper-results>
   <div class="well well-small
-              {{#mapper.afterSearch}}hidden{{/mapper.afterSearch}}">
+              {{#afterSearch}}hidden{{/afterSearch}}">
     No results
   </div>
 </div>
@@ -50,19 +55,19 @@
     <div class="span7">
       <div class="confirm-buttons">
         <span>
-        {{mapper.selected.length}}
+        {{selected.length}}
         assessment(s) will be generated for each selection
         </span>
 
         <button class="btn-map btn btn-small btn-green preventdoubleclick"
-                {{^if mapper.selected.length}}disabled="disabled"{{/if}}>
-          {{#if mapper.is_saving}}
+                {{^if selected.length}}disabled="disabled"{{/if}}>
+          {{#if is_saving}}
             Saving, please wait...
           {{else}}
             Generate Assessments
           {{/if}}
         </button>
-        <spinner toggle="mapper.is_saving"></spinner>
+        <spinner toggle="is_saving"></spinner>
       </div>
     </div>
   </div>

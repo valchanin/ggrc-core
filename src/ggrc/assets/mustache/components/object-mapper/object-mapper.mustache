@@ -33,16 +33,21 @@
     class="{{#mapper.useSnapshots}}snapshot-list{{/mapper.useSnapshots}}
       {{^mapper.afterSearch}}hidden{{/mapper.afterSearch}}"
     deferred-list="deferred_list"
-    base-instance="mapper.parentInstance"
-    {(is-loading)}="mapper.is_loading"
-    object="mapper.object"
-    mapper="mapper"
-    type="mapper.type"
-    selected="mapper.selected"
-    filter="mapper.filter"
-    submit-cbs="mapper.submitCbs"
+    base-instance="parentInstance"
+    {(is-loading)}="is_loading"
+    object="object"
+    search-only="searchOnly"
+    use-snapshots="useSnapshots"
+    new-entries="newEntries"
+    after-search="afterSearch"
+    relevant="relevant"
+    entries="entries"
+    type="type"
+    selected="selected"
+    filter="filter"
+    submit-cbs="submitCbs"
     {^paging.total}="totalObjects"
-    status-filter="mapper.statusFilter">
+    status-filter="statusFilter">
   </mapper-results>
   <div class="well well-small
               {{#mapper.afterSearch}}hidden{{/mapper.afterSearch}}">
@@ -69,7 +74,7 @@
             Map Selected
           {{/if}}
         </button>
-        <spinner toggle="mapper.is_saving"></spinner>
+        <spinner toggle="is_saving"></spinner>
       </div>
     </div>
   </div>

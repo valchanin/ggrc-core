@@ -59,20 +59,20 @@
       destroy: function () {
         this.attr('submitCbs').remove(this.onSearch.bind(this));
       },
-      searchOnly: function () {
-        return this.attr('mapper.search_only');
-      },
-      useSnapshots: function () {
-        return this.attr('mapper.useSnapshots');
-      },
+      searchOnly: false,
+      useSnapshots: false,
+      newEntries: false,
+      afterSearch: false,
+      entries: [],
+      assessmentGenerator: false,
       showNewEntries: function () {
         var self = this;
         var newEntries;
         var sortKey = 'updated_at';
         var sortDirection = 'desc';
 
-        if (this.attr('mapper.newEntries')) {
-          newEntries = this.attr('mapper.newEntries').map(function (value) {
+        if (this.attr('newEntries')) {
+          newEntries = this.attr('newEntries').map(function (value) {
             return {
               id: value.id,
               type: value.type,
@@ -104,14 +104,14 @@
         this.attr('paging.current', 1);
 
         // display results
-        this.attr('mapper.afterSearch', true);
+        this.attr('afterSearch', true);
       },
       setItems: function () {
         var self = this;
         return self.load()
           .then(function (items) {
             self.attr('items', items);
-            self.attr('mapper.entries', items.map(function (item) {
+            self.attr('entries', items.map(function (item) {
               return item.data;
             }));
             self.setColumnsConfiguration();
@@ -152,7 +152,7 @@
       },
       prepareRelevantFilters: function () {
         var filters;
-        var relevantList = this.attr('mapper.relevant');
+        var relevantList = this.attr('relevant');
 
         filters = relevantList.attr()
           .map(function (relevant) {
@@ -275,7 +275,7 @@
       },
       setDisabledItems: function (allItems, relatedIds) {
         if (this.searchOnly() ||
-            this.attr('mapper.assessmentGenerator')) {
+            this.attr('assessmentGenerator')) {
           return;
         }
         allItems.forEach(function (item) {
@@ -399,7 +399,7 @@
               };
             });
             // Do not perform extra mapping validation in case Assessment generation
-            if (!this.attr('mapper.assessmentGenerator') && relatedData) {
+            if (!this.attr('assessmentGenerator') && relatedData) {
               result = result.filter(function (item) {
                 return relatedData[modelKey].ids.indexOf(item.id) < 0;
               });

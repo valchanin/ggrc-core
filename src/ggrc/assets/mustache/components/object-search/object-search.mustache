@@ -25,14 +25,19 @@
   <mapper-results
     class="{{#mapper.useSnapshots}}snapshot-list{{/mapper.useSnapshots}}
       {{^mapper.afterSearch}}hidden{{/mapper.afterSearch}}"
-    base-instance="mapper.parentInstance"
-    {(is-loading)}="mapper.is_loading"
-    mapper="mapper"
-    type="mapper.type"
-    filter="mapper.filter"
-    submit-cbs="mapper.submitCbs"
+    base-instance="parentInstance"
+    {(is-loading)}="is_loading"
+    search-only="searchOnly"
+    use-snapshots="useSnapshots"
+    new-entries="newEntries"
+    after-search="afterSearch"
+    relevant="relevant"
+    entries="entries"
+    type="type"
+    filter="filter"
+    submit-cbs="submitCbs"
     {^paging.total}="totalObjects"
-    status-filter="mapper.statusFilter">
+    status-filter="statusFilter">
   </mapper-results>
   <div class="well well-small
               {{#mapper.afterSearch}}hidden{{/mapper.afterSearch}}">

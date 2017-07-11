@@ -21,28 +21,26 @@
         type: attrs.type
       };
 
-      return {
+      return new GGRC.Models.MapperModel(can.extend(data, {
+        relevantTo: parentScope.attr('relevantTo'),
+        callback: parentScope.attr('callback'),
+        useTemplates: true,
+        assessmentGenerator: true,
         isLoadingOrSaving: function () {
-          return this.attr('mapper.is_saving') ||
-          this.attr('mapper.block_type_change') ||
+          return this.attr('is_saving') ||
+          this.attr('block_type_change') ||
           //  disable changing of object type while loading
           //  to prevent errors while speedily selecting different types
-          this.attr('mapper.is_loading');
-        },
-        mapper: new GGRC.Models.MapperModel(can.extend(data, {
-          relevantTo: parentScope.attr('relevantTo'),
-          callback: parentScope.attr('callback'),
-          useTemplates: true,
-          assessmentGenerator: true
-        }))
-      };
+          this.attr('is_loading');
+        }
+      }));
     },
 
     events: {
       inserted: function () {
         var self = this;
-        this.scope.attr('mapper.selected').replace([]);
-        this.scope.attr('mapper.entries').replace([]);
+        this.scope.attr('selected').replace([]);
+        this.scope.attr('entries').replace([]);
 
         this.setModel();
 
@@ -51,24 +49,24 @@
         });
       },
       closeModal: function () {
-        this.scope.attr('mapper.is_saving', false);
+        this.scope.attr('is_saving', false);
         this.element.find('.modal-dismiss').trigger('click');
       },
       '.modal-footer .btn-map click': function (el, ev) {
-        var callback = this.scope.attr('mapper.callback');
-        var type = this.scope.attr('mapper.type');
-        var object = this.scope.attr('mapper.object');
-        var assessmentTemplate = this.scope.attr('mapper.assessmentTemplate');
+        var callback = this.scope.attr('callback');
+        var type = this.scope.attr('type');
+        var object = this.scope.attr('object');
+        var assessmentTemplate = this.scope.attr('assessmentTemplate');
         var instance = CMS.Models[object].findInCacheById(
-          this.scope.attr('mapper.join_object_id'));
+          this.scope.attr('join_object_id'));
 
         ev.preventDefault();
-        if (el.hasClass('disabled') || this.scope.attr('mapper.is_saving')) {
+        if (el.hasClass('disabled') || this.scope.attr('is_saving')) {
           return;
         }
 
-        this.scope.attr('mapper.is_saving', true);
-        return callback(this.scope.attr('mapper.selected'), {
+        this.scope.attr('is_saving', true);
+        return callback(this.scope.attr('selected'), {
           type: type,
           target: object,
           instance: instance,
@@ -77,10 +75,10 @@
         });
       },
       setModel: function () {
-        var type = this.scope.attr('mapper.type');
+        var type = this.scope.attr('type');
 
         this.scope.attr(
-          'mapper.model', this.scope.mapper.modelFromType(type));
+          'model', this.scope.mapper.modelFromType(type));
       },
       '{mapper} type': function () {
         var mapper = this.scope.attr('mapper');
@@ -94,13 +92,13 @@
       '{mapper} assessmentTemplate': function (scope, ev, val, oldVal) {
         var type;
         if (_.isEmpty(val)) {
-          return this.scope.attr('mapper.block_type_change', false);
+          return this.scope.attr('block_type_change', false);
         }
 
         val = val.split('-');
         type = val[1];
-        this.scope.attr('mapper.block_type_change', true);
-        this.scope.attr('mapper.type', type);
+        this.scope.attr('block_type_change', true);
+        this.scope.attr('type', type);
       }
     }
   });

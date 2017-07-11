@@ -29,7 +29,7 @@ describe('GGRC.Models.MapperModel', function () {
 
     it('correctly calls getMappingTypes it is search', function () {
       var result;
-      mapper.attr('search_only', true);
+      mapper.attr('searchOnly', true);
       result = mapper.attr('types');
       expect(GGRC.Mappings.getMappingTypes).toHaveBeenCalledWith('testObject',
         ['TaskGroupTask', 'TaskGroup', 'CycleTaskGroupObjectTask'], []);
@@ -38,7 +38,7 @@ describe('GGRC.Models.MapperModel', function () {
 
     it('correctly calls getMappingTypes it is not search', function () {
       var result;
-      mapper.attr('search_only', false);
+      mapper.attr('searchOnly', false);
       result = mapper.attr('types');
       expect(GGRC.Mappings.getMappingTypes).toHaveBeenCalledWith('testObject',
         [], ['test1', 'test2']);
@@ -92,7 +92,7 @@ describe('GGRC.Models.MapperModel', function () {
     it('returns true if not in a search mode and is not an in-scope model',
       function () {
         var result;
-        mapper.attr('search_only', false);
+        mapper.attr('searchOnly', false);
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(false);
         result = mapper.allowedToCreate();
@@ -102,7 +102,7 @@ describe('GGRC.Models.MapperModel', function () {
     it('returns false if in a search mode and is an in-scope model',
       function () {
         var result;
-        mapper.attr('search_only', true);
+        mapper.attr('searchOnly', true);
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(true);
         result = mapper.allowedToCreate();
@@ -112,7 +112,7 @@ describe('GGRC.Models.MapperModel', function () {
     it('returns false if in a search mode and is not an in-scope model',
       function () {
         var result;
-        mapper.attr('search_only', true);
+        mapper.attr('searchOnly', true);
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(false);
         result = mapper.allowedToCreate();
@@ -122,7 +122,7 @@ describe('GGRC.Models.MapperModel', function () {
     it('returns false if not in a search mode and is an in-scope model',
       function () {
         var result;
-        mapper.attr('search_only', false);
+        mapper.attr('searchOnly', false);
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(true);
         result = mapper.allowedToCreate();
@@ -153,7 +153,7 @@ describe('GGRC.Models.MapperModel', function () {
       var result;
       spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
         .and.returnValue(false);
-      mapper.attr('search_only', true);
+      mapper.attr('searchOnly', true);
       result = mapper.showWarning();
       expect(result).toEqual(false);
     });

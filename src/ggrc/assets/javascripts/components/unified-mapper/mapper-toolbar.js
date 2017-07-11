@@ -16,7 +16,6 @@
       statusFilter: '',
       dropdown_options: [],
       statuses: [],
-      mapper: {},
       type: '',
       isLoading: false,
       totalObjects: 0,
@@ -94,7 +93,7 @@
       '{viewModel} totalObjects': function (scope, ev, totalObjects) {
         this.viewModel.attr('objectsPlural', totalObjects > 1);
       },
-      '{viewModel.mapper} afterSearch': function (scope, ev, afterSearch) {
+      '{viewModel} afterSearch': function (scope, ev, afterSearch) {
         if (!afterSearch) {
           this.viewModel.attr('totalObjects', 0);
         }

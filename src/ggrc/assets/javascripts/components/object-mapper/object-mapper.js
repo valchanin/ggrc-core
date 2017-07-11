@@ -41,50 +41,48 @@
         type: getDefaultType(attrs.type, attrs.object)
       };
 
-      return {
-        isLoadingOrSaving: function () {
-          return this.attr('mapper.is_saving') ||
-          //  disable changing of object type while loading
-          //  to prevent errors while speedily selecting different types
-          this.attr('mapper.is_loading');
-        },
-        mapper: new GGRC.Models.MapperModel(can.extend(data, {
-          relevantTo: parentViewModel.attr('relevantTo')
-        })),
+      return new GGRC.Models.MapperModel(can.extend(data, {
+        relevantTo: parentViewModel.attr('relevantTo'),
         deferred_to: parentViewModel.attr('deferred_to'),
         deferred_list: [],
-        deferred: false
-      };
+        deferred: false,
+        isLoadingOrSaving: function () {
+          return this.attr('is_saving') ||
+          //  disable changing of object type while loading
+          //  to prevent errors while speedily selecting different types
+          this.attr('is_loading');
+        }
+      }));
     },
 
     events: {
       '.create-control modal:success': function (el, ev, model) {
-        this.viewModel.attr('mapper.newEntries').push(model);
+        this.viewModel.attr('newEntries').push(model);
         this.element.find('mapper-results').viewModel().showNewEntries();
       },
       '.create-control modal:added': function (el, ev, model) {
-        this.viewModel.attr('mapper.newEntries').push(model);
+        this.viewModel.attr('newEntries').push(model);
       },
       '.create-control click': function () {
         // reset new entries
-        this.viewModel.attr('mapper.newEntries', []);
+        this.viewModel.attr('newEntries', []);
       },
       '{window} modal:dismiss': function (el, ev, options) {
-        var joinObjectId = this.viewModel.attr('mapper.join_object_id');
+        var joinObjectId = this.viewModel.attr('join_object_id');
 
         // mapper sets uniqueId for modal-ajax.
         // we can check using unique id which modal-ajax is closing
         if (options.uniqueId &&
           joinObjectId === options.uniqueId &&
-          this.viewModel.attr('mapper.newEntries').length > 0) {
+          this.viewModel.attr('newEntries').length > 0) {
           this.element.find('mapper-results').viewModel().showNewEntries();
         }
       },
       inserted: function () {
         var self = this;
         var deferredToList;
-        this.viewModel.attr('mapper.selected').replace([]);
-        this.viewModel.attr('mapper.entries').replace([]);
+        this.viewModel.attr('selected').replace([]);
+        this.viewModel.attr('entries').replace([]);
 
         this.setModel();
 
@@ -102,24 +100,24 @@
         self.viewModel.attr('mapper').afterShown();
       },
       closeModal: function () {
-        this.viewModel.attr('mapper.is_saving', false);
+        this.viewModel.attr('is_saving', false);
 
         // TODO: Find proper way to dismiss the modal
         this.element.find('.modal-dismiss').trigger('click');
       },
       deferredSave: function () {
         var source = this.viewModel.attr('deferred_to').instance ||
-          this.viewModel.attr('mapper.object');
+          this.viewModel.attr('object');
         var data = {};
 
         data = {
           multi_map: true,
           arr: _.compact(_.map(
-            this.viewModel.attr('mapper.selected'),
+            this.viewModel.attr('selected'),
             function (desination) {
               var isAllowed = GGRC.Utils.allowed_to_map(source, desination);
               var instance =
-                can.makeArray(this.viewModel.attr('mapper.entries'))
+                can.makeArray(this.viewModel.attr('entries'))
                   .map(function (entry) {
                     return entry.instance || entry;
                   })
@@ -139,10 +137,10 @@
         this.closeModal();
       },
       '.modal-footer .btn-map click': function (el, ev) {
-        var type = this.viewModel.attr('mapper.type');
-        var object = this.viewModel.attr('mapper.object');
+        var type = this.viewModel.attr('type');
+        var object = this.viewModel.attr('object');
         var instance = CMS.Models[object].findInCacheById(
-          this.viewModel.attr('mapper.join_object_id'));
+          this.viewModel.attr('join_object_id'));
         var mapping;
         var Model;
         var data = {};
@@ -151,7 +149,7 @@
 
         ev.preventDefault();
         if (el.hasClass('disabled') ||
-          this.viewModel.attr('mapper.is_saving')) {
+          this.viewModel.attr('is_saving')) {
           return;
         }
 
@@ -159,18 +157,18 @@
         if (this.viewModel.attr('deferred')) {
           return this.deferredSave();
         }
-        this.viewModel.attr('mapper.is_saving', true);
+        this.viewModel.attr('is_saving', true);
 
         que.enqueue(instance).trigger().done(function (inst) {
           data.context = instance.context || null;
-          this.viewModel.attr('mapper.selected').forEach(
+          this.viewModel.attr('selected').forEach(
           function (destination) {
             var modelInstance;
             var isMapped;
             var isAllowed;
             var isPersonMapping = type === 'Person';
             // Use simple Relationship Model to map Snapshot
-            if (this.viewModel.attr('mapper.useSnapshots')) {
+            if (this.viewModel.attr('useSnapshots')) {
               modelInstance = new CMS.Models.Relationship({
                 context: data.context,
                 source: instance,
@@ -207,7 +205,7 @@
               $('body').trigger('ajax:flash', {error: message});
             })
             .always(function () {
-              this.viewModel.attr('mapper.is_saving', false);
+              this.viewModel.attr('is_saving', false);
               this.closeModal();
             }.bind(this))
             .done(function () {
@@ -236,10 +234,10 @@
         }.bind(this));
       },
       setModel: function () {
-        var type = this.viewModel.attr('mapper.type');
+        var type = this.viewModel.attr('type');
 
         this.viewModel.attr(
-          'mapper.model', this.viewModel.mapper.modelFromType(type));
+          'model', this.viewModel.mapper.modelFromType(type));
       },
       '{mapper} type': function () {
         var mapper = this.viewModel.attr('mapper');
@@ -258,15 +256,15 @@
 
     helpers: {
       get_title: function (options) {
-        var instance = this.attr('mapper.parentInstance');
+        var instance = this.attr('parentInstance');
         return (
           (instance && instance.title) ?
             instance.title :
-            this.attr('mapper.object')
+            this.attr('object')
         );
       },
       get_object: function (options) {
-        var type = CMS.Models[this.attr('mapper.type')];
+        var type = CMS.Models[this.attr('type')];
         if (type && type.title_plural) {
           return type.title_plural;
         }

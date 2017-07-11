@@ -30,12 +30,12 @@ describe('GGRC.Components.objectSearch', function () {
         viewModel = new can.Map(Component.prototype.viewModel());
       });
       it('returns true if mapper is loading', function () {
-        viewModel.attr('mapper.is_loading', true);
+        viewModel.attr('is_loading', true);
         expect(viewModel.isLoadingOrSaving()).toEqual(true);
       });
       it('returns false if page is not loading, it is not saving,' +
       ' type change is not blocked and mapper is not loading', function () {
-        viewModel.attr('mapper.is_loading', false);
+        viewModel.attr('is_loading', false);
         expect(viewModel.isLoadingOrSaving()).toEqual(false);
       });
     });
@@ -72,7 +72,7 @@ describe('GGRC.Components.objectSearch', function () {
     });
     it('sets model to mapper.model', function () {
       handler.call({viewModel: viewModel});
-      expect(viewModel.attr('mapper.model')).toEqual('mockModel');
+      expect(viewModel.attr('model')).toEqual('mockModel');
     });
   });
 
@@ -92,11 +92,11 @@ describe('GGRC.Components.objectSearch', function () {
 
     it('sets empty string to mapper.filter', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.filter')).toEqual('');
+      expect(viewModel.attr('filter')).toEqual('');
     });
     it('sets false to mapper.afterSearch', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.afterSearch')).toEqual(false);
+      expect(viewModel.attr('afterSearch')).toEqual(false);
     });
     it('calls setModel()', function () {
       handler.call(that);
@@ -107,7 +107,7 @@ describe('GGRC.Components.objectSearch', function () {
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(false);
         handler.call(that);
-        expect(viewModel.attr('mapper.relevant').length)
+        expect(viewModel.attr('relevant').length)
           .toEqual(0);
       });
   });

@@ -37,22 +37,22 @@ describe('GGRC.Components.objectGenerator', function () {
         scope = new can.Map(Component.prototype.scope({}, parentScope, el));
       });
       it('returns true if it is saving', function () {
-        scope.attr('mapper.is_saving', true);
+        scope.attr('is_saving', true);
         expect(scope.isLoadingOrSaving()).toEqual(true);
       });
       it('returns true if type change is blocked', function () {
-        scope.attr('mapper.block_type_change', true);
+        scope.attr('block_type_change', true);
         expect(scope.isLoadingOrSaving()).toEqual(true);
       });
       it('returns true if mapper is loading', function () {
-        scope.attr('mapper.is_loading', true);
+        scope.attr('is_loading', true);
         expect(scope.isLoadingOrSaving()).toEqual(true);
       });
       it('returns false if page is not loading, it is not saving,' +
       ' type change is not blocked and mapper is not loading', function () {
-        scope.attr('mapper.is_saving', false);
-        scope.attr('mapper.block_type_change', false);
-        scope.attr('mapper.is_loading', false);
+        scope.attr('is_saving', false);
+        scope.attr('block_type_change', false);
+        scope.attr('is_loading', false);
         expect(scope.isLoadingOrSaving()).toEqual(false);
       });
     });
@@ -76,12 +76,12 @@ describe('GGRC.Components.objectGenerator', function () {
 
     it('sets empty array to mapper.selected', function () {
       handler.call(that);
-      expect(scope.attr('mapper.selected').length)
+      expect(scope.attr('selected').length)
         .toEqual(0);
     });
     it('sets empty array to mapper.entries', function () {
       handler.call(that);
-      expect(scope.attr('mapper.entries').length)
+      expect(scope.attr('entries').length)
         .toEqual(0);
     });
     it('calls setModel()', function () {
@@ -109,12 +109,12 @@ describe('GGRC.Components.objectGenerator', function () {
     });
 
     it('sets false to mapper.is_saving', function () {
-      scope.attr('mapper.is_saving', true);
+      scope.attr('is_saving', true);
       handler.call({
         element: element,
         scope: scope
       });
-      expect(scope.attr('mapper.is_saving')).toEqual(false);
+      expect(scope.attr('s_saving')).toEqual(false);
     });
     it('dismiss the modal', function () {
       handler.call({
@@ -174,9 +174,9 @@ describe('GGRC.Components.objectGenerator', function () {
     it('sets true to mapper.is_saving and' +
       'returns callback if it is assessment generation', function () {
       var result;
-      scope.attr('mapper.assessmentGenerator', true);
+      scope.attr('assessmentGenerator', true);
       result = handler.call(that, element, event);
-      expect(scope.attr('mapper.is_saving')).toEqual(true);
+      expect(scope.attr('is_saving')).toEqual(true);
       expect(result).toEqual('expectedResult');
       expect(callback.calls.argsFor(0)[0].length)
         .toEqual(0);
@@ -201,7 +201,7 @@ describe('GGRC.Components.objectGenerator', function () {
     });
     it('sets model to mapper.model', function () {
       handler.call({scope: scope});
-      expect(scope.attr('mapper.model')).toEqual('mockModel');
+      expect(scope.attr('model')).toEqual('mockModel');
     });
   });
 
@@ -222,11 +222,11 @@ describe('GGRC.Components.objectGenerator', function () {
 
     it('sets empty string to mapper.filter', function () {
       handler.call(that);
-      expect(scope.attr('mapper.filter')).toEqual('');
+      expect(scope.attr('filter')).toEqual('');
     });
     it('sets false to mapper.afterSearch', function () {
       handler.call(that);
-      expect(scope.attr('mapper.afterSearch')).toEqual(false);
+      expect(scope.attr('afterSearch')).toEqual(false);
     });
     it('calls setModel()', function () {
       handler.call(that);
@@ -245,19 +245,19 @@ describe('GGRC.Components.objectGenerator', function () {
     it('sets false to mapper.block_type_change if value is empty',
       function () {
         handler.call({scope: scope});
-        expect(scope.attr('mapper.block_type_change'))
+        expect(scope.attr('block_type_change'))
           .toEqual(false);
       });
     it('sets true to mapper.block_type_change if value is not empty',
       function () {
         handler.call({scope: scope}, scope, {}, 'mock-value');
-        expect(scope.attr('mapper.block_type_change'))
+        expect(scope.attr('block_type_change'))
           .toEqual(true);
       });
     it('sets type to mapper.type if value is not empty',
       function () {
         handler.call({scope: scope}, scope, {}, 'mock-value');
-        expect(scope.attr('mapper.type'))
+        expect(scope.attr('type'))
           .toEqual('value');
       });
   });

@@ -37,17 +37,17 @@ describe('GGRC.Components.objectMapper', function () {
           new can.Map(Component.prototype.viewModel({}, parentViewModel, el));
       });
       it('returns true if it is saving', function () {
-        viewModel.attr('mapper.is_saving', true);
+        viewModel.attr('is_saving', true);
         expect(viewModel.isLoadingOrSaving()).toEqual(true);
       });
       it('returns true if mapper is loading', function () {
-        viewModel.attr('mapper.is_loading', true);
+        viewModel.attr('is_loading', true);
         expect(viewModel.isLoadingOrSaving()).toEqual(true);
       });
       it('returns false if page is not loading, it is not saving,' +
       ' type change is not blocked and mapper is not loading', function () {
-        viewModel.attr('mapper.is_saving', false);
-        viewModel.attr('mapper.is_loading', false);
+        viewModel.attr('is_saving', false);
+        viewModel.attr('is_loading', false);
         expect(viewModel.isLoadingOrSaving()).toEqual(false);
       });
     });
@@ -81,8 +81,8 @@ describe('GGRC.Components.objectMapper', function () {
         viewModel: viewModel,
         element: element
       }, {}, {}, 'model');
-      expect(viewModel.attr('mapper.newEntries').length).toEqual(1);
-      expect(viewModel.attr('mapper.newEntries')[0]).toEqual('model');
+      expect(viewModel.attr('newEntries').length).toEqual(1);
+      expect(viewModel.attr('newEntries')[0]).toEqual('model');
     });
 
     it('calls showNewEntries from mapper-results', function () {
@@ -102,7 +102,7 @@ describe('GGRC.Components.objectMapper', function () {
 
     it('sets empty array to mapper.newEntries', function () {
       handler.call({viewModel: viewModel});
-      expect(viewModel.attr('mapper.newEntries').length)
+      expect(viewModel.attr('newEntries').length)
         .toEqual(0);
     });
   });
@@ -115,8 +115,8 @@ describe('GGRC.Components.objectMapper', function () {
 
     it('adds model to mapper.newEntries', function () {
       handler.call({viewModel: viewModel}, {}, {}, 'model');
-      expect(viewModel.attr('mapper.newEntries').length).toEqual(1);
-      expect(viewModel.attr('mapper.newEntries')[0]).toEqual('model');
+      expect(viewModel.attr('newEntries').length).toEqual(1);
+      expect(viewModel.attr('newEntries')[0]).toEqual('model');
     });
   });
 
@@ -172,7 +172,7 @@ describe('GGRC.Components.objectMapper', function () {
 
     it('does not calls showNewEntries from mapper-results' +
     'if there are no newEntries', function () {
-      viewModel.attr('mapper.newEntries', []);
+      viewModel.attr('newEntries', []);
       options = {
         uniqueId: 123
       };
@@ -202,12 +202,12 @@ describe('GGRC.Components.objectMapper', function () {
 
     it('sets empty array to mapper.selected', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.selected').length)
+      expect(viewModel.attr('selected').length)
         .toEqual(0);
     });
     it('sets empty array to mapper.entries', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.entries').length)
+      expect(viewModel.attr('entries').length)
         .toEqual(0);
     });
     it('calls setModel()', function () {
@@ -235,12 +235,12 @@ describe('GGRC.Components.objectMapper', function () {
     });
 
     it('sets false to mapper.is_saving', function () {
-      viewModel.attr('mapper.is_saving', true);
+      viewModel.attr('is_saving', true);
       handler.call({
         element: element,
         viewModel: viewModel
       });
-      expect(viewModel.attr('mapper.is_saving')).toEqual(false);
+      expect(viewModel.attr('is_saving')).toEqual(false);
     });
     it('dismiss the modal', function () {
       handler.call({
@@ -363,7 +363,7 @@ describe('GGRC.Components.objectMapper', function () {
     });
     it('sets model to mapper.model', function () {
       handler.call({viewModel: viewModel});
-      expect(viewModel.attr('mapper.model')).toEqual('mockModel');
+      expect(viewModel.attr('model')).toEqual('mockModel');
     });
   });
 
@@ -384,11 +384,11 @@ describe('GGRC.Components.objectMapper', function () {
 
     it('sets empty string to mapper.filter', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.filter')).toEqual('');
+      expect(viewModel.attr('filter')).toEqual('');
     });
     it('sets false to mapper.afterSearch', function () {
       handler.call(that);
-      expect(viewModel.attr('mapper.afterSearch')).toEqual(false);
+      expect(viewModel.attr('afterSearch')).toEqual(false);
     });
     it('calls setModel()', function () {
       handler.call(that);
@@ -399,7 +399,7 @@ describe('GGRC.Components.objectMapper', function () {
         spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
           .and.returnValue(false);
         handler.call(that);
-        expect(viewModel.attr('mapper.relevant').length)
+        expect(viewModel.attr('relevant').length)
           .toEqual(0);
       });
   });
