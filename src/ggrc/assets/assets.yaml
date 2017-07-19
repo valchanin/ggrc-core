@@ -159,6 +159,7 @@ dashboard-js-files:
   - components/advanced-search/advanced-search-mapping-container.js
   - components/advanced-search/advanced-search-mapping-group.js
   - components/advanced-search/advanced-search-mapping-criteria.js
+  - components/advanced-search/advanced-search-wrapper.js
   - components/state-colors-map/state-colors-map.js
   - components/spinner/spinner.js
   - components/modal-connector.js

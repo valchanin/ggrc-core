@@ -23,8 +23,8 @@
         GGRC.Utils.Snapshots.inScopeModels);
       return types;
     },
-    filter: '',
-    statusFilter: '',
+    filterItems: [],
+    mappingItems: [],
     object: '',
     model: {},
     bindings: {},
