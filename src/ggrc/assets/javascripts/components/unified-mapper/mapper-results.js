@@ -35,8 +35,8 @@
       allItems: [],
       allSelected: false,
       baseInstance: null,
-      filter: '',
-      statusFilter: '',
+      filterItems: [],
+      mappingItems: [],
       selected: [],
       refreshItems: false,
       submitCbs: null,
@@ -53,7 +53,7 @@
       newEntries: [],
       entries: [],
       afterSearch: false,
-      relevant: [],
+      relevantTo: [],
       objectGenerator: false,
       deferredList: [],
       init: function () {
@@ -84,7 +84,8 @@
         this.attr('selected').push.apply(this.attr('selected'), newEntries);
 
         // clear filter
-        this.attr('filter', '');
+        this.attr('filterItems', []);
+        this.attr('mappingItems', []);
         this.attr('prevSelected', this.attr('selected').slice());
 
         if (this.attr('sort.key') === sortKey &&
@@ -147,60 +148,28 @@
         }
         this.attr('refreshItems', true);
       },
-      prepareRelevantFilters: function () {
-        var filters;
-        var relevantList = this.attr('relevant');
-
-        filters = relevantList.attr()
-          .map(function (relevant) {
-            if (!relevant.value || !relevant.filter) {
-              if (!relevant.textValue) {
-                return null;
-              }
-              return {
-                type: relevant.model_name,
-                operation: 'relevant',
-                id: 0
-              };
-            }
-            return {
-              type: relevant.filter.type,
-              operation: 'relevant',
-              id: Number(relevant.filter.id)
-            };
-          }).filter(function (v) {
-            return v !== null;
-          });
+      prepareRelevantQuery: function () {
+        var relevantList = this.attr('relevantTo');
+        var filters = relevantList.map(function (relevant) {
+          return {
+            type: relevant.type,
+            operation: 'relevant',
+            id: relevant.id
+          };
+        });
         return filters;
       },
-      prepareBaseQuery: function (modelName, paging, filters, statusFilter) {
-        return GGRC.Utils.QueryAPI
-          .buildParam(modelName, paging, filters, [], statusFilter);
-      },
-      joinQueries: function (left, right, operation) {
-        return GGRC.query_parser
-          .join_queries(left, right, operation);
-      },
-      prepareRelatedQuery: function (modelName, statusFilter) {
+      prepareRelatedQuery: function (filter) {
         if (!this.attr('baseInstance')) {
           return null;
         }
 
         return GGRC.Utils.QueryAPI
-          .buildRelevantIdsQuery(modelName, {
-            filter: this.attr('filter')
-          }, {
+          .buildRelevantIdsQuery(this.attr('type'), {}, {
             type: this.attr('baseInstance.type'),
             id: this.attr('baseInstance.id'),
             operation: 'relevant'
-          }, [], statusFilter);
-      },
-      prepareStatusFilter: function () {
-        var statusFilter = this.attr('statusFilter');
-        if (!statusFilter) {
-          return null;
-        }
-        return GGRC.query_parser.parse(statusFilter);
+          }, filter);
       },
       prepareUnlockedFilter: function () {
         var filterString = GGRC.Utils.State.unlockedFilter();
@@ -213,20 +182,24 @@
         this.attr('allItems', this.loadAllItemsIds());
       },
       getQuery: function (queryType, addPaging) {
+        var result = {};
+        var paging = {};
         var modelName = this.attr('type');
-        var paging = {
-          filter: this.attr('filter')
-        };
-        var filters = this.prepareRelevantFilters();
-        var statusFilter = this.prepareStatusFilter();
-        var unlockedFilter = this.prepareUnlockedFilter();
         var query;
         var relatedQuery;
 
-        if (this.shouldApplyUnlockedFilter(modelName)) {
-          statusFilter = this.joinQueries(statusFilter, unlockedFilter, 'AND');
-        }
+        // prepare QueryAPI data from advanced search
+        var request = [];
+        var filters = GGRC.query_parser.parse(
+          GGRC.Utils.AdvancedSearch.buildFilter(this.attr('filterItems'),
+          request));
+        var mappings = GGRC.query_parser.parse(
+          GGRC.Utils.AdvancedSearch.buildFilter(this.attr('mappingItems'),
+          request));
+        var advancedFilters = GGRC.query_parser.join_queries(filters, mappings);
+        result.request = request;
 
+        // prepare pagination
         if (addPaging) {
           paging.current = this.attr('paging.current');
           paging.pageSize = this.attr('paging.pageSize');
@@ -235,27 +208,43 @@
             paging.sortDirection = this.attr('sort.direction');
           }
         }
+        if (this.shouldApplyUnlockedFilter(modelName)) {
+          advancedFilters = GGRC.query_parser.join_queries(
+            advancedFilters,
+            this.prepareUnlockedFilter());
+        }
 
-        query = this.prepareBaseQuery(modelName, paging, filters, statusFilter);
-        relatedQuery = this.prepareRelatedQuery(modelName, statusFilter);
+        // prepare and add main query to request
+        query = GGRC.Utils.QueryAPI.buildParam(
+          modelName,
+          paging,
+          this.prepareRelevantQuery(),
+          null,
+          advancedFilters);
         if (this.attr('useSnapshots')) {
           // Transform Base Query to Snapshot
           query = GGRC.Utils.Snapshots.transformQuery(query);
         }
-
         // Add Permission check
         query.permissions = (modelName === 'Person') ||
           this.attr('searchOnly') ? 'read' : 'update';
         query.type = queryType || 'values';
+        // we need it to find result in response from backend
+        result.queryIndex = request.push(query) - 1;
 
-        if (!relatedQuery) {
-          return {data: [query]};
+        // prepare and add related query to request
+        // the query is used to select already mapped items
+        relatedQuery = this.prepareRelatedQuery(filters);
+        if (relatedQuery) {
+          if (this.attr('useSnapshots')) {
+            // Transform Related Query to Snapshot
+            relatedQuery = GGRC.Utils.Snapshots.transformQuery(relatedQuery);
+          }
+          // we need it to find result in response from backend
+          result.relatedQueryIndex = request.push(relatedQuery) - 1;
         }
-        if (this.attr('useSnapshots')) {
-          // Transform Related Query to Snapshot
-          relatedQuery = GGRC.Utils.Snapshots.transformQuery(relatedQuery);
-        }
-        return {data: [query, relatedQuery]};
+
+        return result;
       },
       getModelKey: function () {
         return this.attr('useSnapshots') ?
@@ -314,11 +303,13 @@
         var query = this.getQuery('values', true);
         this.attr('isLoading', true);
         GGRC.Utils.QueryAPI
-          .makeRequest(query)
+          .makeRequest({data: query.request})
           .done(function (responseArr) {
-            var data = responseArr[0];
-            var relatedData =
-              this.buildRelatedData(responseArr[1], modelKey);
+            var data = responseArr[query.queryIndex];
+            var relatedData = this.buildRelatedData(
+              responseArr[query.relatedQueryIndex],
+              modelKey);
+
             var result =
               data[modelKey].values.map(function (value) {
                 return {
@@ -380,10 +371,10 @@
         var query = this.getQuery(queryType, false);
 
         GGRC.Utils.QueryAPI
-          .makeRequest(query)
+          .makeRequest({data: query.request})
           .done(function (responseArr) {
-            var data = responseArr[0];
-            var relatedData = responseArr[1];
+            var data = responseArr[query.queryIndex];
+            var relatedData = responseArr[query.relatedQueryIndex];
             var values = data[modelKey][queryType];
             var result = values.map(function (item) {
               return {

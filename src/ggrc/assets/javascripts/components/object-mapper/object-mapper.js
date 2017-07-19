@@ -251,13 +251,10 @@
         this.viewModel.attr('model', this.viewModel.modelFromType(type));
       },
       '{viewModel} type': function () {
-        this.viewModel.attr('filter', '');
+        this.viewModel.attr('filterItems', []);
+        this.viewModel.attr('mappingItems', []);
         this.viewModel.attr('afterSearch', false);
-        // Edge case for objects that are not in Snapshot scope
-        if (!GGRC.Utils.Snapshots.isInScopeModel(
-          this.viewModel.attr('object'))) {
-          this.viewModel.attr('relevant').replace([]);
-        }
+
         this.setModel();
 
         setTimeout(this.viewModel.onSubmit.bind(this.viewModel));

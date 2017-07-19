@@ -76,9 +76,15 @@ describe('GGRC.Components.mapperResults', function () {
         }));
     });
 
-    it('clears filter', function () {
+    it('sets empty array to filterItems', function () {
+      viewModel.attr('filterItems', ['someData']);
       viewModel.showNewEntries();
-      expect(viewModel.attr('filter')).toEqual('');
+      expect(viewModel.attr('filterItems.length')).toEqual(0);
+    });
+    it('sets empty array to mappingItems', function () {
+      viewModel.attr('mappingItems', ['someData']);
+      viewModel.showNewEntries();
+      expect(viewModel.attr('mappingItems.length')).toEqual(0);
     });
 
     it('updates viewModel.prevSelected', function () {
@@ -292,48 +298,30 @@ describe('GGRC.Components.mapperResults', function () {
     });
   });
 
-  describe('prepareRelevantFilters() method', function () {
+  describe('prepareRelevantQuery() method', function () {
     var relevantList = [{
-      model_name: 'mockName'
+      id: 0,
+      type: 'test0'
     }, {
-      model_name: 'mockName',
-      textValue: 'text'
-    }, {
-      value: 'mockValue',
-      filter: {
-        type: 'mockType',
-        id: 123
-      }
+      id: 1,
+      type: 'test1'
     }];
     var expectedResult = [{
-      type: 'mockName',
-      operation: 'relevant',
-      id: 0
+      id: 0,
+      type: 'test0',
+      operation: 'relevant'
     }, {
-      type: 'mockType',
-      operation: 'relevant',
-      id: 123
+      id: 1,
+      type: 'test1',
+      operation: 'relevant'
     }];
     beforeEach(function () {
-      viewModel.attr('relevant', relevantList);
+      viewModel.attr('relevantTo', relevantList);
     });
     it('returns relevant filters', function () {
-      var result = viewModel.prepareRelevantFilters();
-      expect(result).toEqual(expectedResult);
+      var result = viewModel.prepareRelevantQuery();
+      expect(result.attr()).toEqual(expectedResult);
     });
-  });
-
-  describe('prepareBaseQuery() method', function () {
-    beforeEach(function () {
-      spyOn(GGRC.Utils.QueryAPI, 'buildParam').and.returnValue('mockQuery');
-    });
-
-    it('calls GGRC.Utils.QueryAPI.buildParam()',
-      function () {
-        var result = viewModel.prepareBaseQuery(
-          'modelName', 'paging', 'filters', 'statusFilter');
-        expect(result).toEqual('mockQuery');
-      });
   });
 
   describe('prepareRelatedQuery() method', function () {
@@ -350,23 +338,7 @@ describe('GGRC.Components.mapperResults', function () {
       });
       spyOn(GGRC.Utils.QueryAPI, 'buildRelevantIdsQuery')
         .and.returnValue('mockQuery');
-      result = viewModel.prepareRelatedQuery('modelName', 'statusFilter');
-      expect(result).toEqual('mockQuery');
-    });
-  });
-
-  describe('prepareStatusFilter() method', function () {
-    it('returns null if viewModel.statusFilter is undefined', function () {
-      var result = viewModel.prepareStatusFilter();
-      expect(result).toEqual(null);
-    });
-
-    it('returns query', function () {
-      var result;
-      viewModel.attr('statusFilter', 'mockFilter');
-      spyOn(GGRC.query_parser, 'parse')
-        .and.returnValue('mockQuery');
-      result = viewModel.prepareStatusFilter();
+      result = viewModel.prepareRelatedQuery();
       expect(result).toEqual('mockQuery');
     });
   });
@@ -392,85 +364,67 @@ describe('GGRC.Components.mapperResults', function () {
       key: 'mock3',
       direction: 'mock4'
     };
+    var mockFilterItems = ['filterItem'];
+    var mockMappingItems = ['mappingItem'];
+
     beforeEach(function () {
       viewModel.attr('type', 'mockName');
       viewModel.attr('paging', mockPaging);
       viewModel.attr('sort', mockSort);
-      viewModel.attr('filter', 'mockFilter');
+      viewModel.attr('filterItems', mockFilterItems);
+      viewModel.attr('mappingItems', mockMappingItems);
 
-      spyOn(viewModel, 'prepareRelevantFilters')
-        .and.returnValue('filters');
-      spyOn(viewModel, 'prepareStatusFilter')
-        .and.returnValue('statusFilter');
+      spyOn(viewModel, 'prepareRelevantQuery')
+        .and.returnValue('relevant');
       spyOn(viewModel, 'prepareRelatedQuery')
         .and.returnValue({mockData: 'related'});
 
-      it('returns query', function () {
-        var result;
-        viewModel.attr('useSnapshots', false);
-        spyOn(viewModel, 'prepareBaseQuery')
-          .and.returnValue({mockData: 'base'});
-        result = viewModel.getQuery();
-        expect(result.data[0]).toEqual(jasmine.objectContaining({
-          mockData: 'base',
-          permissions: 'update',
-          type: 'values'
-        }));
-        expect(result.data[1]).toEqual(jasmine.objectContaining({
-          mockData: 'related'
-        }));
-      });
+      spyOn(GGRC.Utils.QueryAPI, 'buildParam')
+        .and.returnValue({});
+      spyOn(GGRC.Utils.AdvancedSearch, 'buildFilter');
+      spyOn(GGRC.query_parser, 'parse');
+      spyOn(GGRC.query_parser, 'join_queries');
+    });
 
-      it('adds paging to query if addPaging is true', function () {
-        var result;
-        var paging;
-        viewModel.attr('useSnapshots', false);
-        spyOn(viewModel, 'prepareBaseQuery')
-          .and.returnValue({mockData: 'basePaging'});
-        result = viewModel.getQuery(undefined, true);
-        paging = jasmine.objectContaining(mockPaging);
-        expect(viewModel.prepareBaseQuery)
-          .toHaveBeenCalledWith('mockName', paging, 'filters', 'statusFilter');
-        expect(result.data[0]).toEqual(jasmine.objectContaining({
-          mockData: 'basePging',
-          permissions: 'update',
-          type: 'values'
-        }));
-        expect(result.data[1]).toEqual(jasmine.objectContaining({
-          mockData: 'related'
-        }));
-      });
+    it('builds advanced filters', function () {
+      viewModel.getQuery('values', true);
+      expect(GGRC.Utils.AdvancedSearch.buildFilter.calls.argsFor(0)[0].attr())
+        .toEqual(mockFilterItems);
+    });
+
+    it('builds advanced mappings', function () {
+      viewModel.getQuery('values', true);
+      expect(GGRC.Utils.AdvancedSearch.buildFilter.calls.argsFor(1)[0].attr())
+        .toEqual(mockMappingItems);
+    });
+
+    it('adds paging to query if addPaging is true', function () {
+      viewModel.removeAttr('sort.key');
+      viewModel.getQuery('values', true);
+      expect(GGRC.Utils.QueryAPI.buildParam.calls.argsFor(0)[1])
+        .toEqual({
+          current: 'mock1',
+          pageSize: 'mock2'
+        });
     });
 
     it('adds paging with sort to query if sort.key is defined', function () {
-      var result;
-      var paging;
-      viewModel.attr('useSnapshots', false);
-      spyOn(viewModel, 'prepareBaseQuery')
-        .and.returnValue({mockData: 'basePagingSort'});
-      result = viewModel.getQuery(undefined, true);
-      paging = jasmine.objectContaining(mockPaging, mockSort);
-      expect(viewModel.prepareBaseQuery)
-        .toHaveBeenCalledWith('mockName', paging, 'filters', 'statusFilter');
-      expect(result.data[0]).toEqual(jasmine.objectContaining({
-        mockData: 'basePagingSort',
-        permissions: 'update',
-        type: 'values'
-      }));
-      expect(result.data[1]).toEqual(jasmine.objectContaining({
-        mockData: 'related'
-      }));
+      viewModel.getQuery('values', true);
+      expect(GGRC.Utils.QueryAPI.buildParam.calls.argsFor(0)[1])
+        .toEqual({
+          current: 'mock1',
+          pageSize: 'mock2',
+          sortBy: 'mock3',
+          sortDirection: 'mock4'
+        });
     });
 
     it('sets "read" to permissions if model is person', function () {
       var result;
       viewModel.attr('type', 'Person');
       viewModel.attr('useSnapshots', false);
-      spyOn(viewModel, 'prepareBaseQuery')
-        .and.returnValue({mockData: 'basePagingSort'});
       result = viewModel.getQuery('Person', true);
-      expect(result.data[0]).toEqual(jasmine.objectContaining({
-        mockData: 'basePagingSort',
+      expect(result.request[0]).toEqual(jasmine.objectContaining({
         permissions: 'read',
         type: 'Person'
       }));
@@ -479,17 +433,15 @@ describe('GGRC.Components.mapperResults', function () {
     it('transform query to snapshot if useSnapshots is true', function () {
       var result;
       viewModel.attr('useSnapshots', true);
-      spyOn(viewModel, 'prepareBaseQuery')
-        .and.returnValue({mockData: 'base'});
       spyOn(GGRC.Utils.Snapshots, 'transformQuery')
         .and.returnValue({mockData: 'snapshot'});
       result = viewModel.getQuery();
-      expect(result.data[0]).toEqual(jasmine.objectContaining({
+      expect(result.request[0]).toEqual(jasmine.objectContaining({
         mockData: 'snapshot',
         permissions: 'update',
         type: 'values'
       }));
-      expect(result.data[1]).toEqual(jasmine.objectContaining({
+      expect(result.request[1]).toEqual(jasmine.objectContaining({
         mockData: 'snapshot'
       }));
     });
@@ -497,25 +449,19 @@ describe('GGRC.Components.mapperResults', function () {
     it('set "read" permission if "searchOnly"', function () {
       var result;
       viewModel.attr('searchOnly', true);
-      spyOn(viewModel, 'prepareBaseQuery')
-        .and.returnValue({mockData: 'base'});
       result = viewModel.getQuery();
-      expect(result.data[0]).toEqual(jasmine.objectContaining({
+      expect(result.request[0]).toEqual(jasmine.objectContaining({
         permissions: 'read'
       }));
     });
 
     it('prepare request for unlocked items for Audits', function () {
-      var filter = viewModel.attr('filter');
       viewModel.attr('type', 'Audit');
-      spyOn(viewModel, 'prepareBaseQuery')
-        .and.returnValue({mockData: 'base'});
-      spyOn(viewModel, 'joinQueries')
-        .and.returnValue(filter);
-
+      spyOn(viewModel, 'prepareUnlockedFilter').and.returnValue('unlocked');
       viewModel.getQuery();
 
-      expect(viewModel.joinQueries).toHaveBeenCalled();
+      expect(GGRC.query_parser.join_queries.calls.argsFor(1)[1])
+        .toBe('unlocked');
     });
   });
 
@@ -693,7 +639,10 @@ describe('GGRC.Components.mapperResults', function () {
       spyOn(viewModel, 'getModelKey')
         .and.returnValue('program');
       spyOn(viewModel, 'getQuery')
-        .and.returnValue('query');
+        .and.returnValue({
+          queryIndex: 0,
+          relatedQueryIndex: 1
+        });
       spyOn(viewModel, 'transformValue')
         .and.returnValue('transformedValue');
       spyOn(viewModel, 'setSelectedItems');
@@ -788,7 +737,10 @@ describe('GGRC.Components.mapperResults', function () {
       spyOn(viewModel, 'getModelKey')
         .and.returnValue('program');
       spyOn(viewModel, 'getQuery')
-        .and.returnValue('query');
+        .and.returnValue({
+          queryIndex: 0,
+          relatedQueryIndex: 1
+        });
       spyOn(viewModel, 'transformValue')
         .and.returnValue('transformedValue');
     });

@@ -396,9 +396,15 @@ describe('GGRC.Components.objectMapper', function () {
       handler = events['{viewModel} type'];
     });
 
-    it('sets empty string to filter', function () {
+    it('sets empty array to filterItems', function () {
+      viewModel.attr('filterItems', ['someData']);
       handler.call(that);
-      expect(viewModel.attr('filter')).toEqual('');
+      expect(viewModel.attr('filterItems.length')).toEqual(0);
+    });
+    it('sets empty array to mappingItems', function () {
+      viewModel.attr('mappingItems', ['someData']);
+      handler.call(that);
+      expect(viewModel.attr('mappingItems.length')).toEqual(0);
     });
     it('sets false to afterSearch', function () {
       handler.call(that);
@@ -408,14 +414,6 @@ describe('GGRC.Components.objectMapper', function () {
       handler.call(that);
       expect(that.setModel).toHaveBeenCalled();
     });
-    it('sets empty array to relevant if it is not in scope model',
-      function () {
-        spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
-          .and.returnValue(false);
-        handler.call(that);
-        expect(viewModel.attr('relevant').length)
-          .toEqual(0);
-      });
   });
 
   describe('get_title() helper', function () {

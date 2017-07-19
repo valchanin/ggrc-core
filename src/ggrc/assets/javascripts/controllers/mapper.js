@@ -134,7 +134,8 @@
           relevantTo: [{
             readOnly: true,
             type: scopeObject.type,
-            id: scopeObject.id
+            id: scopeObject.id,
+            title: scopeObject.title
           }]
         };
 
