@@ -504,6 +504,24 @@ mapper-results-columns-configuration {
 .object-modal {
 
   object-mapper, object-search, object-generator {
+    collapsible-panel {
+      h6 {
+        width: inherit;
+        float: inherit;
+      }
+      collapsible-panel-header {
+        .fa {
+          width: auto;
+          margin-right: 12px;
+        }
+        .title-text {
+          font-size: 13px;
+        }
+      }
+      collapsible-panel-body .body-inner {
+        padding: 0px;
+      }
+    }
     .modal-body {
       padding-bottom: 30px !important;
       select, input {
@@ -516,7 +534,19 @@ mapper-results-columns-configuration {
       }
     }
     .modal-footer {
-      padding-top: 10px !important;
+      padding-top: 10px;
+
+      &.expanded{
+        border-top: 1px solid #E0E0E0;
+        padding-top: 24px;
+      }
+
+      collapsible-panel-body{
+        padding-top: 24px;
+        mapper-results {
+          margin-bottom: 24px;
+        }
+      }
 
       .btn-map {
         margin-left: 10px;
@@ -541,19 +571,29 @@ mapper-results-columns-configuration {
   }
 }
 
-.object-operations {
-  collapsible-panel {
-    h6 {
-      width: inherit;
-      float: inherit;
-    }
-  }
-  &__filter {
+.object-controls {
+  &__container {
     select {
       background: $white;
     }
   }
-  &__filter-controls {
+  &__filters {
+    padding-bottom: 24px;
+  }
+  &__mappings {
+    padding-top: 24px;
+    border-top: 1px solid #E0E0E0;
+  }
+  &__mappings-header {
+    margin-bottom: 24px;
+  }
+  &__filter-string {
+    font-size: 12px;
+    color: #969696;
+    padding-left: 20px;
+    font-style: italic;
+  }
+  &__actions {
     float: right;
     button {
       height: 24px;
@@ -580,6 +620,12 @@ mapper-results-columns-configuration {
     align-items: center;
     >* {
       margin-right: 16px;
+    }
+    select {
+      width: 200px;
+    }
+    .btn {
+      padding: 0px;
     }
   }
 }

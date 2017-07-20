@@ -20,14 +20,14 @@
   </div>
   {{/if}}
 
-  <div class="object-operations">
+  <div class="object-controls">
     <advanced-search-wrapper
       {model-name}="model.singular"
       {(mapping-items)}="mappingItems"
       {(filter-items)}="filterItems">
-      <div class="object-operations__filter">
+      <div class="object-controls__container">
         <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch">
-          <div class="object-operations__type">
+          <div class="object-controls__type">
             <h6>Object type</h6>
             <mapping-type-selector
               types="availableTypes"
@@ -82,80 +82,81 @@
             {{/if}}
           </div>
 
+          <div class="object-controls__filters">
             <advanced-search-filter-container
               {(items)}="filterItems"
               {available-attributes}="availableAttributes"
               {model-name}="modelName">
             </advanced-search-filter-container>
-            <hr/>
-            <h4>Filter by Mapping</h4>
-
+          </div>
+          <div class="object-controls__mappings">
+            <div class="object-controls__mappings-header">
+              <h4>Filter by Mapping</h4>
+            </div>
             {{#each relevantTo}}
-            <div class="object-operations__relevant">
+            <div class="object-controls__relevant">
               <h6>Mapped to {{type}}:</h6><span>{{title}}</span>
             </div>
             {{/each}}
-
             <advanced-search-mapping-container
               {(items)}="mappingItems"
               {available-attributes}="availableAttributes"
               {model-name}="modelName">
             </advanced-search-mapping-container>
-            <div class="object-operations__filter-controls">
-              <button type="reset" class="btn btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
-              <button type="submit" class="btn btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
-            </div>
+          </div>
+          <div class="object-controls__actions">
+            <button type="reset" class="btn btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
+            <button type="submit" class="btn btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
+          </div>
         </collapsible-panel>
         {{^if showSearch}}
-        <span>{{filterString}}</span>
+        <span class="object-controls__filter-string">{{filterString}}</span>
         {{/if}}
       </div>
     </advanced-search-wrapper>
   </div>
 </div>
 
-<div class="modal-footer">
-  <div class="object-operations__results">
-    <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
-      <mapper-results
-        class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
-        base-instance="parentInstance"
-        {(is-loading)}="is_loading"
-        object="object"
-        type="type"
-        selected="selected"
-        submit-cbs="submitCbs"
-        {^paging.total}="*totalObjects"
-        {use-snapshots}="useSnapshots"
-        {new-entries}="newEntries"
-        {(entries)}="entries"
-        {relevant-to}="relevantTo"
-        {deferred-list}="deferred_list"
-        {(filter-items)}="filterItems"
-        {(mapping-items)}="mappingItems">
-      </mapper-results>
-        <div class="row-fluid">
-          <div class="span5">
-            <div class="deny-buttons"></div>
-          </div>
-          <div class="span7">
-            <div class="confirm-buttons">
-              {{selected.length}}
-              object(s) selected
-              </span>
+<div class="modal-footer {{#if showResults}}expanded{{/if}}">
+  <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
+    <mapper-results
+      class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
+      base-instance="parentInstance"
+      {(is-loading)}="is_loading"
+      object="object"
+      type="type"
+      selected="selected"
+      submit-cbs="submitCbs"
+      {^paging.total}="*totalObjects"
+      {use-snapshots}="useSnapshots"
+      {new-entries}="newEntries"
+      {(entries)}="entries"
+      {relevant-to}="relevantTo"
+      {deferred-list}="deferred_list"
+      {(filter-items)}="filterItems"
+      {(mapping-items)}="mappingItems">
+    </mapper-results>
+    <div class="row-fluid">
+      <div class="span5">
+        <div class="deny-buttons"></div>
+      </div>
+      <div class="span7">
+        <div class="confirm-buttons">
+          {{selected.length}}
+          object(s) selected
+          </span>
 
-              <button class="btn-map btn btn-small btn-green preventdoubleclick"
-                      {{^if selected.length}}disabled="disabled"{{/if}}>
-                {{#if is_saving}}
-                  Saving, please wait...
-                {{else}}
-                  Map Selected
-                {{/if}}
-              </button>
-              <spinner toggle="is_saving"></spinner>
-            </div>
-          </div>
+          <button class="btn-map btn btn-small btn-green preventdoubleclick"
+                  {{^if selected.length}}disabled="disabled"{{/if}}>
+            {{#if is_saving}}
+              Saving, please wait...
+            {{else}}
+              Map Selected
+            {{/if}}
+          </button>
+          <spinner toggle="is_saving"></spinner>
         </div>
-    </collapsible-panel>
-  </div>
+      </div>
+    </div>
+  </collapsible-panel>
 </div>
