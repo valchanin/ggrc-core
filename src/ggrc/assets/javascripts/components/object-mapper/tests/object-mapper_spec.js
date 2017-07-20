@@ -90,7 +90,17 @@ describe('GGRC.Components.objectMapper', function () {
       handler = events['.create-control modal:success'];
     });
 
+    it('shows results', function () {
+      viewModel.attr('showResults', false);
+      handler.call({
+        viewModel: viewModel,
+        element: element
+      }, {}, {}, 'model');
+      expect(viewModel.attr('showResults')).toBe(true);
+    });
+
     it('adds model to newEntries', function () {
+      viewModel.attr('newEntries', []);
       handler.call({
         viewModel: viewModel,
         element: element
