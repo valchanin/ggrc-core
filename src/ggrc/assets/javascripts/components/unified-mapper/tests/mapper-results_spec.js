@@ -129,12 +129,6 @@ describe('GGRC.Components.mapperResults', function () {
       viewModel.showNewEntries();
       expect(viewModel.attr('paging.current')).toEqual(1);
     });
-
-    it('sets afterSearch to true', function () {
-      viewModel.attr('afterSearch', false);
-      viewModel.showNewEntries();
-      expect(viewModel.attr('afterSearch')).toEqual(true);
-    });
   });
 
   describe('setItems() method', function () {

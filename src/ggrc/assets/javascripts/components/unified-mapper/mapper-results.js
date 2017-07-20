@@ -52,7 +52,6 @@
       useSnapshots: false,
       newEntries: [],
       entries: [],
-      afterSearch: false,
       relevantTo: [],
       objectGenerator: false,
       deferredList: [],
@@ -100,9 +99,6 @@
 
         // set current page
         this.attr('paging.current', 1);
-
-        // display results
-        this.attr('afterSearch', true);
       },
       setItems: function () {
         var self = this;
