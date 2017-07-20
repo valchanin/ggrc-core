@@ -96,8 +96,6 @@
         this.viewModel.attr('selected').replace([]);
         this.viewModel.attr('entries').replace([]);
 
-        this.setModel();
-
         if (this.viewModel.attr('deferred_to.list')) {
           deferredToList = this.viewModel.attr('deferred_to.list')
             .map(function (item) {
@@ -244,20 +242,6 @@
               });
             });
         }.bind(this));
-      },
-      setModel: function () {
-        var type = this.viewModel.attr('type');
-
-        this.viewModel.attr('model', this.viewModel.modelFromType(type));
-      },
-      '{viewModel} type': function () {
-        this.viewModel.attr('filterItems', []);
-        this.viewModel.attr('mappingItems', []);
-        this.viewModel.attr('afterSearch', false);
-
-        this.setModel();
-
-        setTimeout(this.viewModel.onSubmit.bind(this.viewModel));
       }
     },
 

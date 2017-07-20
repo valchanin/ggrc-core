@@ -73,12 +73,4 @@ describe('GGRC.VM.ObjectOperationsBaseVM', function () {
       expect(result).toEqual(types.governance.items[1]);
     });
   });
-
-  describe('onSubmit() method', function () {
-    it('sets true to baseVM.afterSearch', function () {
-      baseVM.attr('afterSearch', false);
-      baseVM.onSubmit();
-      expect(baseVM.attr('afterSearch')).toEqual(true);
-    });
-  });
 });

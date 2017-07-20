@@ -208,8 +208,7 @@ describe('GGRC.Components.objectMapper', function () {
         afterShown: function () {}
       });
       that = {
-        viewModel: viewModel,
-        setModel: jasmine.createSpy('setModel')
+        viewModel: viewModel
       };
       handler = events.inserted;
     });
@@ -223,10 +222,6 @@ describe('GGRC.Components.objectMapper', function () {
       handler.call(that);
       expect(viewModel.attr('entries').length)
         .toEqual(0);
-    });
-    it('calls setModel()', function () {
-      handler.call(that);
-      expect(that.setModel).toHaveBeenCalled();
     });
   });
 
@@ -363,56 +358,6 @@ describe('GGRC.Components.objectMapper', function () {
       handler.call(that, element, event);
       expect($.prototype.trigger)
         .toHaveBeenCalledWith('ajax:flash', {error: undefined});
-    });
-  });
-
-  describe('"setModel" handler', function () {
-    beforeEach(function () {
-      viewModel.attr({
-        modelFromType: function () {}
-      });
-      spyOn(viewModel, 'modelFromType')
-        .and.returnValue('mockModel');
-      handler = events.setModel;
-    });
-    it('sets model to model', function () {
-      handler.call({viewModel: viewModel});
-      expect(viewModel.attr('model')).toEqual('mockModel');
-    });
-  });
-
-  describe('"{viewModel} type" handler', function () {
-    var that;
-    beforeEach(function () {
-      viewModel.attr({
-        relevant: [1, 2, 3],
-        onSubmit: function () {}
-      });
-      that = {
-        viewModel: viewModel,
-        setModel: jasmine.createSpy(),
-        setBinding: jasmine.createSpy()
-      };
-      handler = events['{viewModel} type'];
-    });
-
-    it('sets empty array to filterItems', function () {
-      viewModel.attr('filterItems', ['someData']);
-      handler.call(that);
-      expect(viewModel.attr('filterItems.length')).toEqual(0);
-    });
-    it('sets empty array to mappingItems', function () {
-      viewModel.attr('mappingItems', ['someData']);
-      handler.call(that);
-      expect(viewModel.attr('mappingItems.length')).toEqual(0);
-    });
-    it('sets false to afterSearch', function () {
-      handler.call(that);
-      expect(viewModel.attr('afterSearch')).toEqual(false);
-    });
-    it('calls setModel()', function () {
-      handler.call(that);
-      expect(that.setModel).toHaveBeenCalled();
     });
   });
 

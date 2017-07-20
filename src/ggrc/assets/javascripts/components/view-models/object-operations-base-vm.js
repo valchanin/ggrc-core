@@ -13,6 +13,22 @@
           return CMS.Models
             .get_instance(this.attr('object'), this.attr('join_object_id'));
         }
+      },
+      showSearch: {
+        value: true
+      },
+      showResults: {
+        get: function () {
+          return !this.attr('showSearch');
+        },
+        set: function (value) {
+          this.attr('showSearch', !value);
+        }
+      },
+      model: {
+        get: function () {
+          return this.modelFromType(this.attr('type'));
+        }
       }
     },
     type: 'Control', // We set default as Control
@@ -23,10 +39,7 @@
         GGRC.Utils.Snapshots.inScopeModels);
       return types;
     },
-    filterItems: [],
-    mappingItems: [],
     object: '',
-    model: {},
     bindings: {},
     is_loading: false,
     is_saving: false,
@@ -38,7 +51,6 @@
     newEntries: [],
     relevant: [],
     submitCbs: $.Callbacks(),
-    afterSearch: false,
     useSnapshots: false,
     afterShown: function () {
       this.onSubmit();
@@ -54,8 +66,8 @@
       return _.findWhere(types, {value: type});
     },
     onSubmit: function () {
+      this.attr('showSearch', false);
       this.attr('submitCbs').fire();
-      this.attr('afterSearch', true);
     }
   });
 })(window.can, window.can.$);

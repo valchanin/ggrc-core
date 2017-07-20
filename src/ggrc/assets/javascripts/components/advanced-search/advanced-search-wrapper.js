@@ -7,8 +7,23 @@
   'use strict';
 
   var viewModel = can.Map.extend({
+    define: {
+      filterItems: {
+        value: [],
+        get: function (items) {
+          if (items && !items.length) {
+            items.push(GGRC.Utils.AdvancedSearch.create.state({
+              items: GGRC.Utils.State
+                .getDefaultStatesForModel(this.attr('modelName')),
+              operator: 'ANY',
+              modelName: this.attr('modelName')
+            }));
+          }
+          return items;
+        }
+      }
+    },
     modelName: null,
-    filterItems: [],
     mappingItems: [],
     availableAttributes: function () {
       var available = GGRC.Utils.TreeView.getColumnsForModel(
@@ -21,11 +36,19 @@
     resetFilters: function () {
       this.attr('filterItems', []);
       this.attr('mappingItems', []);
+    },
+    filterString: function () {
+      return GGRC.Utils.AdvancedSearch.buildFilter(this.attr('filterItems'));
     }
   });
 
   GGRC.Components('advancedSearchWrapper', {
     tag: 'advanced-search-wrapper',
-    viewModel: viewModel
+    viewModel: viewModel,
+    events: {
+      '{viewModel} modelName': function () {
+        this.viewModel.resetFilters();
+      }
+    }
   });
 })(window.can, window.GGRC);
