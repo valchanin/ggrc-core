@@ -26,7 +26,7 @@
       {(mapping-items)}="mappingItems"
       {(filter-items)}="filterItems">
       <div class="object-controls__container">
-        <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch">
+        <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch" {lock}="showSearch">
           <div class="object-controls__type">
             <h6>Object type</h6>
             <mapping-type-selector
@@ -118,7 +118,7 @@
 </div>
 
 <div class="modal-footer {{#if showResults}}expanded{{/if}}">
-  <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
+  <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults" {lock}="true">
     <mapper-results
       class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
       base-instance="parentInstance"

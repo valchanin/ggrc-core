@@ -18,8 +18,11 @@
     scope: {
       titleIcon: null,
       expanded: null,
+      lock: false,
       toggle: function () {
-        this.attr('expanded', !this.attr('expanded'));
+        if (!this.attr('lock')) {
+          this.attr('expanded', !this.attr('expanded'));
+        }
       }
     }
   });
