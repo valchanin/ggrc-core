@@ -69,6 +69,7 @@
 
     events: {
       '.create-control modal:success': function (el, ev, model) {
+        this.viewModel.attr('showResults', true);
         this.viewModel.attr('newEntries').push(model);
         this.element.find('mapper-results').viewModel().showNewEntries();
       },
