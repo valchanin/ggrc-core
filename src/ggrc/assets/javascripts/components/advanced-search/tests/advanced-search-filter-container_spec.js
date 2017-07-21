@@ -14,10 +14,11 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
     viewModel = GGRC.Components.getViewModel('advancedSearchFilterContainer');
   });
 
-  describe('items set() method', function () {
-    it('initializes "items" property with state filter if it is empty',
-    function () {
+  describe('items get() method', function () {
+    it('initializes "items" property with state filter if it is empty ' +
+    'and model is not stateless', function () {
       var items;
+      spyOn(GGRC.Utils.State, 'hasFilter').and.returnValue(true);
       viewModel.attr('items', []);
 
       items = viewModel.attr('items');
@@ -28,14 +29,27 @@ describe('GGRC.Components.advancedSearchFilterContainer', function () {
   });
 
   describe('addFilterCriterion() method', function () {
-    it('adds operator and attribute', function () {
+    it('adds only attribute if list is empty', function () {
       var items;
       viewModel.attr('items', can.List());
 
       viewModel.addFilterCriterion();
 
       items = viewModel.attr('items');
+      expect(items.length).toBe(1);
+      expect(items[0].type).toBe('attribute');
+    });
+
+    it('adds operator and attribute', function () {
+      var items;
+      viewModel.attr('items',
+        [GGRC.Utils.AdvancedSearch.create.attribute()]);
+
+      viewModel.addFilterCriterion();
+
+      items = viewModel.attr('items');
       expect(items.length).toBe(3);
+      expect(items[0].type).toBe('attribute');
       expect(items[1].type).toBe('operator');
       expect(items[2].type).toBe('attribute');
     });
