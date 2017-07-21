@@ -73,42 +73,6 @@ describe('GGRC.Components.objectSearch', function () {
     });
   });
 
-  describe('"{viewModel} type" handler', function () {
-    var that;
-    beforeEach(function () {
-      viewModel.attr({
-        relevant: [1, 2, 3],
-        onSubmit: function () {}
-      });
-      that = {
-        viewModel: viewModel,
-        setModel: jasmine.createSpy()
-      };
-      handler = events['{viewModel} type'];
-    });
-
-    it('sets empty string to filter', function () {
-      handler.call(that);
-      expect(viewModel.attr('filter')).toEqual('');
-    });
-    it('sets false to afterSearch', function () {
-      handler.call(that);
-      expect(viewModel.attr('afterSearch')).toEqual(false);
-    });
-    it('calls setModel()', function () {
-      handler.call(that);
-      expect(that.setModel).toHaveBeenCalled();
-    });
-    it('sets empty array to relevant if it is not in scope model',
-      function () {
-        spyOn(GGRC.Utils.Snapshots, 'isInScopeModel')
-          .and.returnValue(false);
-        handler.call(that);
-        expect(viewModel.attr('relevant').length)
-          .toEqual(0);
-      });
-  });
-
   describe('availableTypes() method', function () {
     it('correctly calls getMappingTypes', function () {
       var result;
