@@ -24,8 +24,9 @@
       items: {
         type: '*',
         Value: can.List,
-        set: function (items) {
-          if (!items.length) {
+        get: function (items) {
+          if (items && !items.length &&
+          GGRC.Utils.State.hasFilter(this.attr('modelName'))) {
             items.push(GGRC.Utils.AdvancedSearch.create.state());
           }
           return items;
@@ -50,7 +51,9 @@
      */
     addFilterCriterion: function () {
       var items = this.attr('items');
-      items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
+      if (items.length) {
+        items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
+      }
       items.push(GGRC.Utils.AdvancedSearch.create.attribute());
     },
     /**

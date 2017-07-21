@@ -101,7 +101,8 @@
         filterItems: {
           value: [],
           get: function (items) {
-            if (items && !items.length) {
+            if (items && !items.length &&
+              GGRC.Utils.State.hasFilter(this.attr('modelName'))) {
               items.push(GGRC.Utils.AdvancedSearch.create.state({
                 items: GGRC.Utils.State
                   .getDefaultStatesForModel(this.attr('modelName')),
