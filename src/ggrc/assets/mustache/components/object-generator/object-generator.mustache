@@ -15,8 +15,10 @@
   <div class="object-controls">
     <advanced-search-wrapper
       {model-name}="model.singular"
+      {model-display-name}="model.name"
       {(mapping-items)}="mappingItems"
-      {(filter-items)}="filterItems">
+      {(filter-items)}="filterItems"
+      {relevant-to}="relevantTo">
       <div class="object-controls__container">
         <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch" {lock}="showSearch">
           <div class="object-controls__template">
