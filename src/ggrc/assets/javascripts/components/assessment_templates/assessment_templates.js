@@ -84,7 +84,9 @@
           initialTemplate = nonDummyItem.subitems[0].value;
         }
 
-        this.attr('assessmentTemplate', initialTemplate);
+        if (!this.attr('assessmentTemplate')) {
+          this.attr('assessmentTemplate', initialTemplate);
+        }
       }
     },
     init: function () {

@@ -40,10 +40,17 @@ describe('GGRC.Components.assessmentTemplates', function () {
       ];
     });
 
-    it('selects the first item from the first option group', function () {
-      viewModel.attr('assessmentTemplate', 'template-123');
+    it('selects the first item from the first option group if it was empty',
+    function () {
+      viewModel.attr('assessmentTemplate', null);
       viewModel._selectInitialTemplate(templates);
       expect(viewModel.attr('assessmentTemplate')).toEqual('foo');
+    });
+
+    it('leaves item if the option was not empty', function () {
+      viewModel.attr('assessmentTemplate', 'template-123');
+      viewModel._selectInitialTemplate(templates);
+      expect(viewModel.attr('assessmentTemplate')).toEqual('template-123');
     });
 
     it('leaves the current template unchanged if only a dummy value in ' +
@@ -86,7 +93,7 @@ describe('GGRC.Components.assessmentTemplates', function () {
 
     it('selects the first non-dummy value if it precedes all object groups',
       function () {
-        viewModel.attr('assessmentTemplate', 'template-123');
+        viewModel.attr('assessmentTemplate', null);
         templates.splice(1, 0, {title: 'No Group Template', value: 'single'});
 
         viewModel._selectInitialTemplate(templates);
