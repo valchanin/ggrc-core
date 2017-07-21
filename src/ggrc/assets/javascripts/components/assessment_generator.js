@@ -26,7 +26,8 @@
           relevantTo: [{
             readOnly: true,
             type: instance.type,
-            id: instance.id
+            id: instance.id,
+            title: instance.title
           }],
           callback: this.generateAssessments.bind(this)
         });

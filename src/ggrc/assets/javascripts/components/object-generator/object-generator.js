@@ -75,14 +75,6 @@
 
         this.viewModel.attr('model', this.viewModel.modelFromType(type));
       },
-      '{viewModel} type': function () {
-        this.viewModel.attr('filter', '');
-        this.viewModel.attr('afterSearch', false);
-
-        this.setModel();
-
-        setTimeout(this.viewModel.onSubmit.bind(this.viewModel));
-      },
       '{viewModel} assessmentTemplate': function (viewModel, ev, val, oldVal) {
         var type;
         if (_.isEmpty(val)) {

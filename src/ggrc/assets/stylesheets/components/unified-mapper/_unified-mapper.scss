@@ -572,6 +572,15 @@ mapper-results-columns-configuration {
 }
 
 .object-controls {
+  @mixin controls-row {
+    display: flex;
+    margin: 16px 0px;
+    align-items: center;
+    >* {
+      margin-right: 16px;
+    }
+  }
+
   &__container {
     select {
       background: $white;
@@ -613,14 +622,17 @@ mapper-results-columns-configuration {
       margin-right: 8px;
     }
   }
-
-  &__type {
-    display: flex;
-    margin: 16px 0px;
-    align-items: center;
-    >* {
-      margin-right: 16px;
+  &__template {
+    assessment-templates {
+      @include controls-row;
+      select {
+        width: 140px;
+      }
     }
+  }
+  &__type {
+    @include controls-row;
+
     select {
       width: 200px;
     }
