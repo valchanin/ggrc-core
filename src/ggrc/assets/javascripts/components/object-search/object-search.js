@@ -35,13 +35,6 @@
         var type = this.viewModel.attr('type');
 
         this.viewModel.attr('model', this.viewModel.modelFromType(type));
-      },
-      '{viewModel} type': function () {
-        this.viewModel.attr('filter', '');
-        this.viewModel.attr('afterSearch', false);
-        this.viewModel.attr('relevant').replace([]);
-        this.setModel();
-        setTimeout(this.viewModel.onSubmit.bind(this.viewModel));
       }
     }
   });
