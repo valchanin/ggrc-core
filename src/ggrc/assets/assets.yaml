@@ -231,7 +231,6 @@ dashboard-js-files:
   - components/object-mapper/object-mapper.js
   - components/object-generator/object-generator.js
   - components/object-search/object-search.js
-  - components/unified-mapper/mapper-toolbar.js
   - components/unified-mapper/mapper-filter.js
   - components/unified-mapper/mapper-results.js
   - components/unified-mapper/mapper-results-item.js
@@ -486,7 +485,6 @@ dashboard-js-template-files:
   - components/object-mapper/object-mapper.mustache
   - components/object-generator/object-generator.mustache
   - components/object-search/object-search.mustache
-  - components/unified-mapper/mapper-toolbar.mustache
   - components/unified-mapper/mapper-filter.mustache
   - components/unified-mapper/mapper-results.mustache
   - components/unified-mapper/mapper-results-item.mustache
