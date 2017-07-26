@@ -210,17 +210,26 @@ class ExtendedInfo(object):
 
 class CommonModalUnifiedMapper(object):
   """Common locators for unified mapper modals."""
+  # pylint: disable=invalid-name
   MODAL = Common.MODAL_MAP
-  # labels
+  FILTER_TOGGLE_CSS = (By.CSS_SELECTOR,
+                       '.object-controls__container collapse-panel-click-area')
+  FILTER_ADD_ATTRIBUTE = (By.CSS_SELECTOR, ".filter-container__footer button")
+  FILTER_OPERATOR = (By.CSS_SELECTOR, ".filter-operator__content select")
+  FILTER_ATTRIBUTE_NAME = (By.CSS_SELECTOR, ".filter-attribute__name select")
+  FILTER_ATTRIBUTE_COMPARE = (
+      By.CSS_SELECTOR, ".filter-attribute__operator select")
+  FILTER_ATTRIBUTE_VALUE = (By.CSS_SELECTOR, ".filter-attribute__value input")
   MODAL_TITLE = (By.CSS_SELECTOR, MODAL + " h2")
-  OBJ_TYPE = (By.CSS_SELECTOR, MODAL + " .col:nth-child(1) h6")
-  FILTER_BY_EXPRESSION = (By.CSS_SELECTOR, MODAL + " .col.filter h6")
+  OBJ_TYPE = (By.CSS_SELECTOR, MODAL + " .object-controls__type h6")
   # user input elements
   OBJ_TYPE_DROPDOWN = (By.CSS_SELECTOR, MODAL + " .input-block-level")
   FILTER_VIA_EXPRESSION_TEXT_BOX = (By.CSS_SELECTOR, MODAL + " #mapper-filter")
   FILTER_BY_STATE_DROPDOWN = (By.CSS_SELECTOR,
                               MODAL + " .multiselect-dropdown__input")
-  BUTTON_SEARCH = (By.CSS_SELECTOR, MODAL + " .filter-buttons .btn-small")
+  FILTER_BY_STATE_DROPDOWN_OPTIONS = (By.CSS_SELECTOR,
+                                      MODAL + " .multiselect-dropdown__label")
+  BUTTON_SEARCH = (By.CSS_SELECTOR, MODAL + " button[type='submit']")
   FOUND_OBJECTS_TITLES = (By.CSS_SELECTOR, MODAL + " .flex-box .title-attr")
   FOUND_OBJECTS_CHECKBOXES = (By.CSS_SELECTOR,
                               MODAL + ' .flex-box [type="checkbox"]')
@@ -466,7 +475,7 @@ class ModalSetVisibleFields(object):
 
 class ModalSetVisibleFieldsMapper(ModalSetVisibleFields):
   """Locators for Set visible fields modals."""
-  MODAL = ".modal-body"
+  MODAL = ".modal"
   # labels
   MODAL_TITLE = MODAL + " h5"
   ATTR_LIST = ModalSetVisibleFields.ATTR_LIST
@@ -890,6 +899,7 @@ class AdminTreeView(object):
 
 
 class UnifiedMapperTreeView(TreeView):
+  """Common locators for UnifiedMapperTreeView"""
   MODAL = ".object-modal"
   HEADER = MODAL + " .list-header"
   ITEMS = MODAL + Common.TREE_ITEM

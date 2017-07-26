@@ -92,8 +92,8 @@ class Label(Element):
   """Generic label."""
 
 
-class RichTextInputField(Element):
-  """Common class for representation of Rich Text input."""
+class TextInputField(Element):
+  """Common class for representation of Text input."""
 
   def enter_text(self, text):
     """Clear text from element and enter new text."""
@@ -116,8 +116,8 @@ class RichTextInputField(Element):
     self.text = element.get_attribute("value")
 
 
-class TextInputField(RichTextInputField):
-  """Generic model for text input field."""
+class RichTextInputField(TextInputField):
+  """Generic model for rich text input field."""
 
 
 class Iframe(Element):
@@ -252,16 +252,25 @@ class DropdownStatic(Element):
   """Dropdown with predefined static elements."""
 
   def find_options(self):
+    """Find all options of dropdown by options locator"""
     return self.element.find_elements(*CommonDropdownMenu.DROPDOWN_OPTIONS)
 
   def select(self, member_name):
-    """Selects dropdown element based on dropdown element name."""
+    """Selects dropdown element based on dropdown element value."""
+    self._select_by("value", member_name)
+
+  def select_by_label(self, label):
+    """Selects dropdown element based on dropdown element label."""
+    self._select_by("label", label)
+
+  def _select_by(self, by_attr, val):
+    """Selects dropdown element based on dropdown attr"""
     for element in self.find_options():
-      if element.get_attribute("value") == member_name:
+      if element.get_attribute(by_attr) == val:
         element.click()
         break
     else:
-      exception.ElementNotFound(member_name)
+      exception.ElementNotFound(val)
 
 
 class Component(InstanceRepresentation):
