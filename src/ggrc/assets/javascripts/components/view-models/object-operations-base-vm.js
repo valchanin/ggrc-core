@@ -14,23 +14,14 @@
             .get_instance(this.attr('object'), this.attr('join_object_id'));
         }
       },
-      showSearch: {
-        value: true
-      },
-      showResults: {
-        get: function () {
-          return !this.attr('showSearch');
-        },
-        set: function (value) {
-          this.attr('showSearch', !value);
-        }
-      },
       model: {
         get: function () {
           return this.modelFromType(this.attr('type'));
         }
       }
     },
+    showSearch: true,
+    showResults: false,
     type: 'Control', // We set default as Control
     availableTypes: function () {
       var types = GGRC.Mappings.getMappingTypes(
@@ -63,7 +54,7 @@
       return _.findWhere(types, {value: type});
     },
     onSubmit: function () {
-      this.attr('showSearch', false);
+      this.attr('showResults', true);
       this.attr('submitCbs').fire();
     }
   });
