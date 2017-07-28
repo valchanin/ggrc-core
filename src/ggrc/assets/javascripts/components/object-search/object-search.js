@@ -25,11 +25,6 @@
           return types;
         }
       });
-    },
-    events: {
-      inserted: function () {
-        this.viewModel.onSubmit();
-      }
     }
   });
 })(window.can, window.can.$);
