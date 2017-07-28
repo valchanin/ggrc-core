@@ -20,7 +20,7 @@
       {(filter-items)}="filterItems"
       {relevant-to}="relevantTo">
       <div class="object-controls__container">
-        <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch" {lock}="showSearch">
+        <collapsible-panel {title-text}="'filter'" {(expanded)}="showSearch">
           <div class="object-controls__template">
             <assessment-templates
               instance="parentInstance"
@@ -73,7 +73,7 @@
 </div>
 
 <div class="modal-footer {{#if showResults}}expanded{{/if}}">
-  <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults" {lock}="true">
+  <collapsible-panel {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
     <mapper-results
       class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
       base-instance="parentInstance"
