@@ -934,21 +934,6 @@ describe('GGRC.Components.mapperResults', function () {
         expect(viewModel.setItemsDebounced).toHaveBeenCalled();
       });
     });
-
-    describe('"{viewModel} type" event', function () {
-      var handler;
-
-      beforeEach(function () {
-        handler = events['{viewModel} type'].bind({
-          viewModel: viewModel
-        });
-      });
-      it('sets empty array to items of viewModel', function () {
-        viewModel.attr('items', [1, 2, 3]);
-        handler();
-        expect(viewModel.attr('items').length).toEqual(0);
-      });
-    });
   });
 
   describe('buildRelatedData() method', function () {

@@ -423,9 +423,6 @@
       },
       '{viewModel.sort} direction': function () {
         this.viewModel.setItemsDebounced();
-      },
-      '{viewModel} type': function () {
-        this.viewModel.attr('items', []);
       }
     }
   });
