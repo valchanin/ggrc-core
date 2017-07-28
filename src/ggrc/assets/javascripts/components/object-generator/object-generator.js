@@ -39,8 +39,6 @@
         this.viewModel.attr('selected').replace([]);
         this.viewModel.attr('entries').replace([]);
 
-        this.setModel();
-
         self.viewModel.afterShown();
       },
       closeModal: function () {
@@ -71,11 +69,6 @@
           assessmentTemplate: assessmentTemplate,
           context: this
         });
-      },
-      setModel: function () {
-        var type = this.viewModel.attr('type');
-
-        this.viewModel.attr('model', this.viewModel.modelFromType(type));
       },
       '{viewModel} assessmentTemplate': function (viewModel, ev, val, oldVal) {
         var type;

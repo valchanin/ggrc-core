@@ -7,13 +7,10 @@ describe('GGRC.Components.objectSearch', function () {
   'use strict';
 
   var Component;
-  var events;
   var viewModel;
-  var handler;
 
   beforeAll(function () {
     Component = GGRC.Components.get('objectSearch');
-    events = Component.prototype.events;
   });
   beforeEach(function () {
     viewModel = new GGRC.Components.getViewModel('objectSearch')();
@@ -35,41 +32,6 @@ describe('GGRC.Components.objectSearch', function () {
         viewModel.attr('is_loading', false);
         expect(viewModel.isLoadingOrSaving()).toEqual(false);
       });
-    });
-  });
-
-  describe('"inserted" event', function () {
-    var that;
-
-    beforeEach(function () {
-      viewModel.attr({
-        afterShown: function () {}
-      });
-      that = {
-        viewModel: viewModel,
-        setModel: jasmine.createSpy('setModel')
-      };
-      handler = events.inserted;
-    });
-
-    it('calls setModel()', function () {
-      handler.call(that);
-      expect(that.setModel).toHaveBeenCalled();
-    });
-  });
-
-  describe('"setModel" handler', function () {
-    beforeEach(function () {
-      viewModel.attr({
-        modelFromType: function () {}
-      });
-      spyOn(viewModel, 'modelFromType')
-        .and.returnValue('mockModel');
-      handler = events.setModel;
-    });
-    it('sets model to model', function () {
-      handler.call({viewModel: viewModel});
-      expect(viewModel.attr('model')).toEqual('mockModel');
     });
   });
 

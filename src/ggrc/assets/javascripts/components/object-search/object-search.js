@@ -28,13 +28,7 @@
     },
     events: {
       inserted: function () {
-        this.setModel();
         this.viewModel.afterShown();
-      },
-      setModel: function () {
-        var type = this.viewModel.attr('type');
-
-        this.viewModel.attr('model', this.viewModel.modelFromType(type));
       }
     }
   });
