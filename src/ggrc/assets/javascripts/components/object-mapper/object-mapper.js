@@ -108,7 +108,7 @@
           this.viewModel.attr('deferred_list', deferredToList);
         }
 
-        self.viewModel.onSubmit();
+        self.viewModel.attr('submitCbs').fire();
       },
       closeModal: function () {
         this.viewModel.attr('is_saving', false);

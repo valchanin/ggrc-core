@@ -39,7 +39,7 @@
         this.viewModel.attr('selected').replace([]);
         this.viewModel.attr('entries').replace([]);
 
-        self.viewModel.onSubmit();
+        self.viewModel.attr('submitCbs').fire();
       },
       closeModal: function () {
         this.viewModel.attr('is_saving', false);
