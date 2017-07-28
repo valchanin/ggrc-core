@@ -16,6 +16,10 @@
     tag: tag,
     template: tpl,
     scope: {
+      renderContent: function () {
+        return this.attr('softMode') || this.attr('expanded');
+      },
+      softMode: false,
       expanded: null
     }
   });
