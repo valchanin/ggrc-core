@@ -59,7 +59,7 @@ describe('GGRC.Components.objectGenerator', function () {
       viewModel.attr({
         selected: [1, 2, 3],
         entries: [3, 2, 1],
-        afterShown: function () {}
+        onSubmit: function () {}
       });
       that = {
         viewModel: viewModel

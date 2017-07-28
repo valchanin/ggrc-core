@@ -28,7 +28,7 @@
     },
     events: {
       inserted: function () {
-        this.viewModel.afterShown();
+        this.viewModel.onSubmit();
       }
     }
   });

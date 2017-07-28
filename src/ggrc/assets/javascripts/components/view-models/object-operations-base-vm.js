@@ -52,9 +52,6 @@
     relevant: [],
     submitCbs: $.Callbacks(),
     useSnapshots: false,
-    afterShown: function () {
-      this.onSubmit();
-    },
     modelFromType: function (type) {
       var types = _.reduce(_.values(
         this.availableTypes()), function (memo, val) {
