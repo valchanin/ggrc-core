@@ -12,9 +12,6 @@
       '/components/object-search/object-search.mustache'),
     viewModel: function () {
       return GGRC.VM.ObjectOperationsBaseVM.extend({
-        isLoadingOrSaving: function () {
-          return this.attr('is_loading');
-        },
         object: 'MultitypeSearch',
         type: 'Program',
         availableTypes: function () {
