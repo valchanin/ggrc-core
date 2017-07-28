@@ -13,7 +13,6 @@
     titleText: '@',
     titleIcon: '@',
     extraCssClass: '@',
-    lock: false,
     define: {
       /**
        * Public attribute to indicate expanded/collapsed status of the component
