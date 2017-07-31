@@ -55,6 +55,7 @@
     },
     onSubmit: function () {
       this.attr('showResults', true);
+      this.attr('showSearch', false);
       this.attr('submitCbs').fire();
     }
   });
