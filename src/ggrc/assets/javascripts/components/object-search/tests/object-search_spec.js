@@ -24,4 +24,14 @@ describe('GGRC.Components.objectSearch', function () {
       expect(result).toEqual('types');
     });
   });
+
+  describe('onSubmit() method', function () {
+    it('sets resultsRequested flag to true', function () {
+      viewModel.attr('resultsRequested', false);
+
+      viewModel.onSubmit();
+
+      expect(viewModel.attr('resultsRequested')).toBe(true);
+    });
+  });
 });

@@ -20,6 +20,11 @@
             ['TaskGroupTask', 'TaskGroup', 'CycleTaskGroupObjectTask'],
             []);
           return types;
+        },
+        resultsRequested: false,
+        onSubmit: function () {
+          this.attr('resultsRequested', true);
+          this._super();
         }
       });
     }

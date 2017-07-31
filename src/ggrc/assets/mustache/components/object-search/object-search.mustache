@@ -60,7 +60,8 @@
 </div>
 
 <div class="modal-footer {{#if showResults}}expanded{{/if}}">
-  <collapsible-panel {soft-mode}="true" {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
+  <collapsible-panel {soft-mode}="true" {title-text}="'Search Results {{#if resultsRequested}}({{totalObjects}}){{/if}}'" {(expanded)}="showResults">
+    {{#if resultsRequested}}
     <mapper-results
       class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
       base-instance="parentInstance"
@@ -76,5 +77,10 @@
       {(filter-items)}="filterItems"
       {(mapping-items)}="mappingItems">
     </mapper-results>
+    {{else}}
+    <div class="well well-small">
+      No results
+    </div>
+    {{/if}}
   </collapsible-panel>
 </div>
