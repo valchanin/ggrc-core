@@ -27,6 +27,14 @@
           this._super();
         }
       });
+    },
+    helpers: {
+      displayCount: function (countObserver) {
+        var count = countObserver();
+        if (count) {
+          return '(' + count + ')';
+        }
+      }
     }
   });
 })(window.can, window.can.$);
