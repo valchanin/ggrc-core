@@ -94,9 +94,9 @@ class BaseWebUiService(object):
     """Navigate to info page URL of object according to URL of object and
     return info widget class of object.
     """
-    info_page_url = self.url_obj_info_page.format(
-        obj_url=obj.url)
-    selenium_utils.open_url(self.driver, info_page_url)
+    if obj is not None:
+      info_page_url = self.url_obj_info_page.format(obj_url=obj.url)
+      selenium_utils.open_url(self.driver, info_page_url)
     return self.info_widget_cls(self.driver)
 
   def open_info_panel_of_obj_by_title(self, src_obj, obj):
@@ -127,7 +127,9 @@ class BaseWebUiService(object):
 
   def get_obj_from_info_page(self, obj):
     """Get and return object from Info page."""
-    scope = self.get_scope_from_info_page(obj)
+    scope = (
+        self.get_scope_from_info_page(obj) if obj is not None else
+        self.info_widget_cls(self.driver).get_info_widget_obj_scope())
     return self.create_list_objs(
         entity_factory=self.entities_factory_cls, list_scopes=[scope])[0]
 
@@ -444,13 +446,40 @@ class AssessmentsService(BaseWebUiService):
     and if 'asmt_tmpl_obj' then to Assessment Template title, generate
     new Assessment(s).
     """
-    objs_under_asmt_titles = [obj_under.title for obj_under in
-                              objs_under_asmt]
+    objs_under_asmt_titles = [obj_under.title for obj_under in objs_under_asmt]
     objs_widget = self.open_widget_of_mapped_objs(src_obj)
     asmt_tmpl_title = asmt_tmpl_obj.title if asmt_tmpl_obj else None
     (objs_widget.tree_view.open_3bbs().select_generate().
      generate_asmts(asmt_tmpl_title=asmt_tmpl_title,
                     objs_under_asmt_titles=objs_under_asmt_titles))
+
+  def edit_obj_title_via_info_widget(self, src_obj):
+    """Open generic widget of object, open edit modal from drop down menu.
+    Modify current title and apply changes by pressing 'save and close' button
+    """
+    obj_info_page = self.open_info_page_of_obj(src_obj)
+    modal = obj_info_page.open_info_3bbs().select_edit()
+    modal.enter_title("Assessment " + string_utils.random_string(size=20))
+    modal.save_and_close()
+    return self
+
+  def complete_assessment(self, obj):
+    """Navigate to info page of object according to URL of object then find and
+    click 'Complete' button then return info page of object in new state"""
+    self.open_info_page_of_obj(obj).click_complete()
+    return self
+
+  def verify_assessment(self, obj):
+    """Navigate to info page of object according to URL of object then find and
+    click 'Verify' button then return info page of object in new state"""
+    self.open_info_page_of_obj(obj).click_verify()
+    return self
+
+  def reject_assessment(self, obj):
+    """Navigate to info page of object according to URL of object then find and
+    click 'Reject' button then return info page of object in new state"""
+    self.open_info_page_of_obj(obj).click_reject()
+    return self
 
 
 class ControlsService(SnapshotsWebUiService):

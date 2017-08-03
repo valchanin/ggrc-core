@@ -168,8 +168,7 @@ class TreeView(base.TreeView):
     _locator_3bbs = (
         By.CSS_SELECTOR, self._locators.BUTTON_3BBS.format(self.widget_name))
     base.Button(self._driver, _locator_3bbs).click()
-    return self.dropdown_settings_cls(
-        self._driver, self.obj_name)
+    return self.dropdown_settings_cls(self._driver, self.obj_name)
 
   def select_member_by_title(self, title):
     """Select member on Tree View by title.

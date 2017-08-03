@@ -63,6 +63,27 @@ class Test(InstanceRepresentation):
     'exclude_attrs' - list of excluding attributes names.
     Finally, make pytest assert for objects, then xfail assert for attributes.
     """
+    split_objs = (
+        Test.extended_assert_wo_xfail(
+            expected_objs, actual_objs, *exclude_attrs))
+    assert (True if Entity.is_list_of_attrs_equal(
+        split_objs["exp_ex_attrs"], split_objs["act_ex_attrs"])
+        else pytest.xfail(reason=issue_msg))
+
+  @staticmethod
+  def extended_assert_wo_xfail(expected_objs, actual_objs, *exclude_attrs):
+    """Perform extended assert for expected and actual objects according to
+    dictionary of attributes to exclude and providing issue's message.
+    Initially, based on original objects prepare expected and actual
+    collections to performing of extended comparison procedure ('split_objs'),
+    where:
+    'exp_objs_wo_ex_attrs', 'act_objs_wo_ex_attrs' - list objects w/o excluding
+    attributes;
+    'exp_ex_attrs', 'act_ex_attrs' - list dictionaries w/ excluding attributes
+    (items which contain attributes' names and values);
+    'issue_msg' - issue message for pytest xfail procedure;
+    'exclude_attrs' - list of excluding attributes names.
+    """
     split_objs = Entity.extract_excluding_attrs(
         expected_objs, actual_objs, *exclude_attrs)
     assert (split_objs["exp_objs_wo_ex_attrs"] ==
@@ -70,9 +91,7 @@ class Test(InstanceRepresentation):
         messages.AssertionMessages.format_err_msg_equal(
             split_objs["exp_objs_wo_ex_attrs"],
             split_objs["act_objs_wo_ex_attrs"]))
-    assert (True if Entity.is_list_of_attrs_equal(
-        split_objs["exp_ex_attrs"], split_objs["act_ex_attrs"])
-        else pytest.xfail(reason=issue_msg))
+    return split_objs
 
 
 class TestUtil(InstanceRepresentation):

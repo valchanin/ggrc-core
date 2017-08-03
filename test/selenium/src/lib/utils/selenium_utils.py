@@ -33,6 +33,11 @@ def open_url(driver, url):
     driver.get(url)
 
 
+def refresh_page(driver):
+  """Refresh Page in current browser session"""
+  driver.refresh()
+
+
 def switch_to_new_window(driver):
   """Wait until new window will be opened, have the number of windows handles
   increase and then switch to last opened window.
@@ -82,6 +87,17 @@ def get_when_visible(driver, locator):
 def wait_until_condition(driver, condition):
   """Wait until given expected condition is met."""
   _webdriver_wait(driver).until(condition)
+
+
+def wait_until_elements_present(driver, *locators):
+  """Wait until all elements for given locators are present in DOM."""
+  for locator in locators:
+    wait_until_present(driver, locator)
+
+
+def wait_until_present(driver, locator):
+  """Wait until element for given locator is present in DOM."""
+  wait_until_condition(driver, EC.presence_of_element_located(locator))
 
 
 def wait_until_not_present(driver, locator):

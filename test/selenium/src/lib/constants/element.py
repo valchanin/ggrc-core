@@ -223,6 +223,7 @@ class CommonAssessment(Common):
   STATE = Base.STATE
   CREATORS = "Creators"
   CREATORS_ = "Creator(s)"
+  COMMENTS = "Comments"
   ASSIGNEES = "Assignees"
   ASSIGNEES_ = "Assignee(s)"
   VERIFIERS = "Verifiers"
@@ -252,7 +253,7 @@ class ObjectStates(object):
 
 class BaseStates(object):
   """Common states for Audit and Assessment objects."""
-  IN_PROGRESS = "In progress"
+  IN_PROGRESS = "In Progress"
   COMPLETED = "Completed"
 
 

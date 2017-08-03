@@ -553,21 +553,21 @@ class TestSnapshots(base.Test):
       - check Assessment
       - check Issue
     """
-    origin_control = create_audit_with_control_and_update_control[
-        "update_control_rest"][0]
     snapshoted_control = create_audit_with_control_and_update_control[
         "new_control_rest"][0]
     # due to 'actual_control.custom_attributes = {None: None}'
     expected_obj = (dynamic_object.repr_ui().update_attrs(
-        custom_attributes={None: None}))
+        custom_attributes={None: None}, updated_at=None))
     expected_obj_service = get_ui_service(expected_obj.type)(selenium)
     (webui_service.ControlsService(selenium).map_objs_via_tree_view(
         src_obj=expected_obj, dest_objs=[snapshoted_control]))
-    actual_objs = expected_obj_service.get_list_objs_from_tree_view(
-        src_obj=origin_control)
-    assert [expected_obj] == actual_objs, (
+    actual_obj = expected_obj_service.get_obj_from_info_page(obj=expected_obj)
+    # due to 'expected_obj.objects_under_assessment = None'
+    actual_obj.update_attrs(objects_under_assessment=None,
+                            custom_attributes={None: None})
+    assert expected_obj == actual_obj, (
         messages.AssertionMessages.
-        format_err_msg_equal(expected_obj, actual_objs))
+        format_err_msg_equal(expected_obj, actual_obj))
 
   @pytest.mark.parametrize(
       "dynamic_object",
