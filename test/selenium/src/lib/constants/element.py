@@ -429,3 +429,11 @@ class TransformationElements(TransformationSetVisibleFields, CommonAssessment):
   """All transformation elements' labels and properties witch are using to
   convert UI attributes to entities attributes.
   """
+
+
+class UnifiedMapperModal(object):
+  """Class that represent ui of Unified Mapper"""
+  OPERATOR_AND = "AND"
+  OPERATOR_OR = "OR"
+  ATTRIBUTE_TITLE = Common.TITLE
+  COMPARE_OPERATOR_EQUALS = "="
