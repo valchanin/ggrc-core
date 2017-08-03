@@ -18,7 +18,7 @@ class RestClient(object):
   """Client for HTTP interactions with GGRC's REST API."""
   BASIC_HEADERS = {'X-Requested-By': 'GGRC',
                    'Content-Type': 'application/json',
-                   'Accept-Encoding': 'gzip, deflate'}
+                   'Accept-Encoding': 'gzip, deflate, br'}
 
   STATUS_CODES = {'OK': 200,
                   'FAIL': [400, 404, 500]}

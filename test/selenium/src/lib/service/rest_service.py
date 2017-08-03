@@ -203,12 +203,19 @@ class AssessmentsService(BaseRestService):
     objects with filtered attributes.
     """
     objs = BaseRestService(url.ASSESSMENTS).create_objs(
-        count, factory_params=None, **attrs_for_template)
-    # add Default Person as 'Assessor', 'Creator' to Assessments
-    RelationshipsService().map_objs(
-        src_obj=ObjectPersonsFactory().default(), dest_objs=objs,
-        attrs={"AssigneeType": "Creator,Assessor"})
+        count, factory_params, **attrs_for_template)
+    assignees = [assignee for obj in objs for assignee in obj.assignees]
+    if assignees:
+      RelationshipsService().map_objs(
+          src_obj=ObjectPersonsFactory().default(), dest_objs=objs,
+          attrs={"AssigneeType": ",".join(assignees)})
     return objs
+
+  def update_obj(self, obj):
+    """Update attributes values of existing Assessment via REST API"""
+    return (self.client.update_object(
+        href=obj.href, **dict({k: v for k, v in obj.__dict__
+                              .iteritems() if k != "href"}.items())))
 
 
 class IssuesService(BaseRestService):

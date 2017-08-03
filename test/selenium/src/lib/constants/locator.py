@@ -38,8 +38,7 @@ class Common(object):
   DOWN = "down"
   # xpath helper
   XPATH_NOT_HIDDEN = "[not(ancestor::section[contains(@class, 'hidden')])]"
-  INFO_WIDGET_XPATH = ("//section[starts-with(@class,'info')]" +
-                       XPATH_NOT_HIDDEN)
+  INFO_WIDGET_XPATH = "//section[contains(@class,'info')]" + XPATH_NOT_HIDDEN
   # import / export pages
   CONTENT = ".content"
   OPTION = "option"
@@ -533,10 +532,17 @@ class WidgetBarButtonAddDropdown(object):
 class ObjectWidget(object):
   """Locators for Generic objects widget."""
   _HEADER = '.header [class^="span"]'
+  _STATE = 'div.state-value'
   HEADER_TITLE = (By.CSS_SELECTOR, _HEADER + ' [data-field="title"]')
   HEADER_OWNER = (
       By.CSS_SELECTOR, _HEADER + ' [data-field="owners"]')
-  HEADER_STATE = (By.CSS_SELECTOR, _HEADER + ' [data-field="status"]')
+  HEADER_STATE = (By.CSS_SELECTOR, _STATE)
+  HEADER_STATE_IN_PROGRESS = (By.CSS_SELECTOR, _STATE + '.state-inprogress')
+  HEADER_STATE_COMPLETED = (By.CSS_SELECTOR, _STATE + '.state-completed')
+  HEADER_STATE_READY_FOR_REVIEW = (
+      By.CSS_SELECTOR, _STATE + '.state-readyforreview')
+  HEADER_STATE_VERIFIED = (By.CSS_SELECTOR, _STATE + '.state-verified')
+
   HEADER_LAST_ASSESSMENT_DATE = (
       By.CSS_SELECTOR, _HEADER + ' [data-field="last_assessment_date"]')
   MEMBERS_TITLE_LIST = (
@@ -582,7 +588,7 @@ class ModalCloneAudit(ModalCommonConfirmAction):
 class CommonWidgetInfo(object):
   """Common locators for Info widgets and Info panels."""
   _NOT_HIDDEN = Common.XPATH_NOT_HIDDEN
-  _INFO_WIDGET_XPATH = Common.INFO_WIDGET_XPATH + _NOT_HIDDEN
+  _INFO_WIDGET_XPATH = Common.INFO_WIDGET_XPATH
   _MAIN_HEADER_XPATH = "//div[contains(@class,'pane-header')]" + _NOT_HIDDEN
   _HEADERS_AND_VALUES = (_INFO_WIDGET_XPATH +
                          '//div[starts-with(./@class, "span")]//h6/..')
@@ -599,6 +605,7 @@ class CommonWidgetInfo(object):
   # user input elements
   BUTTON_3BBS = (By.XPATH, _INFO_WIDGET_XPATH + "//*[@data-toggle='dropdown']")
 
+print CommonWidgetInfo.BUTTON_3BBS
 
 class WidgetInfoPanel(CommonWidgetInfo):
   """Locators specific for Info panels."""
@@ -717,6 +724,12 @@ class WidgetInfoAssessment(WidgetInfoPanel):
   CODE_VALUE_CSS = (By.CSS_SELECTOR, _CODE + " .inline__content-wrapper")
   # comments section
   COMMENTS_CSS = (By.CSS_SELECTOR, ".assessment-comments")
+  # state section
+  BUTTON_3BBS = (By.CSS_SELECTOR, ".btn-3bbps")
+  BUTTON_COMPLETE = (By.XPATH, "//button[contains(text(), 'Complete')]")
+  BUTTON_VERIFY = (By.XPATH, "//button[contains(text(), 'Verify')]")
+  BUTTON_REJECT = (By.XPATH, "//button[contains(text(), 'Reject')]")
+  ICON_VERIFIED = (By.CSS_SELECTOR, "i.verified-icon")
 
 
 class WidgetInfoAssessmentTemplate(WidgetInfoPanel):

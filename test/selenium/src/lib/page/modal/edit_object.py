@@ -22,6 +22,10 @@ class _EditModal(modal_base.BaseModal):
     self.button_save_and_close.click()
 
 
+class Assessments(modal_base.AsmtsModal, _EditModal):
+  """Assessments edit modal."""
+
+
 class Programs(modal_base.ProgramsModal, _EditModal):
   """Programs edit modal."""
 

@@ -784,12 +784,12 @@ class AssessmentEntity(Entity):
       "updated_at", "objects_under_assessment", "custom_attributes",
       "comments"]
 
-  def __init__(self, status=None, audit=None, owners=None,
-               recipients=None, assignees=None, assessor=None, creator=None,
-               verifier=None, verified=None, updated_at=None,
-               objects_under_assessment=None, os_state=None,
-               custom_attribute_definitions=None, custom_attribute_values=None,
-               custom_attributes=None, comments=None):
+  def __init__(self, status=None, audit=None, owners=None, recipients=None,
+               assignees=None, assessor=None, creator=None, verifier=None,
+               verified=None, updated_at=None, objects_under_assessment=None,
+               os_state=None, custom_attribute_definitions=None,
+               custom_attribute_values=None, custom_attributes=None,
+               comments=None):
     super(AssessmentEntity, self).__init__()
     # REST and UI
     self.status = status  # state (e.g. "Not Started")

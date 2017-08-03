@@ -547,6 +547,7 @@ class AssessmentsFactory(EntitiesFactory):
   """Factory class for Assessments entities."""
 
   obj_attrs_names = Entity.get_attrs_names_for_entities(AssessmentEntity)
+  default_person = None
 
   @classmethod
   def generate(cls, objs_under_asmt, audit, asmt_tmpl=None):
@@ -580,11 +581,11 @@ class AssessmentsFactory(EntitiesFactory):
 
   @classmethod
   def create(cls, type=None, id=None, title=None, href=None, url=None,
-             slug=None, status=None, owners=None, audit=None,
-             recipients=None, assignees=None, verified=None, updated_at=None,
+             slug=None, status=None, owners=None, audit=None, recipients=None,
+             assignees=None, verified=None, verifier=None, updated_at=None,
              objects_under_assessment=None, os_state=None,
              custom_attribute_definitions=None, custom_attribute_values=None,
-             custom_attributes=None):
+             custom_attributes=None, previous_status=None):
     """Create Assessment object.
     Random values will be used for title and slug.
     Predictable values will be used for type, status, recipients,
@@ -592,20 +593,21 @@ class AssessmentsFactory(EntitiesFactory):
     """
     # pylint: disable=too-many-locals
     asmt_entity = cls._create_random_asmt()
-    asmt_entity = Entity.update_objs_attrs_values_by_entered_data(
-        obj_or_objs=asmt_entity, is_allow_none_values=False, type=type, id=id,
+    asmt_entity = cls._update_asmt_attrs_values(
+        obj=asmt_entity, is_allow_none_values=False, type=type, id=id,
         title=title, href=href, url=url, slug=slug, status=status,
         owners=owners, audit=audit, recipients=recipients, assignees=assignees,
-        verified=verified, updated_at=updated_at,
+        verified=verified, verifier=verifier, updated_at=updated_at,
         objects_under_assessment=objects_under_assessment, os_state=os_state,
         custom_attribute_definitions=custom_attribute_definitions,
         custom_attribute_values=custom_attribute_values,
-        custom_attributes=custom_attributes)
+        custom_attributes=custom_attributes, previous_status=previous_status)
     return asmt_entity
 
   @classmethod
   def _create_random_asmt(cls):
     """Create Assessment entity with randomly and predictably filled fields."""
+    cls.default_person = ObjectPersonsFactory().default()
     random_asmt = AssessmentEntity()
     random_asmt.type = cls.obj_asmt
     random_asmt.title = cls.generate_string(cls.obj_asmt)
@@ -615,10 +617,22 @@ class AssessmentsFactory(EntitiesFactory):
         (unicode(roles.ASSESSOR), unicode(roles.CREATOR),
          unicode(roles.VERIFIER)))
     random_asmt.verified = False
+    random_asmt.assessor = [unicode(cls.default_person.name)]
+    random_asmt.creator = [unicode(cls.default_person.name)]
     random_asmt.assignees = {
-        "Assessor": [ObjectPersonsFactory().default().__dict__],
-        "Creator": [ObjectPersonsFactory().default().__dict__]}
+        "Assessor": [cls.default_person.__dict__],
+        "Creator": [cls.default_person.__dict__]}
     return random_asmt
+
+  @classmethod
+  def _update_asmt_attrs_values(cls, obj, **arguments):
+    """Update Assessments (obj) attributes values according to dictionary of
+    arguments (key = value). Generated data-'obj', entered data-'**arguments'.
+    """
+    if arguments.get("verifier"):
+      obj.assignees['Verifier'] = [cls.default_person.__dict__]
+    return Entity.update_objs_attrs_values_by_entered_data(
+        obj_or_objs=obj, **arguments)
 
 
 class IssuesFactory(EntitiesFactory):
