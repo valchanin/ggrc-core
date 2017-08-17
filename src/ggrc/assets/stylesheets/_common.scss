@@ -740,9 +740,9 @@ p {
   &.state-inprogress {
     background: $status-inprogress;
   }
-  &.state-readyforreview,
+  &.state-inreview,
   &.state-managerreview {
-    background: $status-readyforreview;
+    background: $status-inreview;
   }
   &.state-active,
   &.state-verified,
@@ -799,12 +799,12 @@ p {
       background: $status-inprogress;
     }
   }
-  &.state-readyforreview,
+  &.state-inreview,
   &.state-managerreview {
-    color: $status-readyforreview;
+    color: $status-inreview;
 
     &:before {
-      background: $status-readyforreview;
+      background: $status-inreview;
     }
   }
   &.state-active,
