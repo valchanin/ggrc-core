@@ -68,14 +68,38 @@
         comments: {
           Value: can.List
         },
-        urls: {
+        documents: {
           Value: can.List
+        },
+        urls: {
+          get: function () {
+            var self = this;
+            return this.attr('documents')
+              .filter(function (document) {
+                return document.attr('document_type') ===
+                  self.attr('documentTypes.urls');
+              });
+          }
         },
         referenceUrls: {
-          Value: can.List
+          get: function () {
+            var self = this;
+            return this.attr('documents')
+              .filter(function (document) {
+                return document.attr('document_type') ===
+                  self.attr('documentTypes.referenceUrls');
+              });
+          }
         },
         evidences: {
-          Value: can.List
+          get: function () {
+            var self = this;
+            return this.attr('documents')
+              .filter(function (document) {
+                return document.attr('document_type') ===
+                  self.attr('documentTypes.evidences');
+              });
+          }
         },
         editMode: {
           type: 'boolean',
@@ -128,17 +152,19 @@
       getSnapshotQuery: function () {
         return this.getQuery('Snapshot');
       },
-      getDocumentQuery: function (documentType) {
+      getDocumentQuery: function () {
         var query = this.getQuery(
           'Document',
           {sortBy: 'created_at', sortDirection: 'desc'},
-          this.getDocumentAdditionFilter(documentType));
+          null);
         return query;
       },
-      requestQuery: function (query, type) {
+      requestQuery: function (query, types) {
         var dfd = can.Deferred();
-        type = type || '';
-        this.attr('isUpdating' + can.capitalize(type), true);
+        types = types || [];
+        _.each(types, function (type) {
+          this.attr('isUpdating' + can.capitalize(type), true);
+        }, this);
         GGRC.Utils.QueryAPI
           .batchRequests(query)
           .done(function (response) {
@@ -150,7 +176,9 @@
             dfd.resolve([]);
           })
           .always(function () {
-            this.attr('isUpdating' + can.capitalize(type), false);
+            _.each(types, function (type) {
+              this.attr('isUpdating' + can.capitalize(type), false);
+            }, this);
           }.bind(this));
         return dfd;
       },
@@ -160,27 +188,15 @@
       },
       loadComments: function () {
         var query = this.getCommentQuery();
-        return this.requestQuery(query, 'comments');
+        return this.requestQuery(query, ['comments']);
       },
-      loadEvidences: function () {
-        var query = this.getDocumentQuery(
-          this.attr('documentTypes.evidences'));
-        return this.requestQuery(query, 'evidences');
-      },
-      loadUrls: function () {
-        var query = this.getDocumentQuery(
-          this.attr('documentTypes.urls'));
-        return this.requestQuery(query, 'urls');
-      },
-      loadReferenceUrls: function () {
-        var query = this.getDocumentQuery(
-          this.attr('documentTypes.referenceUrls'));
-        return this.requestQuery(query, 'referenceUrls');
+      loadDocuments: function (types) {
+        var query = this.getDocumentQuery();
+        return this.requestQuery(query, types);
       },
       updateItems: function () {
-        can.makeArray(arguments).forEach(function (type) {
-          this.attr(type).replace(this['load' + can.capitalize(type)]());
-        }.bind(this));
+        this.attr('documents')
+          .replace(this.loadDocuments(_.toArray(arguments)));
       },
       afterCreate: function (event, type) {
         var createdItems = event.items;
@@ -219,28 +235,13 @@
         return this.attr(type).unshift.apply(this.attr(type),
           can.makeArray(items));
       },
-      getDocumentAdditionFilter: function (documentType) {
-        return documentType ?
-          {
-            expression: {
-              left: 'document_type',
-              op: {name: '='},
-              right: documentType
-            }
-          } :
-          [];
-      },
       updateRelatedItems: function () {
         this.attr('mappedSnapshots')
           .replace(this.loadSnapshots());
         this.attr('comments')
           .replace(this.loadComments());
-        this.attr('evidences')
-          .replace(this.loadEvidences());
-        this.attr('urls')
-          .replace(this.loadUrls());
-        this.attr('referenceUrls')
-          .replace(this.loadReferenceUrls());
+        this.attr('documents')
+          .replace(this.loadDocuments(['evidences', 'urls', 'referenceUrls']));
       },
       initializeFormFields: function () {
         var cavs =
@@ -366,7 +367,7 @@
         this.viewModel.updateRelatedItems();
       },
       '{viewModel.instance} resolvePendingBindings': function () {
-        this.viewModel.updateItems('referenceUrls');
+        this.viewModel.loadDocuments(['referenceUrls']);
       }
     },
     helpers: {
