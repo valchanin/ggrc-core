@@ -396,7 +396,7 @@
                                         {{#toggle show_new_object_form}}
                                             <ggrc-quick-add
                                                     (before-create)="addItems(%event, 'referenceUrls')"
-                                                    (after-create)="updateItems('referenceUrls')"
+                                                    (after-create)="afterCreate(%event, 'referenceUrls')"
                                                     {parent_instance}="instance"
                                                     join_model="Relationship"
                                                     quick_create="create_url"
