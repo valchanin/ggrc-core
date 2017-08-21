@@ -364,7 +364,7 @@
         this.viewModel.updateRelatedItems();
       },
       '{viewModel.instance} resolvePendingBindings': function () {
-        this.viewModel.loadDocuments(['referenceUrls']);
+        this.viewModel.updateItems('referenceUrls');
       }
     },
     helpers: {
