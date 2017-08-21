@@ -73,31 +73,28 @@
         },
         urls: {
           get: function () {
-            var self = this;
+            var type = this.attr('documentTypes.urls');
             return this.attr('documents')
               .filter(function (document) {
-                return document.attr('document_type') ===
-                  self.attr('documentTypes.urls');
+                return document.attr('document_type') === type;
               });
           }
         },
         referenceUrls: {
           get: function () {
-            var self = this;
+            var type = this.attr('documentTypes.referenceUrls');
             return this.attr('documents')
               .filter(function (document) {
-                return document.attr('document_type') ===
-                  self.attr('documentTypes.referenceUrls');
+                return document.attr('document_type') === type;
               });
           }
         },
         evidences: {
           get: function () {
-            var self = this;
+            var type = this.attr('documentTypes.evidences');
             return this.attr('documents')
               .filter(function (document) {
-                return document.attr('document_type') ===
-                  self.attr('documentTypes.evidences');
+                return document.attr('document_type') === type;
               });
           }
         },
