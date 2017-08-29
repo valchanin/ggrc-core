@@ -3,8 +3,10 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-(function (can, $) {
+(function (can, GGRC) {
   'use strict';
+
+  var QueryAPI = GGRC.Utils.QueryAPI;
 
   GGRC.Components('assessmentTemplates', {
     tag: 'assessment-templates',
@@ -13,7 +15,6 @@
       '/components/assessment_templates/assessment_templates.mustache'
     ),
     viewModel: {
-      binding: '@',
       responses: [],
       instance: null,
       assessmentTemplate: null,
@@ -25,14 +26,9 @@
           title: 'No template',
           value: ''
         };
-        _.each(responses, function (response) {
+        _.each(responses, function (instance) {
           var type;
-          var instance;
 
-          if (!response.instance) {
-            return;
-          }
-          instance = response.instance;
           type = instance.template_object_type;
           if (!result[type]) {
             result[type] = {
@@ -92,12 +88,17 @@
     init: function () {
       var viewModel = this.viewModel;
       var instance = viewModel.attr('instance');
-      var binding = instance.get_binding(viewModel.attr('binding'));
+      var param = QueryAPI.buildParam('AssessmentTemplate', {}, {
+        type: instance.type,
+        id: instance.id
+      }, ['id', 'type', 'title', 'template_object_type']);
 
-      binding.refresh_instances().done(function (response) {
-        viewModel.attr('responses', response);
+      QueryAPI.makeRequest({data: [param]}).then(function (response) {
+        var values = response[0].AssessmentTemplate.values;
+
+        viewModel.attr('responses', values);
         viewModel._selectInitialTemplate(viewModel.templates());
       });
     }
   });
-})(window.can, window.can.$);
+})(window.can, window.GGRC);

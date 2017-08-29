@@ -12,7 +12,7 @@ from lib import base
 from lib.service import rest_service
 from lib.service import webui_service
 from lib.service.rest.client import RestClient
-from lib.utils import string_utils
+from lib.utils import help_utils
 
 
 class TestObjectivePage(base.Test):
@@ -39,7 +39,7 @@ class TestObjectivePage(base.Test):
     """Check if Objectives can be mapped to Control via REST."""
     # pylint: disable=too-many-arguments
     expected_status_code = RestClient.STATUS_CODES["OK"]
-    dynamic_relationships = string_utils.convert_to_list(dynamic_relationships)
+    dynamic_relationships = help_utils.convert_to_list(dynamic_relationships)
     assert all(expected_status_code == relationship.status_code
                for relationship in dynamic_relationships)
     assert (
@@ -50,5 +50,5 @@ class TestObjectivePage(base.Test):
     actual_objectives_tab_count = (
         webui_service.ObjectivesService(selenium).get_count_objs_from_tab(
             src_obj=new_control_rest))
-    assert (len(string_utils.convert_to_list(dynamic_object)) ==
+    assert (len(help_utils.convert_to_list(dynamic_object)) ==
             actual_objectives_tab_count)

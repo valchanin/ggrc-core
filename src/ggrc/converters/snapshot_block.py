@@ -41,6 +41,10 @@ class SnapshotBlockConverter(object):
       "__mapping__:Issue": "Map: Issue",
   }
 
+  EXTRA_CACHE_MODELS = {
+      "AccessControlRole": "name",
+  }
+
   BOOLEAN_ALIASES = {
       True: "yes",
       "1": "yes",
@@ -162,6 +166,7 @@ class SnapshotBlockConverter(object):
       logger.warning("Exporting invalid snapshot model: %s", self.child_type)
       return {}
     aliases = AttributeInfo.gather_visible_aliases(model)
+    aliases.update(AttributeInfo.get_acl_definitions(model))
     aliases.update(self.CUSTOM_SNAPSHOT_ALIASES)
     if self.MAPPINGS_KEY in self.fields:
       aliases.update(self.SNAPSHOT_MAPPING_ALIASES)
@@ -200,7 +205,9 @@ class SnapshotBlockConverter(object):
         "Person": "email",
         "Option": "title",
     }
+    id_map.update(self.EXTRA_CACHE_MODELS)
     stubs = self._gather_stubs()
+    stubs.update({model: None for model in self.EXTRA_CACHE_MODELS})
     cache = {}
     for model_name, ids in stubs.iteritems():
       with benchmark("Generate snapshot cache for: {}".format(model_name)):
@@ -209,12 +216,33 @@ class SnapshotBlockConverter(object):
         if not hasattr(model, attr_name):
           continue
         attr = getattr(model, attr_name)
-        model_count = model.query.count()
         query = db.session.query(model.id, attr)
-        if len(ids) < model_count / 2:
-          query = query.filter(model.id.in_(ids))
+        if ids:
+          model_count = model.query.count()
+          if len(ids) < model_count / 2:
+            query = query.filter(model.id.in_(ids))
         cache[model_name] = dict(query)
     return cache
+
+  @cached_property
+  def _access_control_map(self):
+    """Get AC role name to person emails mapping."""
+    acr = self._stub_cache.get("AccessControlRole", {})
+    people = self._stub_cache.get("Person", {})
+    _access_control_map = {}
+    for snap in self.snapshots:
+      _access_control_map[snap.content["id"]] = defaultdict(list)
+      for acl in snap.content.get("access_control_list", []):
+        role_name = acr[acl["ac_role_id"]]
+        email = people.get(acl["person_id"], "")
+        _access_control_map[snap.content["id"]][role_name].append(email)
+
+      # Emails should be sorted in asc order
+      _access_control_map[snap.content["id"]] = {
+          role: sorted(emails)
+          for role, emails in _access_control_map[snap.content["id"]].items()
+      }
+    return _access_control_map
 
   def get_value_string(self, value):
     """Get string representation of a given value."""
@@ -250,6 +278,11 @@ class SnapshotBlockConverter(object):
         # values in format of "YYYY-MM-DDThh:mm:ss" and "YYYY-MM-DD hh:mm:ss"
         return val.replace("T", " ")
       return utils.iso_to_us_date(val)
+    elif AttributeInfo.ALIASES_PREFIX in name:
+      _, role_name = name.split(":")
+      return "\n".join(
+          self._access_control_map[content["id"]].get(role_name, [])
+      )
     return self.get_value_string(content.get(name))
 
   def get_cav_value_string(self, value):

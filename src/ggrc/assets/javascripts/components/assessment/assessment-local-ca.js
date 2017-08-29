@@ -7,6 +7,7 @@
   'use strict';
 
   var CAUtils = GGRC.Utils.CustomAttributes;
+  var CA_DD_REQUIRED_DEPS = CAUtils.CA_DD_REQUIRED_DEPS;
 
   GGRC.Components('assessmentLocalCa', {
     tag: 'assessment-local-ca',
@@ -34,65 +35,106 @@
           type: 'number',
           set: function (newValue, setValue) {
             setValue(newValue);
-            this.updateEvidenceValidation();
+            this.validateForm();
           }
         },
         isEvidenceRequired: {
           get: function () {
             var optionsWithEvidence = this.attr('fields')
               .filter(function (item) {
-                return item.attr('type') === 'dropdown' &&
-                  (item.attr('validationConfig')[item.attr('value')] === 2 ||
-                item.attr('validationConfig')[item.attr('value')] === 3);
+                return item.attr('type') === 'dropdown';
+              })
+              .filter(function (item) {
+                var requiredOption =
+                  item.attr('validationConfig')[item.attr('value')];
+
+                return requiredOption === CA_DD_REQUIRED_DEPS.EVIDENCE ||
+                   requiredOption ===
+                    CA_DD_REQUIRED_DEPS.COMMENT_AND_EVIDENCE;
               }).length;
             return optionsWithEvidence > this.attr('evidenceAmount');
           }
         }
       },
-      performValidation: function (field, value) {
-        var isEvidenceRequired = this.attr('isEvidenceRequired');
-        this.updateEvidenceValidation();
-        field.attr('validation.empty', !(value));
-        if (field.attr('type') === 'dropdown') {
-          if (!field.attr('validationConfig')[value]) {
-            field.attr('errorsMap.evidence', false);
-            field.attr('errorsMap.comment', false);
-            field.attr('validation.valid', true);
+      validateForm: function () {
+        var self = this;
+        this.attr('fields')
+          .each(function (field) {
+            self.performValidation(field, field.value, true);
+          });
+      },
+      performValidation: function (field, value, initialCheck) {
+        var fieldValid;
+        var hasMissingEvidence;
+        var hasMissingComment;
+        var hasMissingValue;
+        var requiresEvidence;
+        var requiresComment;
+        var valCfg = field.validationConfig;
+        var fieldValidationConf = valCfg && valCfg[value];
+        var isMandatory = field.validation.mandatory;
+
+        requiresEvidence =
+          fieldValidationConf === CA_DD_REQUIRED_DEPS.EVIDENCE ||
+          fieldValidationConf === CA_DD_REQUIRED_DEPS.COMMENT_AND_EVIDENCE;
+
+        requiresComment =
+          fieldValidationConf === CA_DD_REQUIRED_DEPS.COMMENT ||
+          fieldValidationConf === CA_DD_REQUIRED_DEPS.COMMENT_AND_EVIDENCE;
+
+        hasMissingEvidence = requiresEvidence &&
+          this.attr('isEvidenceRequired');
+
+        hasMissingComment = initialCheck ?
+          requiresComment && field.errorsMap.comment : requiresComment;
+
+        if (field.type === 'checkbox') {
+          if (value === '1') {
+            value = true;
+          } else if (value === '0') {
+            value = false;
           }
-          if (field.attr('validationConfig')[value] === 0) {
-            field.attr('errorsMap.evidence', false);
-            field.attr('errorsMap.comment', false);
-            field.attr('validation.valid', true);
-          }
-          if (field.attr('validationConfig')[value] === 2) {
-            field.attr('errorsMap.evidence', isEvidenceRequired);
-            field.attr('errorsMap.comment', false);
-            field.attr('validation.valid', !isEvidenceRequired);
-            if (isEvidenceRequired) {
-              this.dispatch({
-                type: 'validationChanged',
-                field: field
-              });
+
+          field.attr({
+            validation: {
+              show: isMandatory,
+              valid: isMandatory ? !hasMissingValue && !!(value) : true,
+              hasMissingInfo: false
             }
-          }
-          if (field.attr('validationConfig')[value] === 1) {
-            field.attr('errorsMap.evidence', false);
-            field.attr('errorsMap.comment', true);
-            field.attr('validation.valid', false);
+          });
+        } else if (field.type === 'dropdown') {
+          fieldValid = (value) ?
+            !(hasMissingEvidence || hasMissingComment || hasMissingValue) :
+            !isMandatory && !hasMissingValue;
+
+          field.attr({
+            validation: {
+              show: isMandatory || !!value,
+              valid: fieldValid,
+              hasMissingInfo: (hasMissingEvidence || hasMissingComment),
+              requiresAttachment: (requiresEvidence || requiresComment)
+            },
+            errorsMap: {
+              evidence: hasMissingEvidence,
+              comment: hasMissingComment
+            }
+          });
+
+          if (!initialCheck && (hasMissingEvidence || hasMissingComment)) {
             this.dispatch({
               type: 'validationChanged',
               field: field
             });
           }
-          if (field.attr('validationConfig')[value] === 3) {
-            field.attr('errorsMap.evidence', isEvidenceRequired);
-            field.attr('errorsMap.comment', true);
-            field.attr('validation.valid', false);
-            this.dispatch({
-              type: 'validationChanged',
-              field: field
-            });
-          }
+        } else {
+          // validation for all other fields
+          field.attr({
+            validation: {
+              show: isMandatory,
+              valid: isMandatory ? !hasMissingValue && !!(value) : true,
+              hasMissingInfo: false
+            }
+          });
         }
       },
       updateEvidenceValidation: function () {
@@ -114,6 +156,8 @@
       },
       save: function (fieldId, fieldValue) {
         var self = this;
+        var changes = {};
+        changes[fieldId] = fieldValue;
 
         this.attr('isDirty', true);
 
@@ -121,7 +165,7 @@
           var caValues = self.attr('instance.custom_attribute_values');
           CAUtils.applyChangesToCustomAttributeValue(
             caValues,
-            {fieldId: fieldValue});
+            new can.Map(changes));
 
           self.attr('saving', true);
         })
@@ -139,6 +183,14 @@
         this.performValidation(e.field, e.value);
         this.attr('formSavedDeferred', can.Deferred());
         this.save(e.fieldId, e.value);
+      }
+    },
+    events: {
+      '{viewModel.instance} update': function () {
+        this.viewModel.validateForm();
+      },
+      '{viewModel.instance} afterCommentCreated': function () {
+        this.viewModel.validateForm();
       }
     }
   });

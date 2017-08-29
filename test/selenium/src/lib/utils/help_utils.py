@@ -36,3 +36,11 @@ def execute_method_according_to_plurality(obj_or_objs, method_name, types=None,
       [method_name(obj, **method_kwargs) for obj in obj_or_objs] if
       is_multiple_objs(obj_or_objs, types) else
       method_name(get_single_obj(obj_or_objs), **method_kwargs))
+
+
+def convert_to_list(items):
+  """Converts items to list items:
+  - if items are already list items then skip;
+  - if are not list items then convert to list items."""
+  list_items = items if isinstance(items, list) else [items, ]
+  return list_items

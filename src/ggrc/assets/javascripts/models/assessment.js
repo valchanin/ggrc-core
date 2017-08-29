@@ -268,11 +268,6 @@
       this._transformBackupProperty(['design', 'operationally', '_disabled']);
       return this._super(checkAssociations);
     },
-    after_save: function () {
-      if (this.audit && this.audit.selfLink) {
-        this.audit.refresh();
-      }
-    },
     form_preload: function (newObjectForm) {
       var pageInstance = GGRC.page_instance();
       var currentUser = CMS.Models.get_instance('Person',

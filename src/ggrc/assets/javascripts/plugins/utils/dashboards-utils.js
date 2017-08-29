@@ -77,6 +77,10 @@
         return [];
       }
 
+      cavs = cavs.map(function (cav) {
+        return cav.custom_attribute_id ? cav : cav.reify();
+      });
+
       return cads.reduce(function (result, cad) {
         var caType = cad.attr('attribute_type');
         var dashboardName;

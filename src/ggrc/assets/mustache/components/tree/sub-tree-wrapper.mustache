@@ -32,16 +32,16 @@
         </sub-tree-expander>
       </div>
 
-    {{#if notDirectlyExpanded}}
-    {{#notDirectlyItems}}
-      <sub-tree-item class="tree-item-element"
-                     extra-css="not-directly-related"
-                     {instance}="."
-                     {limit-depth-tree}="limitDepthTree"
-                     {make-result}="@makeResult"
-      ></sub-tree-item>
-    {{/notDirectlyItems}}
-    {{/if}}
+      {{#if notDirectlyExpanded}}
+        {{#notDirectlyItems}}
+          <sub-tree-item class="tree-item-element"
+                        extra-css="not-directly-related"
+                        {instance}="."
+                        {limit-depth-tree}="limitDepthTree"
+                        {make-result}="@makeResult"
+          ></sub-tree-item>
+        {{/notDirectlyItems}}
+      {{/if}}
     {{/if}}
 
     {{#if notResult}}

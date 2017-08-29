@@ -128,6 +128,9 @@
       },
       '{viewModel.baseInstance} refreshInstance': function () {
         this.viewModel.setRelatedItems();
+      },
+      '{viewModel.baseInstance} refreshRelatedAssessments': function () {
+        this.viewModel.setRelatedItems();
       }
     }
   });

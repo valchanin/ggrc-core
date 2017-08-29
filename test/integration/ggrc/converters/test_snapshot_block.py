@@ -5,7 +5,9 @@
 
 import mock
 
+from ggrc import db
 from ggrc.converters.snapshot_block import SnapshotBlockConverter
+from ggrc.models import all_models
 from integration.ggrc import TestCase
 from integration.ggrc.models import factories
 
@@ -73,29 +75,38 @@ class TestSnapshotBlockConverter(TestCase):
     converter = mock.MagicMock()
     block = SnapshotBlockConverter(converter, [])
     block.child_type = "Control"
+    expected_attrs = [
+        ('slug', 'Code'),
+        ('audit', 'Audit'),  # inserted attribute
+        ('revision_date', 'Revision Date'),  # inserted attribute
+        ('title', 'Title'),
+        ('description', 'Description'),
+        ('notes', 'Notes'),
+        ('test_plan', 'Test Plan'),
+        ('start_date', 'Effective Date'),
+        ('end_date', 'Last Deprecated Date'),
+        ('status', 'State'),
+        ('os_state', 'Review State'),
+        ('assertions', 'Assertions'),
+        ('categories', 'Categories'),
+        ('fraud_related', 'Fraud Related'),
+        ('key_control', 'Significance'),
+        ('kind', 'Kind/Nature'),
+        ('means', 'Type/Means'),
+        ('reference_url', 'Reference URL'),
+        ('verify_frequency', 'Frequency'),
+        ('document_evidence', 'Evidence'),
+    ]
+    ac_roles = db.session.query(all_models.AccessControlRole.name).filter(
+        all_models.AccessControlRole.object_type == "Control"
+    ).all()
+    expected_attrs += [
+        ("__acl__:{}".format(role[0]), role[0]) for role in ac_roles
+    ]
+    # last_assessment_date should be in the end according to current order
+    expected_attrs.append(('last_assessment_date', 'Last Assessment Date'))
+
     self.assertEqual(
         block._attribute_name_map.items(),
-        [
-            ('slug', 'Code'),
-            ('audit', 'Audit'),  # inserted attribute
-            ('revision_date', 'Revision Date'),  # inserted attribute
-            ('title', 'Title'),
-            ('description', 'Description'),
-            ('notes', 'Notes'),
-            ('test_plan', 'Test Plan'),
-            ('start_date', 'Effective Date'),
-            ('end_date', 'Last Deprecated Date'),
-            ('status', 'State'),
-            ('os_state', 'Review State'),
-            ('assertions', 'Assertions'),
-            ('categories', 'Categories'),
-            ('fraud_related', 'Fraud Related'),
-            ('key_control', 'Significance'),
-            ('kind', 'Kind/Nature'),
-            ('means', 'Type/Means'),
-            ('reference_url', 'Reference URL'),
-            ('verify_frequency', 'Frequency'),
-            ('document_evidence', 'Evidence'),
-            ('last_assessment_date', 'Last Assessment Date'),
-        ]
+        expected_attrs
     )

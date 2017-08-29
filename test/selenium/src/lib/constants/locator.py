@@ -11,6 +11,8 @@ from lib.constants import objects, url
 
 class Common(object):
   """Common locators."""
+  TITLE = " .title"
+  DESCRIPTION = " .description"
   # modal
   MODAL_GENEATE = ".modal-selector"
   MODAL_CREATE = ".modal-wide"
@@ -45,6 +47,18 @@ class Common(object):
   # import / export pages
   CONTENT = ".content"
   OPTION = "option"
+
+
+class CommonAssessment(object):
+  """Common Assessment locators for Modal and Info."""
+  MAP_OBJS_BTN = " map-button-using-assessment-type"
+  MAP_OBJS_BTN_CSS = (By.CSS_SELECTOR, MAP_OBJS_BTN)
+  MAPPED_SNAPSHOTS = " .mapped-objects__item.mapped-snapshot-item"
+  MAPPED_SNAPSHOTS_CSS = (By.CSS_SELECTOR, MAPPED_SNAPSHOTS)
+  MAPPED_SNAPSHOT_TITLE_CSS = (
+      By.CSS_SELECTOR, MAPPED_SNAPSHOTS + Common.TITLE)
+  MAPPED_SNAPSHOT_DESCRIPTION_CSS = (
+      By.CSS_SELECTOR, MAPPED_SNAPSHOTS + Common.DESCRIPTION)
 
 
 class Login(object):
@@ -191,7 +205,7 @@ class ExportPage(object):
   EXPORT_PAGE = (By.CSS_SELECTOR, _EXPORT_PAGE)
   EXPORT_PANEL = (By.CSS_SELECTOR, _EXPORT_PANEL)
   # labels
-  TITLE = (By.CSS_SELECTOR, ".title")
+  TITLE = (By.CSS_SELECTOR, Common.TITLE)
   # user input elements
   BUTTON_ADD_OBJECT_TYPE = (By.CSS_SELECTOR, "#addAnotherObjectType")
   BUTTON_EXPORT_OBJECTS = (By.CSS_SELECTOR, "#export-csv-button")
@@ -261,6 +275,7 @@ class ModalGenerateAssessments(CommonModalUnifiedMapper):
 class BaseModalCreateNew(object):
   """Locators for Create new object modals."""
   MODAL = Common.MODAL_CREATE
+  MODAL_CSS = (By.CSS_SELECTOR, MODAL)
   # labels
   MODAL_TITLE = (By.CSS_SELECTOR, MODAL + " .ui-draggable-handle>h2")
   TITLE = (By.CSS_SELECTOR,
@@ -428,8 +443,12 @@ class ModalCreateNewIssue(BaseModalCreateNew):
   """Locators for Create new Issue modals."""
 
 
-class ModalCreateNewAsmt(BaseModalCreateNew):
+class ModalCreateNewAsmt(BaseModalCreateNew, CommonAssessment):
   """Locators for Create new Assessment modals."""
+  MAPPED_SNAPSHOTS_CSS = (By.CSS_SELECTOR, BaseModalCreateNew.MODAL +
+                          CommonAssessment.MAPPED_SNAPSHOTS)
+  MAP_OBJS_BTN_CSS = (By.CSS_SELECTOR,
+                      BaseModalCreateNew.MODAL + CommonAssessment.MAP_OBJS_BTN)
 
 
 class ModalCreateNewAsmtTmpl(BaseModalCreateNew):
@@ -713,7 +732,7 @@ class WidgetInfoAudit(WidgetInfoPanel):
   """Locators for Audit Info widgets."""
 
 
-class WidgetInfoAssessment(WidgetInfoPanel):
+class WidgetInfoAssessment(WidgetInfoPanel, CommonAssessment):
   """Locators for Assessment Info widgets."""
   # pylint: disable=invalid-name
   WIDGET = Common.INFO_WIDGET
@@ -726,10 +745,6 @@ class WidgetInfoAssessment(WidgetInfoPanel):
       By.CSS_SELECTOR,
       WIDGET + " assessment-custom-attributes inline-edit-control")
   CAS_CHECKBOXES = (By.CSS_SELECTOR, '[class*="wrapper"] [type="checkbox"]')
-  MAPPED_OBJECTS_TITLES_AND_DESCRIPTIONS = (
-      By.CSS_SELECTOR, WIDGET + " .mapped-objects__item-body")
-  MAPPED_OBJECT_TITLE = (By.CSS_SELECTOR, ".title")
-  MAPPED_OBJECT_DESCRIPTION = (By.CSS_SELECTOR, ".description")
   # Assessment Attributes tab
   # Code section
   _CODE = "assessment-inline-item[prop-name='slug'] "
@@ -1150,6 +1165,7 @@ class CommentItem(object):
 
 
 class AssessmentLogTab(object):
+  """Locators for Log Tab elements on Assessment InfoWidget."""
   CELLS_CSS = (By.CSS_SELECTOR, '.third-col')
   COMMENT_PERSON_CSS = (By.CSS_SELECTOR, '.person-tooltip-trigger')
   PERSON_LABEL = (By.CSS_SELECTOR, '.person-label')
@@ -1158,6 +1174,7 @@ class AssessmentLogTab(object):
 
 
 class AssessmentRelatedTable(object):
+  """Locators for RelatedAssessments Tab elements on Assessment InfoWidget."""
   HEADERS = (By.CSS_SELECTOR, ".grid-data-header")
   ROWS = (By.CSS_SELECTOR, ".grid-data-row")
   CELLS = (By.CSS_SELECTOR, "div")

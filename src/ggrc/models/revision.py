@@ -175,6 +175,11 @@ class Revision(Base, db.Model):
             "id": None,
         })
     populated_content = self._content.copy()
+
+    # Add person with id and type for old snapshots compatibility
+    for acl in access_control_list:
+      if "person" not in acl:
+        acl["person"] = {"id": acl.get("person_id"), "type": "Person"}
     populated_content["access_control_list"] = access_control_list
 
     if 'url' in self._content:

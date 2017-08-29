@@ -223,13 +223,15 @@
               <related-issues {base-instance}="instance"
                                     {all-related-snapshots}="mappedSnapshots"></related-issues>
           </tab-panel>
-          <tab-panel {(panels)}="panels" title-text="Other Attributes">
-              <assessment-custom-attributes (on-update-attributes)="saveGlobalAttributes(%event)"
+          <tab-panel {(panels)}="panels" title-text="Other Attributes" class="assessment-attributes-panel">
+              <div class="assessment-attributes-panel">
+                <custom-roles {instance}="instance"></custom-roles>
+                <assessment-custom-attributes (on-update-attributes)="saveGlobalAttributes(%event)"
                                                   {items}="globalAttributes"
                                                   {is-edit-denied}="isEditDenied"
-                                            class="ggrc-form ggrc-form-multiple-columns"
-              ></assessment-custom-attributes>
-            <div class="info-pane__section ggrc-form">
+                                            class="ggrc-form ggrc-form-multiple-columns">
+                </assessment-custom-attributes>
+                <div class="info-pane__section ggrc-form">
                     <div class="ggrc-form-item">
                         <div class="ggrc-form-item__multiple-row">
                             <assessment-object-type-dropdown
@@ -280,103 +282,102 @@
                             {instance}="instance"
                             {mapped-items}="relatedInformation"
                             title-text="Related Information"></assessment-mapped-related-information>
-                    <custom-roles {instance}="instance"></custom-roles>
                 </div>
-                    <div class="ggrc-form ggrc-form-multiple-columns">
-                        <div class="ggrc-form-item">
-                            <div class="ggrc-form-item__row">
-                                <assessment-inline-item
-                                    type="text"
-                                    prop-name="description"
-                                    with-read-more="true"
-                                    {set-in-progress}="@setInProgressState"
-                                    {on-state-change-dfd}="onStateChangeDfd"
-                                    {is-edit-icon-denied}="isEditDenied"
-                                    {value}="instance.description"
-                                    {instance}="instance">
-                                        <div class="ggrc-form__title">Description</div>
-                                </assessment-inline-item>
-                            </div>
-                        </div>
-                        <div class="ggrc-form-item">
-                            {{> '/static/mustache/assessments/dates_list.mustache'}}
-                        </div>
-                        <div class="ggrc-form-item">
-                            <div class="ggrc-form-item__row">
-                                <assessment-inline-item
-                                    type="input"
-                                    prop-name="notes"
-                                    with-read-more="true"
-                                    {set-in-progress}="@setInProgressState"
-                                    {on-state-change-dfd}="onStateChangeDfd"
-                                    {is-edit-icon-denied}="isEditDenied"
-                                    {value}="instance.notes"
-                                    {instance}="instance">
-                                        <div class="ggrc-form__title">Notes</div>
-                                </assessment-inline-item>
-                            </div>
-                        </div>
-                        <div class="ggrc-form-item">
-                            <div class="ggrc-form-item__multiple-row">
-                                <assessment-inline-item
-                                    type="input"
-                                    prop-name="slug"
-                                    with-read-more="true"
-                                    {set-in-progress}="@setInProgressState"
-                                    {on-state-change-dfd}="onStateChangeDfd"
-                                    {is-edit-icon-denied}="isEditDenied"
-                                    {value}="instance.slug"
-                                    {instance}="instance">
-                                        <div class="ggrc-form__title">Code</div>
-                                </assessment-inline-item>
-                            </div>
-                            <!-- TODO: Assessment object type -->
-                        </div>
-                        <div class="ggrc-form-item">
-                            <div class="ggrc-form-item__multiple-row">
-                                <assessment-inline-item
-                                    type="dropdown"
-                                    prop-name="design"
-                                    with-read-more="true"
-                                    dropdown-no-value="true"
-                                    {set-in-progress}="@setInProgressState"
-                                    {on-state-change-dfd}="onStateChangeDfd"
-                                    {dropdown-options}="model.conclusions"
-                                    {is-edit-icon-denied}="isEditDenied"
-                                    {value}="instance.design"
-                                    {instance}="instance">
-                                        <div>
-                                            <div class="ggrc-form__title">Conclusion: Design</div>
-                                            <p class="conclusion-small-text">
-                                                <small><em>Is this control design effective?</em></small>
-                                            </p>
-                                        </div>
-                                </assessment-inline-item>
-                            </div>
-                            <div class="ggrc-form-item__multiple-row">
-                                <assessment-inline-item
-                                    type="dropdown"
-                                    prop-name="operationally"
-                                    with-read-more="true"
-                                    dropdown-no-value="true"
-                                    {set-in-progress}="@setInProgressState"
-                                    {on-state-change-dfd}="onStateChangeDfd"
-                                    {dropdown-options}="model.conclusions"
-                                    {is-edit-icon-denied}="isEditDenied"
-                                    {value}="instance.operationally"
-                                    {instance}="instance">
-                                        <div>
-                                            <div class="ggrc-form__title">Conclusion: Operation</div>
-                                            <p class="conclusion-small-text">
-                                                <small><em>Is this control design effective?</em></small>
-                                            </p>
-                                        </div>
-                                </assessment-inline-item>
-                            </div>
-                        </div>
-                        <div class="ggrc-form-item">
-                            <div class="ggrc-form-item__row">
-                                <div class="row-fluid wrap-row">
+                <div class="ggrc-form ggrc-form-multiple-columns">
+                <div class="ggrc-form-item">
+                    <div class="ggrc-form-item__row">
+                        <assessment-inline-item
+                            type="text"
+                            prop-name="description"
+                            with-read-more="true"
+                            {set-in-progress}="@setInProgressState"
+                            {on-state-change-dfd}="onStateChangeDfd"
+                            {is-edit-icon-denied}="isEditDenied"
+                            {value}="instance.description"
+                            {instance}="instance">
+                                <div class="ggrc-form__title">Description</div>
+                        </assessment-inline-item>
+                    </div>
+                </div>
+                <div class="ggrc-form-item">
+                    {{> '/static/mustache/assessments/dates_list.mustache'}}
+                </div>
+                <div class="ggrc-form-item">
+                    <div class="ggrc-form-item__row">
+                        <assessment-inline-item
+                            type="input"
+                            prop-name="notes"
+                            with-read-more="true"
+                            {set-in-progress}="@setInProgressState"
+                            {on-state-change-dfd}="onStateChangeDfd"
+                            {is-edit-icon-denied}="isEditDenied"
+                            {value}="instance.notes"
+                            {instance}="instance">
+                                <div class="ggrc-form__title">Notes</div>
+                        </assessment-inline-item>
+                    </div>
+                </div>
+                <div class="ggrc-form-item">
+                    <div class="ggrc-form-item__multiple-row">
+                        <assessment-inline-item
+                            type="input"
+                            prop-name="slug"
+                            with-read-more="true"
+                            {set-in-progress}="@setInProgressState"
+                            {on-state-change-dfd}="onStateChangeDfd"
+                            {is-edit-icon-denied}="isEditDenied"
+                            {value}="instance.slug"
+                            {instance}="instance">
+                                <div class="ggrc-form__title">Code</div>
+                        </assessment-inline-item>
+                    </div>
+                    <!-- TODO: Assessment object type -->
+                </div>
+                <div class="ggrc-form-item">
+                    <div class="ggrc-form-item__multiple-row">
+                        <assessment-inline-item
+                            type="dropdown"
+                            prop-name="design"
+                            with-read-more="true"
+                            dropdown-no-value="true"
+                            {set-in-progress}="@setInProgressState"
+                            {on-state-change-dfd}="onStateChangeDfd"
+                            {dropdown-options}="model.conclusions"
+                            {is-edit-icon-denied}="isEditDenied"
+                            {value}="instance.design"
+                            {instance}="instance">
+                                <div>
+                                    <div class="ggrc-form__title">Conclusion: Design</div>
+                                    <p class="conclusion-small-text">
+                                        <small><em>Is this control design effective?</em></small>
+                                    </p>
+                                </div>
+                        </assessment-inline-item>
+                    </div>
+                    <div class="ggrc-form-item__multiple-row">
+                        <assessment-inline-item
+                            type="dropdown"
+                            prop-name="operationally"
+                            with-read-more="true"
+                            dropdown-no-value="true"
+                            {set-in-progress}="@setInProgressState"
+                            {on-state-change-dfd}="onStateChangeDfd"
+                            {dropdown-options}="model.conclusions"
+                            {is-edit-icon-denied}="isEditDenied"
+                            {value}="instance.operationally"
+                            {instance}="instance">
+                                <div>
+                                    <div class="ggrc-form__title">Conclusion: Operation</div>
+                                    <p class="conclusion-small-text">
+                                        <small><em>Is this control design effective?</em></small>
+                                    </p>
+                                </div>
+                        </assessment-inline-item>
+                    </div>
+                </div>
+                <div class="ggrc-form-item">
+                    <div class="ggrc-form-item__row">
+                        <div class="row-fluid wrap-row">
 
                                     <!-- <REFERENCE URLS> -->
                                     <div>
@@ -438,12 +439,13 @@
                                         {{/unless}}
                                     </div>
 
-                                    <!-- </REFERENCE URLS> -->
-                                </div>
-                            </div>
+                            <!-- </REFERENCE URLS> -->
                         </div>
                     </div>
-                </tab-panel>
+                </div>
+            </div>
+            </div>
+          </tab-panel>
 
                 <tab-panel {(panels)}="panels" title-text="Change Log">
                     <revision-log {instance}="instance"></revision-log>

@@ -482,7 +482,6 @@ class TestSnapshots(base.Test):
     self.general_assert([expected_control], actual_controls,
                         "custom_attributes")
 
-  @pytest.mark.xfail(strict=True)
   @pytest.mark.smoke_tests
   @pytest.mark.parametrize(
       "dynamic_object, dynamic_relationships",

@@ -694,6 +694,7 @@
             pinControl
               .updateInstance(componentSelector, newInstance);
             newInstance.dispatch('refreshRelatedDocuments');
+            newInstance.dispatch('refreshRelatedAssessments');
 
             this.viewModel.updateActiveItemIndicator(relativeIndex);
           }.bind(this))

@@ -43,7 +43,8 @@
         type: Boolean,
         get: function () {
           return CurrentPage.isObjectContextPage() &&
-            CurrentPage.getPageType() !== 'Workflow';
+            CurrentPage.getPageType() !== 'Workflow' &&
+            this.attr('notDirectlyItems').length;
         }
       },
       notResult: {

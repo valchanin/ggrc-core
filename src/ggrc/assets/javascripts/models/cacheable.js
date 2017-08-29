@@ -298,12 +298,11 @@
           function (xhr) {
             if (xhr.status === 409) {
               xhr.warningId = setTimeout(function () {
-                $(document.body).trigger('ajax:flash', {
-                  warning: 'There was a conflict while saving.' +
-                  ' Your changes have not yet been saved.' +
+                GGRC.Errors.notifier('warning',
+                  'There was a conflict while saving.' +
+                  ' Your changes have not been saved yet.' +
                   ' Please check any fields you were editing' +
-                  ' and try saving again'
-                });
+                  ' and try saving again');
               });
               // TODO: we should show modal window here
             }

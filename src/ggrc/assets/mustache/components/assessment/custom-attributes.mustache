@@ -4,7 +4,7 @@
 }}
 {{#each items}}
     <div class="ggrc-form-item">
-        <div class="{{#is type 'input'}}ggrc-form-item__row{{else}}ggrc-form-item__multiple-row{{/if}}">
+        <div class="{{#if_in type 'input,text'}}ggrc-form-item__row{{else}}ggrc-form-item__multiple-row{{/if}}">
             <inline-edit-control class="inline-edit-control"
                 (inline-save)="updateGlobalAttribute(%event, %context)"
                 {instance}="instance"

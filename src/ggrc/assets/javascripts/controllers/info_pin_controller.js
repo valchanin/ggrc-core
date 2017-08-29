@@ -149,9 +149,12 @@ can.Control('CMS.Controllers.InfoPin', {
     return infoPaneOpenDfd;
   },
   updateInstance: function (selector, instance) {
-    this.element.find(selector)
-      .viewModel()
-      .attr('instance', instance);
+    var vm = this.element.find(selector).viewModel();
+
+    vm.attr('instance', instance);
+    vm.attr('instance').dispatch({
+      type: 'update'
+    });
   },
   setLoadingIndicator: function (selector, isLoading) {
     this.element.toggleClass('loading');

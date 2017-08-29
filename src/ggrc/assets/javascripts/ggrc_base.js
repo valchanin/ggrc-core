@@ -154,7 +154,7 @@
       'requested resource. It is either read-protected or not ' +
       'readable by the server.',
       '409': 'There was a conflict while saving.' +
-      ' Your changes have not yet been saved.' +
+      ' Your changes have not been saved yet.' +
       ' Please refresh the page and try saving again',
       '412': 'One of the form fields isn\'t right. ' +
       'Check the form for any highlighted fields.'

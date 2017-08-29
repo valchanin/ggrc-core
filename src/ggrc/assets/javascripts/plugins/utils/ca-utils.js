@@ -15,6 +15,14 @@
     Checkbox: 'checkbox',
     Dropdown: 'dropdown'
   };
+
+  var CA_DD_REQUIRED_DEPS = Object.freeze({
+    NONE: 0,
+    COMMENT: 1,
+    EVIDENCE: 2,
+    COMMENT_AND_EVIDENCE: 3
+  });
+
   /**
    * Util methods for custom attributes.
    */
@@ -277,7 +285,8 @@
       getAttributes: getAttributes,
       getCustomAttributeType: getCustomAttributeType,
       convertToFormViewField: convertToFormViewField,
-      applyChangesToCustomAttributeValue: applyChangesToCustomAttributeValue
+      applyChangesToCustomAttributeValue: applyChangesToCustomAttributeValue,
+      CA_DD_REQUIRED_DEPS: CA_DD_REQUIRED_DEPS
     };
   })();
 })(window.GGRC, window.can, window._);

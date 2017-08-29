@@ -113,14 +113,6 @@ def remap_values_for_list_dicts(dict_of_transform_keys, list_dicts):
        for k, v in dic.iteritems()} for dic in list_dicts]
 
 
-def convert_to_list(items):
-  """Converts items to list items:
-  - if items are already list items then skip;
-  - if are not list items then convert to list items."""
-  list_items = items if isinstance(items, list) else [items, ]
-  return list_items
-
-
 def convert_list_elements_to_list(list_to_convert):
   """Converts list elements in list to sequence of elements:
   Example: [1, 2, 3, [4, 5], 6, [7]] = [1, 2, 3, 4, 5, 6, 7]

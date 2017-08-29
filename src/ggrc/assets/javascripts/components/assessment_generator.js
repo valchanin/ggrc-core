@@ -102,8 +102,6 @@
         }.bind(this));
       },
       generateModel: function (object, template, type) {
-        var assessmentTemplate = CMS.Models.AssessmentTemplate.findInCacheById(
-          template);
         var title = 'Generated Assessment for ' + this.scope.audit.title;
         var data = {
           _generated: true,
@@ -115,11 +113,17 @@
             href: object.selfLink
           },
           context: this.scope.audit.context,
-          template: assessmentTemplate && assessmentTemplate.stub(),
           title: title,
           assessment_type: type
         };
         data.run_in_background = true;
+
+        if (template) {
+          data.template = {
+            id: Number(template),
+            type: 'AssessmentTemplate'
+          };
+        }
         return new CMS.Models.Assessment(data).save();
       },
       notify: function () {

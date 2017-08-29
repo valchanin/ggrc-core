@@ -96,6 +96,17 @@ local-custom-attributes {
     box-sizing: border-box;
   }
 
+  &__mandatory {
+    width: 18px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $icon-color-empty;
+    font-size: 11px;
+    opacity: 1;
+  }
+
   &__title-text {
     display: inline-flex;
     margin: 0;

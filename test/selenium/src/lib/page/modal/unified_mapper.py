@@ -111,6 +111,9 @@ class CommonUnifiedMapperModal(base.Modal):
     base.Button(self._driver, self._locators.BUTTON_MAP_SELECTED).click()
     selenium_utils.get_when_invisible(
         self._driver, self._locators.BUTTON_MAP_SELECTED)
+
+  def _confirm_items_added(self):
+    """Wait until items shown on Tree View"""
     selenium_utils.get_when_invisible(
         self._driver, locator.TreeView.NO_RESULTS_MESSAGE)
 
@@ -168,3 +171,11 @@ class GenerateAssessmentsModal(CommonUnifiedMapperModal):
     self.map_dest_objs(
         dest_objs_type=asmt_tmpl_title,
         dest_objs_titles=objs_under_asmt_titles, is_asmts_generation=True)
+
+
+class AssessmentCreationMapperModal(CommonUnifiedMapperModal):
+  """Class for UnifiedMapper modal on Assessment Edit/Create Modal."""
+  def _confirm_items_added(self):
+    """Wait until items shown on Edit/Create Assessment Modal."""
+    selenium_utils.get_when_invisible(
+        self._driver, locator.TreeView.NO_RESULTS_MESSAGE)

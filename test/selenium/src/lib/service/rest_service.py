@@ -12,7 +12,7 @@ from lib.constants import url, objects, messages
 from lib.entities.entities_factory import ObjectPersonsFactory, EntitiesFactory
 from lib.entities.entity import Entity
 from lib.service.rest import client, query
-from lib.utils import string_utils
+from lib.utils import help_utils
 
 
 class BaseRestService(object):
@@ -143,7 +143,7 @@ class BaseRestService(object):
     """
     list_objs = self.update_list_objs(
         entity_factory=self.entities_factory_cls(),
-        list_objs_to_update=string_utils.convert_to_list(objs),
+        list_objs_to_update=help_utils.convert_to_list(objs),
         attrs_to_factory=factory_params, **attrs_for_template)
     return Entity.filter_objs_attrs(
         obj_or_objs=list_objs,
@@ -152,7 +152,7 @@ class BaseRestService(object):
   def delete_objs(self, objs):
     """Delete existing objects via REST API."""
     return [self.client.delete_object(href=obj.href) for
-            obj in string_utils.convert_to_list(objs)]
+            obj in help_utils.convert_to_list(objs)]
 
 
 class HelpRestService(object):
@@ -245,7 +245,7 @@ class RelationshipsService(HelpRestService):
     return [self.client.create_object(
         type=objects.get_singular(self.endpoint), source=src_obj.__dict__,
         destination=dest_obj.__dict__, **attrs_for_template) for
-        dest_obj in string_utils.convert_to_list(dest_objs)]
+        dest_obj in help_utils.convert_to_list(dest_objs)]
 
 
 class ObjectsOwnersService(HelpRestService):
@@ -257,7 +257,7 @@ class ObjectsOwnersService(HelpRestService):
     """Assign of an owner to objects."""
     return [self.client.create_object(
         type=objects.get_singular(self.endpoint), ownable=obj.__dict__,
-        person=owner.__dict__) for obj in string_utils.convert_to_list(objs)]
+        person=owner.__dict__) for obj in help_utils.convert_to_list(objs)]
 
 
 class ObjectsInfoService(HelpRestService):

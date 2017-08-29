@@ -210,6 +210,13 @@ def map_new_control_rest_to_new_objectives_rest(request):
 
 
 @pytest.fixture(scope="function")
+def map_new_program_rest_to_new_objective_rest(request):
+  """Map Program to Objective object via REST API return response from server.
+  """
+  yield _common_fixtures(request.fixturename)
+
+
+@pytest.fixture(scope="function")
 def map_new_program_rest_to_new_control_rest(request):
   """Map Control to Program object via REST API return response from server.
   """

@@ -9,6 +9,7 @@
 import pytest
 
 from lib import base
+from lib.constants.element import AssessmentStates
 from lib.entities import entities_factory
 from lib.service import webui_service
 
@@ -90,6 +91,49 @@ class TestAuditPage(base.Test):
     # due to 'expected_asmt.updated_at = None'
     self.general_assert(
         [expected_asmt], actual_asmts, "updated_at")
+
+  @pytest.mark.parametrize(
+      "dynamic_object, dynamic_relationships",
+      [("new_control_rest", "map_new_program_rest_to_new_control_rest"),
+       ("new_objective_rest", "map_new_program_rest_to_new_objective_rest")],
+      indirect=True)
+  @pytest.mark.smoke_tests
+  def test_asmt_creation_with_mapping(
+      self, new_program_rest, dynamic_object, dynamic_relationships,
+      new_audit_rest, selenium
+  ):
+    """Check if Assessment can be created with mapped snapshot via
+    Modal Create on Assessments TreeView. Additional check existing of
+    mapped objs Titles on Modal Create.
+    Preconditions:
+    - Program, dynamic_object created via REST API.
+    - dynamic_object mapped to Program via REST API.
+    - Audit created under Program via REST API.
+    Test parameters:
+    - 'dynamic_object'.
+    - 'dynamic_relationships'.
+    """
+    expected_asmt = (
+        entities_factory.AssessmentsFactory().create(
+            objects_under_assessment=[dynamic_object]))
+    expected_titles = [dynamic_object.title]
+    assessments_service = webui_service.AssessmentsService(selenium)
+    actual_titles = (
+        assessments_service.create_obj_and_get_mapped_titles_from_modal(
+            src_obj=new_audit_rest, obj=expected_asmt))
+    actual_asmt = assessments_service.get_list_objs_from_info_panels(
+        src_obj=new_audit_rest, objs=[expected_asmt])[0]
+    # due to issue GGRC-3033
+    attrs_to_exclude = []
+    if actual_asmt.status == AssessmentStates.IN_PROGRESS:
+      attrs_to_exclude.append("status")
+    self.general_assert(
+        expected_asmt.repr_ui(), actual_asmt, *attrs_to_exclude)
+    assert expected_titles == actual_titles
+    if "status" in attrs_to_exclude:
+      pytest.xfail(reason="GGRC-3033 Issue")
+    else:
+      pytest.fail(msg="GGRC-3033 Issue was fixed")
 
   @pytest.mark.smoke_tests
   @pytest.mark.parametrize(

@@ -9,6 +9,9 @@
       <form-validation-icon {validation}="validation"></form-validation-icon>
       <div class="field__title form-field__title">
         <label class="field__title-text {{extraClass type}}" for="form-field-{{id}}">{{title}}</label>
+	{{#if validation.mandatory}}
+	  <i class="fa fa-asterisk field__mandatory"></i>
+	{{/if}}
         {{#if helptext}}
           <i class="fa fa-question-circle field__title-helper-text" rel="tooltip" title="{{helptext}}"></i>
         {{/if}}
@@ -21,7 +24,7 @@
           {placeholder}="placeholder"
           {options}="options"
           (value-changed)="fieldValueChanged(%event, %context)"
-          class="form-field__content {{{extraClass type}}"
+	  class="form-field__content {{extraClass type}}"
         ></local-custom-attributes-field>
       {{else}}
         <local-custom-attributes-field-view
@@ -30,11 +33,11 @@
           class="form-field__content {{extraClass type}}"
         ></local-custom-attributes-field-view>
       {{/if}}
-      {{#unless validation.valid}}
+      {{#if validation.hasMissingInfo}}
         <div class="form-field__validation-hint-placeholder">
             <button class="btn btn-small btn-link btn-link-nopadding" ($click)="showRequiredInfoModal(%event, %context)">Add required info</button>
         </div>
-      {{/unless}}
+      {{/if}}
     </div>
   {{/each}}
 </div>

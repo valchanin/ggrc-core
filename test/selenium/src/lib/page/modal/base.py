@@ -4,7 +4,9 @@
 # pylint: disable=too-few-public-methods
 
 from lib import base
-from lib.constants import locator
+from lib.constants import locator, objects
+from lib.page.modal import unified_mapper
+from lib.utils import selenium_utils
 
 
 class BaseModal(base.Modal):
@@ -23,9 +25,9 @@ class BaseModal(base.Modal):
     """Enter title to modal."""
     self.ui_title.enter_text(text)
 
-  def enter_code(self, text):
+  def enter_code(self, code):
     """Enter code to modal."""
-    self.ui_code.enter_text(text)
+    self.ui_code.enter_text(code)
 
   def fill_minimal_data(self, title, code):
     """Enter common minimal data to modal."""
@@ -176,11 +178,11 @@ class ControlsModal(BaseModal):
     """
     self.ui_notes.find_iframe_and_enter_data(text)
 
-  def enter_code(self, text):
+  def enter_code(self, code):
     """
     Args: text (basestring)
     """
-    self.ui_code.enter_text(text)
+    self.ui_code.enter_text(code)
 
 
 class ObjectivesModal(BaseModal):
@@ -254,3 +256,24 @@ class AsmtTmplModal(BaseModal):
 class AsmtsModal(BaseModal):
   """Modal base for Assessment objects."""
   _locators = locator.ModalCreateNewAsmt
+
+  def map_controls(self, objs):
+    """Open Unified Mapper on modal and map objs.
+    Return: self
+    """
+    base.Button(self._driver, self._locators.MAP_OBJS_BTN_CSS).click()
+    mapper = unified_mapper.AssessmentCreationMapperModal(
+        self._driver, objects.ASSESSMENTS)
+    mapper.map_dest_objs(
+        dest_objs_type=objs[0]["type"],
+        dest_objs_titles=[obj["title"] for obj in objs])
+    return self
+
+  def get_mapped_snapshots_titles(self):
+    """Return titles of mapped snapshots on Assessment Modal.
+    Return: list of str
+    """
+    return [base.Label(self._driver, el.find_element(
+            *self._locators.MAPPED_SNAPSHOT_TITLE_CSS)).text
+            for el in selenium_utils.get_when_all_visible(
+            self._driver, self._locators.MAPPED_SNAPSHOTS_CSS)]

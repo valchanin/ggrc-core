@@ -25,7 +25,7 @@ class Representation(object):
     """Get list unique attributes names for entities. If 'entity' then get
     attributes of one entered entity, else get attributes of all entities.
     """
-    all_entities_cls = (string_utils.convert_to_list(entity) if entity
+    all_entities_cls = (help_utils.convert_to_list(entity) if entity
                         else Entity.all_entities_classes())
     all_entities_attrs_names = string_utils.convert_list_elements_to_list(
         [entity_cls().__dict__.keys() for entity_cls in all_entities_cls])
@@ -298,8 +298,8 @@ class Representation(object):
               obj_attr_value = (
                   dict(origin_obj_attr_value.items() + obj_attr_value.items())
                   if obj_attr_name == "custom_attributes" else
-                  string_utils.convert_to_list(origin_obj_attr_value) +
-                  string_utils.convert_to_list(obj_attr_value))
+                  help_utils.convert_to_list(origin_obj_attr_value) +
+                  help_utils.convert_to_list(obj_attr_value))
             setattr(obj, obj_attr_name, obj_attr_value)
             if obj_attr_name in ["creator", "assessor", "verifier"]:
               from lib.entities.entities_factory import ObjectPersonsFactory
@@ -310,7 +310,7 @@ class Representation(object):
           if is_replace_values_of_dicts and isinstance(_obj_attr_value, dict):
             obj_attr_value = string_utils.exchange_dicts_items(
                 transform_dict=_obj_attr_value,
-                dicts=string_utils.convert_to_list(
+                dicts=help_utils.convert_to_list(
                     getattr(obj, obj_attr_name)),
                 is_keys_not_values=False)
             obj_attr_value = (
@@ -480,8 +480,8 @@ class Representation(object):
     ''*exclude_attrs' - tuple of excluding attributes names.
     """
     # pylint: disable=invalid-name
-    expected_objs = string_utils.convert_to_list(expected_objs)
-    actual_objs = string_utils.convert_to_list(actual_objs)
+    expected_objs = help_utils.convert_to_list(expected_objs)
+    actual_objs = help_utils.convert_to_list(actual_objs)
     expected_excluded_attrs = [
         dict([(attr, getattr(expected_obj, attr)) for attr in exclude_attrs])
         for expected_obj in expected_objs]
