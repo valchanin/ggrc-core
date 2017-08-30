@@ -55,6 +55,14 @@
         get: function () {
           return StateUtils.hasFilterTooltip(this.attr('modelName'));
         }
+      },
+      /**
+       * Indicates whether operator should be displayed.
+       * @type {boolean}
+       */
+      showOperator: {
+        type: 'boolean',
+        value: true
       }
     },
     /**

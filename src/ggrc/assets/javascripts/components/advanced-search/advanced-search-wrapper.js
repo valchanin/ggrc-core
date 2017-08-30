@@ -9,10 +9,18 @@
   GGRC.Components('advancedSearchWrapper', {
     tag: 'advanced-search-wrapper',
     viewModel: can.Map.extend({
+      define: {
+        hasStatusFilter: {
+          get: function () {
+            return GGRC.Utils.State.hasFilter(this.attr('modelName'));
+          }
+        }
+      },
       modelName: null,
       modelDisplayName: null,
       filterItems: [],
       mappingItems: [],
+      statusItem: {},
       relevantTo: [],
       availableAttributes: function () {
         var available = GGRC.Utils.TreeView.getColumnsForModel(
@@ -25,6 +33,7 @@
       resetFilters: function () {
         this.attr('filterItems', []);
         this.attr('mappingItems', []);
+        this.attr('statusItem', {});
       }
     }),
     events: {

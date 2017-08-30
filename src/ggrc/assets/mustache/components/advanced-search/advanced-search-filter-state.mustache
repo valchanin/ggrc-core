@@ -7,12 +7,14 @@
   <div class="filter-state__name">
     <h6>State</h6>
   </div>
+  {{#if showOperator}}
   <div class="filter-state__operator">
     <select {($value)}="stateModel.operator">
       <option value="ANY">Any of</option>
       <option value="NONE">None of</option>
     </select>
   </div>
+  {{/if}}
   <div class="filter-state__value">
     <multiselect-dropdown
             {options}="filterStates"

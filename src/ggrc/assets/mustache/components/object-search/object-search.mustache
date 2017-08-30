@@ -20,19 +20,31 @@
       {(mapping-items)}="mappingItems"
       {(filter-items)}="filterItems">
       <div class="object-controls">
-        <div class="object-controls__type">
-          <h6>Object type</h6>
-          <mapping-type-selector
-            types="availableTypes"
-            selected-type="type"
-            disabled="is_loading">
-          </mapping-type-selector>
+        <div class="object-controls__row">
+          <div class="object-controls__type">
+            <h6>Object type</h6>
+            <mapping-type-selector
+              types="availableTypes"
+              selected-type="type"
+              disabled="is_loading">
+            </mapping-type-selector>
+          </div>
+          {{#if hasStatusFilter}}
+          <div class="object-controls__state">
+            <advanced-search-filter-state
+              {model-name}="modelName"
+              {(state-model)}="statusItem"
+              {show-operator}="false">
+            </advanced-search-filter-state>
+          </div>
+          {{/if}}
         </div>
         <div class="object-controls__filters">
           <advanced-search-filter-container
             {(items)}="filterItems"
             {available-attributes}="availableAttributes"
-            {model-name}="modelName">
+            {model-name}="modelName"
+            {default-status-filter}="false">
           </advanced-search-filter-container>
         </div>
         <div class="object-controls__mappings">

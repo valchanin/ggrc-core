@@ -573,9 +573,8 @@ mapper-results-columns-configuration {
 .object-controls {
   @mixin controls-row {
     display: flex;
-    margin: 16px 0px;
     align-items: center;
-    >* {
+    > *:not(:last-child) {
       margin-right: 16px;
     }
   }
@@ -617,6 +616,10 @@ mapper-results-columns-configuration {
       }
     }
   }
+  &__row {
+    display: flex;
+    margin: 16px 0px;
+  }
   &__type {
     @include controls-row;
 
@@ -626,5 +629,8 @@ mapper-results-columns-configuration {
     .btn {
       padding: 0px;
     }
+  }
+  &__state {
+    margin-left: 40px;
   }
 }
