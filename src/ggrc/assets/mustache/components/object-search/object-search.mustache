@@ -13,73 +13,67 @@
 </div>
 
 <div class="modal-filter modal-body">
-  <div class="object-controls">
+  <collapsible-panel {soft-mode}="true" {title-text}="'filter'" {(expanded)}="showSearch">
     <advanced-search-wrapper
       {model-name}="model.singular"
       {model-display-name}="model.name"
       {(mapping-items)}="mappingItems"
       {(filter-items)}="filterItems">
-      <div class="object-controls__container">
-        <collapsible-panel {soft-mode}="true" {title-text}="'filter'" {(expanded)}="showSearch">
-          <div class="object-controls__type">
-            <h6>Object type</h6>
-            <mapping-type-selector
-              types="availableTypes"
-              selected-type="type"
-              disabled="is_loading">
-            </mapping-type-selector>
-          </div>
-          <div class="object-controls__filters">
-            <advanced-search-filter-container
-              {(items)}="filterItems"
-              {available-attributes}="availableAttributes"
-              {model-name}="modelName">
-            </advanced-search-filter-container>
-          </div>
-          <div class="object-controls__mappings">
-            <div class="object-controls__mappings-header">
-              <h4>Filter by Mapping</h4>
-            </div>
-            <advanced-search-mapping-container
-              {(items)}="mappingItems"
-              {model-name}="modelName">
-            </advanced-search-mapping-container>
-          </div>
-          <div class="object-controls__actions">
-            <button type="reset" class="btn btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
-            <button type="submit" class="btn btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
-          </div>
-        </collapsible-panel>
-        {{^if showSearch}}
-        <span class="object-controls__filter-string">{{filterString}}</span>
-        {{/if}}
+      <div class="object-controls">
+        <div class="object-controls__type">
+          <h6>Object type</h6>
+          <mapping-type-selector
+            types="availableTypes"
+            selected-type="type"
+            disabled="is_loading">
+          </mapping-type-selector>
+        </div>
+        <div class="object-controls__filters">
+          <advanced-search-filter-container
+            {(items)}="filterItems"
+            {available-attributes}="availableAttributes"
+            {model-name}="modelName">
+          </advanced-search-filter-container>
+        </div>
+        <div class="object-controls__mappings">
+          <advanced-search-mapping-container
+            {(items)}="mappingItems"
+            {model-name}="modelName">
+          </advanced-search-mapping-container>
+        </div>
+        <div class="object-controls__actions">
+          <button type="reset" class="btn btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
+          <button type="submit" class="btn btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
+        </div>
       </div>
     </advanced-search-wrapper>
-  </div>
+  </collapsible-panel>
 </div>
 
 <div class="modal-footer {{#if showResults}}expanded{{/if}}">
   <collapsible-panel {soft-mode}="true" {title-text}="'Search Results {{displayCount *totalObjects}}'" {(expanded)}="showResults">
-    {{#if resultsRequested}}
-    <mapper-results
-      class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
-      base-instance="parentInstance"
-      {(is-loading)}="is_loading"
-      type="type"
-      submit-cbs="submitCbs"
-      {^paging.total}="*totalObjects"
-      {search-only}="true"
-      {use-snapshots}="useSnapshots"
-      {new-entries}="newEntries"
-      {(after-search)}="afterSearch"
-      {(entries)}="entries"
-      {(filter-items)}="filterItems"
-      {(mapping-items)}="mappingItems">
-    </mapper-results>
-    {{else}}
-    <div class="well well-small">
-      No results
+    <div class="search-results">
+      {{#if resultsRequested}}
+      <mapper-results
+        class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
+        base-instance="parentInstance"
+        {(is-loading)}="is_loading"
+        type="type"
+        submit-cbs="submitCbs"
+        {^paging.total}="*totalObjects"
+        {search-only}="true"
+        {use-snapshots}="useSnapshots"
+        {new-entries}="newEntries"
+        {(after-search)}="afterSearch"
+        {(entries)}="entries"
+        {(filter-items)}="filterItems"
+        {(mapping-items)}="mappingItems">
+      </mapper-results>
+      {{else}}
+      <div class="well well-small">
+        No results
+      </div>
+      {{/if}}
     </div>
-    {{/if}}
   </collapsible-panel>
 </div>

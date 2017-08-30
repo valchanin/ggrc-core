@@ -529,7 +529,8 @@ mapper-results-columns-configuration {
       }
     }
     .modal-body {
-      padding-bottom: 30px !important;
+      border-top: 1px solid #E0E0E0;
+      padding: 20px !important;
       select, input {
         margin: 0;
       }
@@ -540,18 +541,10 @@ mapper-results-columns-configuration {
       }
     }
     .modal-footer {
-      padding-top: 10px;
+      border-top: 1px solid #E0E0E0;
 
-      &.expanded{
-        border-top: 1px solid #E0E0E0;
-        padding-top: 24px;
-      }
-
-      collapsible-panel-body{
-        padding-top: 24px;
-        mapper-results {
-          margin-bottom: 24px;
-        }
+      .search-results {
+        margin-top: 20px;
       }
 
       .btn-map {
@@ -586,28 +579,15 @@ mapper-results-columns-configuration {
       margin-right: 16px;
     }
   }
-
-  &__container {
-    select {
-      background: $white;
-    }
+  select {
+    background: $white;
   }
+
   &__filters {
     padding-bottom: 24px;
   }
-  &__mappings {
-    padding-top: 24px;
-    border-top: 1px solid #E0E0E0;
-  }
   &__mappings-header {
     margin-bottom: 24px;
-  }
-  &__filter-string {
-    font-size: 12px;
-    color: #969696;
-    padding-left: 20px;
-    font-style: italic;
-    display: block;
   }
   &__actions {
     float: right;
