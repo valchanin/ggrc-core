@@ -133,7 +133,7 @@
 
 .filter-state {
   @include advanced-search-controls;
-  >* {
+  > *:not(:last-child) {
     margin-right: 16px;
   }
   &__name {

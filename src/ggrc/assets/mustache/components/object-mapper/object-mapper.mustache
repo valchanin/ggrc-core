@@ -10,6 +10,52 @@
   <h2>
     Map {{get_object}} to {{get_title}}
   </h2>
+  {{#if allowedToCreate}}
+    {{#is_allowed 'create' model.singular context='any'}}
+      {{#if_equals type 'AssessmentTemplate'}}
+        <span class="create-new-object">
+          Map existing object or
+          <a class="btn btn-link create-control"
+              href="javascript://"
+              data-toggle="modal-ajax-form"
+              data-unique-id="{{join_object_id}}"
+              data-modal-class="modal-wide"
+              data-object-singular="{{model_info 'AssessmentTemplate' 'model_singular'}}"
+              data-object-plural="{{model_info 'AssessmentTemplate' 'root_collection'}}"
+              data-object-params='{
+                "audit": {
+                  "id": {{parentInstance.id}},
+                  "type": "{{parentInstance.type}}"
+                },
+                "context": {
+                  "id": {{parentInstance.context.id}},
+                  "type": "{{json_escape parentInstance.context.type}}"
+                },
+              "audit_title": "{{json_escape parentInstance.title}}"
+            }'
+            data-join-object-id="{{join_object_id}}">
+            Create and map new object
+          </a>
+        </span>
+      {{else}}
+        {{^if showWarning}}
+          <span class="create-new-object">
+            Map existing object or
+            <a class="btn btn-link create-control"
+                href="javascript://"
+                data-toggle="modal-ajax-form"
+                data-unique-id="{{join_object_id}}"
+                data-modal-class="modal-wide"
+                data-object-singular="{{model.singular}}"
+                data-object-plural="{{model.plural}}"
+                data-join-object-id="{{join_object_id}}">
+                Create and map new object
+            </a>
+          </span>
+        {{/if}}
+      {{/if_equals}}
+    {{/is_allowed}}
+  {{/if}}
 </div>
 <div class="modal-filter modal-body">
   {{#if showWarning}}
@@ -20,124 +66,102 @@
   </div>
   {{/if}}
 
-  <div class="object-controls">
+  <collapsible-panel {soft-mode}="true" {title-text}="'filter'" {(expanded)}="showSearch">
     <advanced-search-wrapper
       {model-name}="model.singular"
       {model-display-name}="model.name"
       {(mapping-items)}="mappingItems"
       {(filter-items)}="filterItems"
       {relevant-to}="relevantTo">
-      <div class="object-controls__container">
-        <collapsible-panel {soft-mode}="true" {title-text}="'filter'" {(expanded)}="showSearch">
+      <div class="object-controls">
+        <div class="object-controls__row">
           <div class="object-controls__type">
             <h6>Object type</h6>
             <mapping-type-selector
               types="availableTypes"
               selected-type="type"
-              disabled="isLoadingOrSaving">
+              disabled="is_loading">
             </mapping-type-selector>
-            {{#if allowedToCreate}}
-              {{#is_allowed 'create' model.singular context='any'}}
-                {{#if_equals type 'AssessmentTemplate'}}
-                  <div class="col create">
-                    <a
-                      class="btn btn-link create-control"
-                      href="javascript://"
-                      data-toggle="modal-ajax-form"
-                      data-unique-id="{{join_object_id}}"
-                      data-modal-class="modal-wide"
-                      data-object-singular="{{model_info 'AssessmentTemplate' 'model_singular'}}"
-                      data-object-plural="{{model_info 'AssessmentTemplate' 'root_collection'}}"
-                      data-object-params='{
-                          "audit": {
-                              "id": {{parentInstance.id}},
-                              "type": "{{parentInstance.type}}"
-                          },
-                          "context": {
-                              "id": {{parentInstance.context.id}},
-                              "type": "{{json_escape parentInstance.context.type}}"
-                          },
-                          "audit_title": "{{json_escape parentInstance.title}}"
-                        }'
-                      data-join-object-id="{{join_object_id}}">
-                      + Create New
-                    </a>
-                  </div>
-                {{else}}
-                  {{^if showWarning}}
-                    <div class="col create">
-                      <a
-                        class="btn btn-link create-control"
-                        href="javascript://"
-                        data-toggle="modal-ajax-form"
-                        data-unique-id="{{join_object_id}}"
-                        data-modal-class="modal-wide"
-                        data-object-singular="{{model.singular}}"
-                        data-object-plural="{{model.plural}}"
-                        data-join-object-id="{{join_object_id}}">
-                        + Create New
-                      </a>
-                    </div>
-                  {{/if}}
-                {{/if_equals}}
-              {{/is_allowed}}
+          </div>
+          {{#if hasStatusFilter}}
+          <div class="object-controls__state">
+            <advanced-search-filter-state
+              {model-name}="modelName"
+              {(state-model)}="statusItem"
+              {show-operator}="false">
+            </advanced-search-filter-state>
+          </div>
+          {{/if}}
+        </div>
+        <div class="object-controls__filters">
+          <advanced-search-filter-container
+            {(items)}="filterItems"
+            {available-attributes}="availableAttributes"
+            {model-name}="modelName"
+            {default-status-filter}="false"
+            {show-add-button}="mappingItems.length">
+          </advanced-search-filter-container>
+        </div>
+        {{#if mappingItems.length}}
+        <div class="object-controls__mappings">
+          {{#each relevantTo}}
+          <div class="object-controls__relevant object-controls__relevant--list">
+            <h6>Mapped to {{type}}:</h6><span>{{title}}</span>
+          </div>
+          {{/each}}
+          <advanced-search-mapping-container
+            {(items)}="mappingItems"
+            {model-name}="modelName"
+            {show-add-button}="false">
+          </advanced-search-mapping-container>
+        </div>
+        {{/if}}
+        <div class="object-controls__actions">
+          <div class="object-controls__actions--left">
+            {{^if mappingItems.length}}
+            <button class="btn btn-small btn-white" ($click)="addFilterAttribute">Add Attribute</button>
             {{/if}}
-          </div>
-
-          <div class="object-controls__filters">
-            <advanced-search-filter-container
-              {(items)}="filterItems"
-              {available-attributes}="availableAttributes"
-              {model-name}="modelName">
-            </advanced-search-filter-container>
-          </div>
-          <div class="object-controls__mappings">
-            <div class="object-controls__mappings-header">
-              <h4>Filter by Mapping</h4>
-            </div>
+            <button class="btn btn-small btn-white" ($click)="addMappingFilter">Add Mapping Filter</button>
+            {{^if mappingItems.length}}
             {{#each relevantTo}}
             <div class="object-controls__relevant">
               <h6>Mapped to {{type}}:</h6><span>{{title}}</span>
             </div>
             {{/each}}
-            <advanced-search-mapping-container
-              {(items)}="mappingItems"
-              {model-name}="modelName">
-            </advanced-search-mapping-container>
+            {{/if}}
           </div>
-          <div class="object-controls__actions">
-            <button type="reset" class="btn btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
-            <button type="submit" class="btn btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
+          <div class="object-controls__actions--right">
+            <button type="reset" class="btn btn-small btn-white" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="resetFilters()">Reset</button>
+            <button type="submit" class="btn btn-small btn-lightBlue" {{#if is_loading}}disabled="disabled"{{/if}} ($click)="onSubmit()">Search</button>
           </div>
-        </collapsible-panel>
-        {{^if showSearch}}
-        <span class="object-controls__filter-string">{{filterString}}</span>
-        {{/if}}
+        </div>
       </div>
     </advanced-search-wrapper>
-  </div>
+  </collapsible-panel>
 </div>
 
 <div class="modal-footer {{#if showResults}}expanded{{/if}}">
   <collapsible-panel {soft-mode}="true" {title-text}="'Search Results ({{*totalObjects}})'" {(expanded)}="showResults">
-    <mapper-results
-      class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
-      base-instance="parentInstance"
-      {(is-loading)}="is_loading"
-      object="object"
-      type="type"
-      selected="selected"
-      submit-cbs="submitCbs"
-      {^paging.total}="*totalObjects"
-      {use-snapshots}="useSnapshots"
-      {new-entries}="newEntries"
-      {(entries)}="entries"
-      {relevant-to}="relevantTo"
-      {deferred-list}="deferred_list"
-      {(filter-items)}="filterItems"
-      {(mapping-items)}="mappingItems">
-    </mapper-results>
-    <div class="row-fluid">
+    <div class="search-results">
+      <mapper-results
+        class="{{#useSnapshots}}snapshot-list{{/useSnapshots}}"
+        base-instance="parentInstance"
+        {(is-loading)}="is_loading"
+        object="object"
+        type="type"
+        selected="selected"
+        submit-cbs="submitCbs"
+        {^paging.total}="*totalObjects"
+        {use-snapshots}="useSnapshots"
+        {new-entries}="newEntries"
+        {(entries)}="entries"
+        {relevant-to}="relevantTo"
+        {deferred-list}="deferred_list"
+        {(filter-items)}="filterItems"
+        {(mapping-items)}="mappingItems">
+      </mapper-results>
+    </div>
+    <div class="control-buttons row-fluid">
       <div class="span5">
         <div class="deny-buttons"></div>
       </div>
