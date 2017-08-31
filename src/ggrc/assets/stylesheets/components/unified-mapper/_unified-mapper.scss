@@ -571,29 +571,32 @@ mapper-results-columns-configuration {
 }
 
 .object-controls {
-  @mixin controls-row {
+  @mixin controls-row ($distance:16px) {
     display: flex;
     align-items: center;
     > *:not(:last-child) {
-      margin-right: 16px;
+      margin-right: $distance;
     }
   }
   select {
     background: $white;
   }
 
-  &__filters {
-    padding-bottom: 24px;
+  &__mappings {
+    padding-top: 24px;
   }
   &__mappings-header {
     margin-bottom: 24px;
   }
   &__actions {
-    float: right;
-    button {
-      height: 24px;
-      padding: 0px 12px;
-      line-height: 12px;
+    margin-top: 24px;
+    &--right {
+      @include controls-row(8px);
+      float: right;
+    }
+    &--left {
+      @include controls-row(8px);
+      float: left;
     }
   }
   &__relevant {

@@ -39,6 +39,13 @@
       defaultStatusFilter: {
         type: 'boolean',
         value: true
+      },
+      /**
+       * Indicates whether 'Add' button should be displayed.
+       */
+      showAddButton: {
+        type: 'boolean',
+        value: true
       }
     },
     /**

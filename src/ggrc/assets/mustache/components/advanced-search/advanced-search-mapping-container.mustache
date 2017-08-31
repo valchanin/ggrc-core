@@ -39,11 +39,13 @@
       {{/switch}}
     {{/each}}
   </div>
+  {{#if showAddButton}}
   <div class="mapping-container__footer">
     <div>
       <button class="btn btn-small btn-white" ($click)="addMappingCriteria()">Add Mapping Filter</button>
     </div>
   </div>
+  {{/if}}
 </div>
 
 

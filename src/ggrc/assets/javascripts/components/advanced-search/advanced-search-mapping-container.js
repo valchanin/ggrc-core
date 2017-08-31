@@ -46,6 +46,13 @@
         GGRC.Utils.AdvancedSearch.create.operator('AND'),
         GGRC.Utils.AdvancedSearch.create.mappingCriteria()
       ]));
+    },
+    /**
+     * Indicates whether 'Add' button should be displayed.
+     */
+    showAddButton: {
+      type: 'boolean',
+      value: true
     }
   });
 

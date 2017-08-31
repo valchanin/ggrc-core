@@ -30,6 +30,20 @@
         ).available;
         return available;
       },
+      addFilterAttribute: function () {
+        var items = this.attr('filterItems');
+        if (items.length) {
+          items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
+        }
+        items.push(GGRC.Utils.AdvancedSearch.create.attribute());
+      },
+      addMappingFilter: function () {
+        var items = this.attr('mappingItems');
+        if (items.length) {
+          items.push(GGRC.Utils.AdvancedSearch.create.operator('AND'));
+        }
+        items.push(GGRC.Utils.AdvancedSearch.create.mappingCriteria());
+      },
       resetFilters: function () {
         this.attr('filterItems', []);
         this.attr('mappingItems', []);

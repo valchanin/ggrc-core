@@ -45,11 +45,13 @@
       {{/switch}}
     {{/each}}
   </div>
+  {{#if showAddButton}}
   <div class="filter-container__footer">
     <div>
       <button class="btn btn-small btn-white" ($click)="addFilterCriterion()">Add Attribute</button>
     </div>
   </div>
+  {{/if}}
 </div>
 
 
