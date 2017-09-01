@@ -46,7 +46,7 @@
           $(this).trigger('shown'); // this will reposition the modal stack
         })
         .on('delete-object', $.proxy(this.delete_object, this))
-        .draggable({handle: '.modal-header'});
+        .draggable({handle: '.modal-header', cancel: '.btn'});
     },
 
     doNothing: function (e) {
