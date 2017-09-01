@@ -78,6 +78,7 @@
       '.create-control click': function () {
         // reset new entries
         this.viewModel.attr('newEntries', []);
+        this.element.trigger('hideModal');
       },
       '{window} modal:dismiss': function (el, ev, options) {
         var joinObjectId = this.viewModel.attr('join_object_id');
@@ -88,6 +89,8 @@
           joinObjectId === options.uniqueId &&
           this.viewModel.attr('newEntries').length > 0) {
           this.mapObjects(this.viewModel.attr('newEntries'));
+        } else {
+          this.element.trigger('showModal');
         }
       },
       inserted: function () {

@@ -98,15 +98,23 @@ describe('GGRC.Components.objectMapper', function () {
   });
 
   describe('".create-control click" event', function () {
+    var element = {};
+
     beforeEach(function () {
       viewModel.attr({});
       handler = events['.create-control click'];
+      element.trigger = jasmine.createSpy();
     });
 
     it('sets empty array to newEntries', function () {
-      handler.call({viewModel: viewModel});
+      handler.call({viewModel: viewModel, element: element});
       expect(viewModel.attr('newEntries').length)
         .toEqual(0);
+    });
+
+    it('triggers "hideModal" event', function () {
+      handler.call({viewModel: viewModel, element: element});
+      expect(element.trigger).toHaveBeenCalledWith('hideModal');
     });
   });
 
@@ -126,6 +134,7 @@ describe('GGRC.Components.objectMapper', function () {
   describe('"{window} modal:dismiss" event', function () {
     var options;
     var spyObj;
+    var element = {};
 
     beforeEach(function () {
       viewModel.attr({
@@ -134,6 +143,7 @@ describe('GGRC.Components.objectMapper', function () {
       });
       handler = events['{window} modal:dismiss'];
       spyObj = jasmine.createSpy();
+      element.trigger = jasmine.createSpy();
     });
 
     it('calls mapObjects from mapper-results' +
@@ -155,9 +165,23 @@ describe('GGRC.Components.objectMapper', function () {
       };
       handler.call({
         viewModel: viewModel,
-        mapObjects: spyObj
+        mapObjects: spyObj,
+        element: element
       }, {}, {}, options);
       expect(spyObj).not.toHaveBeenCalled();
+    });
+
+    it('triggers "showModel event"' +
+      'if there are newEntries and ids are not equal', function () {
+      options = {
+        uniqueId: 321
+      };
+      handler.call({
+        viewModel: viewModel,
+        mapObjects: spyObj,
+        element: element
+      }, {}, {}, options);
+      expect(element.trigger).toHaveBeenCalledWith('showModal');
     });
 
     it('does not calls mapObjects from mapper-results' +
@@ -168,9 +192,24 @@ describe('GGRC.Components.objectMapper', function () {
       };
       handler.call({
         viewModel: viewModel,
-        mapObjects: spyObj
+        mapObjects: spyObj,
+        element: element
       }, {}, {}, options);
       expect(spyObj).not.toHaveBeenCalled();
+    });
+
+    it('triggers "showModal"' +
+    'if there are no newEntries', function () {
+      viewModel.attr('newEntries', []);
+      options = {
+        uniqueId: 123
+      };
+      handler.call({
+        viewModel: viewModel,
+        mapObjects: spyObj,
+        element: element
+      }, {}, {}, options);
+      expect(element.trigger).toHaveBeenCalledWith('showModal');
     });
   });
 

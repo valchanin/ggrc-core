@@ -34,8 +34,16 @@
         $trigger: $trigger
       }, options));
 
-      $target.on('hidden.bs.modal', function () {
+      $target.on('modal:dismiss', function () {
         $(this).remove();
+      });
+
+      $target.on('hideModal', function (e) {
+        $target.modal_form('silentHide');
+      });
+
+      $target.on('showModal', function () {
+        $target.modal_form('show');
       });
 
       return $target;
