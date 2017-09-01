@@ -68,53 +68,32 @@ describe('GGRC.Components.objectMapper', function () {
   });
 
   describe('".create-control modal:success" event', function () {
-    var element;
     var spyObj;
 
     beforeEach(function () {
       viewModel.attr({
         newEntries: []
       });
-      spyObj = {
-        showNewEntries: jasmine.createSpy()
-      };
-      element = {
-        find: function () {
-          return {
-            viewModel: function () {
-              return spyObj;
-            }
-          };
-        }
-      };
       handler = events['.create-control modal:success'];
-    });
-
-    it('shows results', function () {
-      viewModel.attr('showResults', false);
-      handler.call({
-        viewModel: viewModel,
-        element: element
-      }, {}, {}, 'model');
-      expect(viewModel.attr('showResults')).toBe(true);
+      spyObj = jasmine.createSpy();
     });
 
     it('adds model to newEntries', function () {
       viewModel.attr('newEntries', []);
       handler.call({
         viewModel: viewModel,
-        element: element
+        mapObjects: spyObj
       }, {}, {}, 'model');
       expect(viewModel.attr('newEntries').length).toEqual(1);
       expect(viewModel.attr('newEntries')[0]).toEqual('model');
     });
 
-    it('calls showNewEntries from mapper-results', function () {
+    it('calls mapObjects to map results', function () {
       handler.call({
         viewModel: viewModel,
-        element: element
+        mapObjects: spyObj
       }, {}, {}, 'model');
-      expect(spyObj.showNewEntries).toHaveBeenCalled();
+      expect(spyObj).toHaveBeenCalledWith(viewModel.attr('newEntries'));
     });
   });
 
@@ -147,54 +126,41 @@ describe('GGRC.Components.objectMapper', function () {
   describe('"{window} modal:dismiss" event', function () {
     var options;
     var spyObj;
-    var element;
 
     beforeEach(function () {
       viewModel.attr({
         join_object_id: 123,
         newEntries: [1]
       });
-      spyObj = {
-        showNewEntries: function () {}
-      };
-      element = {
-        find: function () {
-          return {
-            viewModel: function () {
-              return spyObj;
-            }
-          };
-        }
-      };
-      spyOn(spyObj, 'showNewEntries');
       handler = events['{window} modal:dismiss'];
+      spyObj = jasmine.createSpy();
     });
 
-    it('calls showNewEntries from mapper-results' +
+    it('calls mapObjects from mapper-results' +
     'if there are newEntries and ids are equal', function () {
       options = {
         uniqueId: 123
       };
       handler.call({
         viewModel: viewModel,
-        element: element
+        mapObjects: spyObj
       }, {}, {}, options);
-      expect(spyObj.showNewEntries).toHaveBeenCalled();
+      expect(spyObj).toHaveBeenCalled();
     });
 
-    it('does not call showNewEntries from mapper-results' +
+    it('does not call mapObjects from mapper-results' +
       'if there are newEntries and ids are not equal', function () {
       options = {
         uniqueId: 321
       };
       handler.call({
         viewModel: viewModel,
-        element: element
+        mapObjects: spyObj
       }, {}, {}, options);
-      expect(spyObj.showNewEntries).not.toHaveBeenCalled();
+      expect(spyObj).not.toHaveBeenCalled();
     });
 
-    it('does not calls showNewEntries from mapper-results' +
+    it('does not calls mapObjects from mapper-results' +
     'if there are no newEntries', function () {
       viewModel.attr('newEntries', []);
       options = {
@@ -202,9 +168,9 @@ describe('GGRC.Components.objectMapper', function () {
       };
       handler.call({
         viewModel: viewModel,
-        element: element
+        mapObjects: spyObj
       }, {}, {}, options);
-      expect(spyObj.showNewEntries).not.toHaveBeenCalled();
+      expect(spyObj).not.toHaveBeenCalled();
     });
   });
 
@@ -331,7 +297,8 @@ describe('GGRC.Components.objectMapper', function () {
       that = {
         viewModel: viewModel,
         closeModal: jasmine.createSpy(),
-        deferredSave: jasmine.createSpy().and.returnValue('deferredSave')
+        deferredSave: jasmine.createSpy().and.returnValue('deferredSave'),
+        mapObjects: events.mapObjects
       };
       spyOn(window, 'RefreshQueue')
         .and.returnValue({
