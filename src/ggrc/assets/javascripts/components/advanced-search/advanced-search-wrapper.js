@@ -20,7 +20,7 @@
       modelDisplayName: null,
       filterItems: [],
       mappingItems: [],
-      statusItem: {},
+      statusItem: GGRC.Utils.AdvancedSearch.create.state(),
       relevantTo: [],
       availableAttributes: function () {
         var available = GGRC.Utils.TreeView.getColumnsForModel(
@@ -47,7 +47,7 @@
       resetFilters: function () {
         this.attr('filterItems', []);
         this.attr('mappingItems', []);
-        this.attr('statusItem', {});
+        this.attr('statusItem.value', {});
       }
     }),
     events: {

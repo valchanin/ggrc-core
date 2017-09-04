@@ -280,6 +280,7 @@ describe('GGRC.Components.mapperResults', function () {
     };
     var mockFilterItems = ['filterItem'];
     var mockMappingItems = ['mappingItem'];
+    var mockStatusItem = 'statusItem';
 
     beforeEach(function () {
       viewModel.attr('type', 'mockName');
@@ -287,6 +288,7 @@ describe('GGRC.Components.mapperResults', function () {
       viewModel.attr('sort', mockSort);
       viewModel.attr('filterItems', mockFilterItems);
       viewModel.attr('mappingItems', mockMappingItems);
+      viewModel.attr('statusItem', mockStatusItem);
 
       spyOn(viewModel, 'prepareRelevantQuery')
         .and.returnValue('relevant');
@@ -310,6 +312,12 @@ describe('GGRC.Components.mapperResults', function () {
       viewModel.getQuery('values', true);
       expect(GGRC.Utils.AdvancedSearch.buildFilter.calls.argsFor(1)[0].attr())
         .toEqual(mockMappingItems);
+    });
+
+    it('builds advanced status', function () {
+      viewModel.getQuery('values', true);
+      expect(GGRC.Utils.AdvancedSearch.buildFilter.calls.argsFor(2)[0][0])
+        .toEqual(mockStatusItem);
     });
 
     it('adds paging to query if addPaging is true', function () {
@@ -374,7 +382,7 @@ describe('GGRC.Components.mapperResults', function () {
       spyOn(viewModel, 'prepareUnlockedFilter').and.returnValue('unlocked');
       viewModel.getQuery();
 
-      expect(GGRC.query_parser.join_queries.calls.argsFor(1)[1])
+      expect(GGRC.query_parser.join_queries.calls.argsFor(2)[1])
         .toBe('unlocked');
     });
   });

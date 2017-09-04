@@ -70,8 +70,9 @@
     <advanced-search-wrapper
       {model-name}="model.singular"
       {model-display-name}="model.name"
-      {(mapping-items)}="mappingItems"
-      {(filter-items)}="filterItems"
+      {^mapping-items}="*mappingItems"
+      {^filter-items}="*filterItems"
+      {^status-item}="*statusItem"
       {relevant-to}="relevantTo">
       <div class="object-controls">
         <div class="object-controls__row">
@@ -87,7 +88,7 @@
           <div class="object-controls__state">
             <advanced-search-filter-state
               {model-name}="modelName"
-              {(state-model)}="statusItem"
+              {(state-model)}="statusItem.value"
               {show-operator}="false">
             </advanced-search-filter-state>
           </div>
@@ -156,8 +157,9 @@
         {(entries)}="entries"
         {relevant-to}="relevantTo"
         {deferred-list}="deferred_list"
-        {(filter-items)}="filterItems"
-        {(mapping-items)}="mappingItems">
+        {filter-items}="*filterItems"
+        {mapping-items}="*mappingItems"
+        {status-item}="*statusItem">
       </mapper-results>
     </div>
     <div class="control-buttons row-fluid">

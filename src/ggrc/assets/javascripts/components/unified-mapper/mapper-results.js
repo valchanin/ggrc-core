@@ -37,6 +37,7 @@
       baseInstance: null,
       filterItems: [],
       mappingItems: [],
+      statusItem: {},
       selected: [],
       refreshItems: false,
       submitCbs: null,
@@ -158,7 +159,12 @@
         var mappings = GGRC.query_parser.parse(
           GGRC.Utils.AdvancedSearch.buildFilter(this.attr('mappingItems'),
           request));
-        var advancedFilters = GGRC.query_parser.join_queries(filters, mappings);
+        var status = GGRC.query_parser.parse(
+          GGRC.Utils.AdvancedSearch.buildFilter([this.attr('statusItem')],
+          request));
+        var advancedFilters = GGRC.query_parser.join_queries(
+          GGRC.query_parser.join_queries(filters, mappings),
+          status);
         result.request = request;
 
         // prepare pagination
