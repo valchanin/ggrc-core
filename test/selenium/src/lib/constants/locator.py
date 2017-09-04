@@ -19,6 +19,7 @@ class Common(object):
   MODAL_CONFIRM = ".modal.hide"
   MODAL_MAP = ".modal-selector"
   MODAL_FOOTER = " .modal-footer"
+  MODAL_FILTER = " .modal-filter"
   # info page (panel)
   INFO_WIDGET = ".info"
   # dropdown
@@ -228,9 +229,11 @@ class CommonModalUnifiedMapper(object):
   """Common locators for unified mapper modals."""
   # pylint: disable=invalid-name
   MODAL = Common.MODAL_MAP
+  MODAL_FILTER = Common.MODAL_FILTER
   FILTER_TOGGLE_CSS = (By.CSS_SELECTOR,
-                       '.object-controls__container collapse-panel-click-area')
-  FILTER_ADD_ATTRIBUTE = (By.CSS_SELECTOR, ".filter-container__footer button")
+                       MODAL_FILTER + " collapse-panel-click-area")
+  FILTER_ADD_ATTRIBUTE_BTN = (By.XPATH, "//button[text()='Add Attribute']")
+  FILTER_ROW_CSS = (By.CSS_SELECTOR, ".filter-container__attribute")
   FILTER_OPERATOR = (By.CSS_SELECTOR, ".filter-operator__content select")
   FILTER_ATTRIBUTE_NAME = (By.CSS_SELECTOR, ".filter-attribute__name select")
   FILTER_ATTRIBUTE_COMPARE = (
@@ -240,11 +243,6 @@ class CommonModalUnifiedMapper(object):
   OBJ_TYPE = (By.CSS_SELECTOR, MODAL + " .object-controls__type h6")
   # user input elements
   OBJ_TYPE_DROPDOWN = (By.CSS_SELECTOR, MODAL + " .input-block-level")
-  FILTER_VIA_EXPRESSION_TEXT_BOX = (By.CSS_SELECTOR, MODAL + " #mapper-filter")
-  FILTER_BY_STATE_DROPDOWN = (By.CSS_SELECTOR,
-                              MODAL + " .multiselect-dropdown__input")
-  FILTER_BY_STATE_DROPDOWN_OPTIONS = (By.CSS_SELECTOR,
-                                      MODAL + " .multiselect-dropdown__label")
   BUTTON_SEARCH = (By.CSS_SELECTOR, MODAL + " button[type='submit']")
   FOUND_OBJECTS_TITLES = (By.CSS_SELECTOR, MODAL + " .flex-box .title-attr")
   FOUND_OBJECTS_CHECKBOXES = (By.CSS_SELECTOR,

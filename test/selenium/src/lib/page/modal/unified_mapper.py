@@ -49,33 +49,36 @@ class CommonUnifiedMapperModal(base.Modal):
         asmt_tmpl_dropdown.select_by_label(obj_name)
 
   def add_filter_attr(self, attr_name, value,
-                      operator=alias.AND_OP, compare=alias.EQUAL_OP):
+                      operator=None, compare_op=alias.EQUAL_OP):
     """Add filter attribute according to passed parameters. """
     if not self._add_attr_btn:
       self._add_attr_btn = selenium_utils.get_when_visible(
-          self._driver, self._locators.FILTER_ADD_ATTRIBUTE)
+          self._driver, self._locators.FILTER_ADD_ATTRIBUTE_BTN)
     self._add_attr_btn.click()
     last_filter_param = self._get_latest_filter_elements()
     last_filter_param['name'].select(attr_name)
     last_filter_param['value'].enter_text(value)
-    last_filter_param['compare'].select(compare)
-    last_filter_param['operator'].select(operator)
+    last_filter_param["compare_op"].select(compare_op)
+    if last_filter_param["operator"] and operator:
+      last_filter_param["operator"].select(operator)
 
   def _get_latest_filter_elements(self):
     """Return elements of last filter parameter"""
-    return {
+    latest_filter_elem = self._driver.find_elements(
+        *self._locators.FILTER_ROW_CSS)
+    latest_filter = {
         "name": base.DropdownStatic(
-            self._driver, selenium_utils.get_when_all_visible(
-                self._driver, self._locators.FILTER_ATTRIBUTE_NAME)[-1]),
-        "operator": base.DropdownStatic(
-            self._driver, selenium_utils.get_when_all_visible(
-                self._driver, self._locators.FILTER_OPERATOR)[-1]),
-        "compare": base.DropdownStatic(
-            self._driver, selenium_utils.get_when_all_visible(
-                self._driver, self._locators.FILTER_ATTRIBUTE_COMPARE)[-1]),
+            latest_filter_elem[-1], self._locators.FILTER_ATTRIBUTE_NAME),
+        "compare_op": base.DropdownStatic(
+            latest_filter_elem[-1], self._locators.FILTER_ATTRIBUTE_COMPARE),
         "value": base.TextInputField(
-            self._driver, selenium_utils.get_when_all_visible(
-                self._driver, self._locators.FILTER_ATTRIBUTE_VALUE)[-1])}
+            latest_filter_elem[-1], self._locators.FILTER_ATTRIBUTE_VALUE),
+        "operator": None}
+    if len(latest_filter_elem) > 1:
+      latest_filter["operator"] = base.DropdownStatic(
+          self._driver, selenium_utils.get_when_all_visible(
+              self._driver, self._locators.FILTER_OPERATOR)[-1])
+    return latest_filter
 
   def _select_search_dest_objs(self):
     """Click Search button to search objects according set filters."""
@@ -126,7 +129,7 @@ class CommonUnifiedMapperModal(base.Modal):
                                is_asmts_generation=is_asmts_generation)
     for enum, title in enumerate(dest_objs_titles):
       if enum == 0:
-        operator = alias.AND_OP
+        operator = None
       else:
         operator = alias.OR_OP
       self.add_filter_attr(self._elements.ATTRIBUTE_TITLE, title,
