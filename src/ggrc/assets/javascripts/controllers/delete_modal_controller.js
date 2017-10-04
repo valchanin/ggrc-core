@@ -41,7 +41,11 @@ GGRC.Controllers.Modals("GGRC.Controllers.Delete", {
                                // Do not re-enable the form elements.
 
     }).fail(function(xhr, status){
-      $(document.body).trigger("ajax:flash", { error : xhr.responseText });
+      var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) ?
+        xhr.responseJSON.message :
+        xhr.responseText;
+
+      $(document.body).trigger("ajax:flash", { error : errorMessage });
     }), el.add(cancel_button).add(modal_backdrop));
   }
 
