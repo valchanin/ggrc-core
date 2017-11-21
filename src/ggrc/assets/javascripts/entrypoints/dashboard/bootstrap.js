@@ -11,6 +11,9 @@
    initCounts,
  } from '../../plugins/utils/current-page-utils';
 
+ import {RoutesConfig} from '../../routes';
+ import appState from '../../appState';
+
 (function ($, can, CMS, GGRC) {
   var $area = $('.area').first();
   var defaults;
@@ -203,6 +206,8 @@
       }
     }
   });
+
+  RoutesConfig.setupRoutes(appState);
 
   extraPageOptions = {
     Program: {
