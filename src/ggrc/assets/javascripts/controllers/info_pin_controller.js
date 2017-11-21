@@ -12,6 +12,7 @@ import '../components/unmap-button/unmap-person-button';
 import '../components/issue-tracker/info-issue-tracker-fields';
 import * as TreeViewUtils from '../plugins/utils/tree-view-utils';
 import {confirm} from '../plugins/utils/modals';
+import appState from '../appState';
 
 can.Control('CMS.Controllers.InfoPin', {
   defaults: {
@@ -20,6 +21,18 @@ can.Control('CMS.Controllers.InfoPin', {
 }, {
   init: function (el, options) {
     this.element.height(0);
+
+    let type = appState.attr('infoPaneType');
+    let id = appState.attr('infoPaneId');
+
+    if (type && id) {
+      CMS.Models[can.capitalize(type)].findOne({id}).then((instance)=> {
+        this.setInstance(new can.Map({
+          instance,
+          options: {},
+        }), $(''), true);
+      });
+    }
   },
   findView: function (instance) {
     var view = instance.class.table_plural + '/info';
@@ -75,6 +88,8 @@ can.Control('CMS.Controllers.InfoPin', {
     $(window).trigger('resize');
   },
   unsetInstance: function () {
+    appState.removeAttr('infoPaneType');
+    appState.removeAttr('infoPaneId');
     this.element
       .css({
         height: 0,
@@ -137,6 +152,11 @@ can.Control('CMS.Controllers.InfoPin', {
     var infoPaneOpenDfd = can.Deferred();
     var isSubtreeItem = opts.attr('options.isSubTreeItem');
 
+    appState.attr({
+      infoPaneType: instance.class.table_singular,
+      infoPaneId: instance.id,
+    });
+
     opts.attr('options.isDirectlyRelated',
       !isSubtreeItem ||
       TreeViewUtils.isDirectlyRelated(instance));
@@ -172,6 +192,11 @@ can.Control('CMS.Controllers.InfoPin', {
     vm.attr('instance', instance);
     vm.attr('instance').dispatch({
       type: 'update'
+    });
+
+    appState.attr({
+      infoPaneType: instance.class.table_singular,
+      infoPaneId: instance.id,
     });
   },
   setLoadingIndicator: function (selector, isLoading) {

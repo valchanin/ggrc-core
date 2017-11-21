@@ -371,7 +371,7 @@ import appState from '../appState';
       var dashboardCtr = this.options.dashboard_controller;
       var infopinCtr = dashboardCtr.info_pin.element.control();
 
-      if (infopinCtr) {
+      if (infopinCtr && !(appState.attr('infoPaneType') && appState.attr('infoPaneId'))) {
         infopinCtr.hideInstance();
       }
 
