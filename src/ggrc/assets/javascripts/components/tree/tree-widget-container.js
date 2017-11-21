@@ -606,13 +606,21 @@ viewModel = can.Map.extend({
   applyAdvancedFilters: function () {
     var filters = this.attr('advancedSearch.filterItems');
     var mappings = this.attr('advancedSearch.mappingItems');
-    var request = can.List();
-    var advancedFilters;
 
     this.attr('advancedSearch.appliedFilterItems', filters);
     this.attr('advancedSearch.appliedMappingItems', mappings);
+    appState.attr('advancedSearch', {
+      appliedFilterItems: filters.serialize(),
+    });
 
-    advancedFilters = GGRC.query_parser.join_queries(
+    this.processFilters(filters, mappings);
+
+    this.attr('advancedSearch.open', false);
+    this.onFilter();
+  },
+  processFilters(filters, mappings) {
+    var request = can.List();
+    var advancedFilters = GGRC.query_parser.join_queries(
       GGRC.query_parser
         .parse(AdvancedSearch.buildFilter(filters, request)),
       GGRC.query_parser
@@ -621,11 +629,9 @@ viewModel = can.Map.extend({
     this.attr('advancedSearch.request', request);
 
     this.attr('advancedSearch.filter', advancedFilters);
-
-    this.attr('advancedSearch.open', false);
-    this.onFilter();
   },
   removeAdvancedFilters: function () {
+    appState.removeAttr('advancedSearch');
     this.attr('advancedSearch.appliedFilterItems', can.List());
     this.attr('advancedSearch.appliedMappingItems', can.List());
     this.attr('advancedSearch.request', can.List());
@@ -693,6 +699,12 @@ export default GGRC.Components('treeWidgetContainer', {
     var parentInstance = viewModel.attr('parent_instance');
     var allowMapping = viewModel.attr('allow_mapping');
     var allowCreating = viewModel.attr('allow_creating');
+
+    let appliedFilters = appState.attr('advancedSearch.appliedFilterItems');
+    if (appliedFilters) {
+      viewModel.attr('advancedSearch.appliedFilterItems', appliedFilters);
+      viewModel.processFilters(appliedFilters, []);
+    }
 
     function setAllowMapping() {
       var isAccepted = parentInstance.attr('status') === 'Accepted';
