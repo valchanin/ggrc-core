@@ -6,6 +6,8 @@
 import {
   initWidgets,
 } from '../../plugins/utils/current-page-utils';
+import {RouterConfig} from '../../router';
+import routes from './routes';
 
 const $area = $('.area').first();
 const sortByNameEmail = list => {
@@ -23,6 +25,8 @@ const sortByNameEmail = list => {
     return 0;
   }));
 };
+
+RouterConfig.setupRoutes(routes);
 
 const adminListDescriptors = {
   people: {

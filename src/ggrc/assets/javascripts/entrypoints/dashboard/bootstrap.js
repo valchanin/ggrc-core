@@ -14,6 +14,9 @@ import {
   isMyWork,
 } from '../../plugins/utils/current-page-utils';
 
+import {RouterConfig} from '../../router';
+import routes from './routes';
+
 const $area = $('.area').first();
 const instance = GGRC.page_instance();
 const location = window.location.pathname;
@@ -23,6 +26,8 @@ let defaults;
 let extraPageOptions;
 let widgetList;
 let widgetModels;
+
+RouterConfig.setupRoutes(routes);
 
 extraPageOptions = {
   Program: {
