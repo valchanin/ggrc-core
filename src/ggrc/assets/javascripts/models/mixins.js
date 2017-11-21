@@ -450,7 +450,7 @@ import {isSnapshot} from '../plugins/utils/snapshot-utils';
       return [widgetName,
               '_widget/',
               this.hash_fragment(),
-              '&refetch'].join('');
+              '&refetch=true'].join('');
     }
   });
 })(window.can, window.GGRC);

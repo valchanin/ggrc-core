@@ -8,6 +8,10 @@ const ROUTES_CONFIG = [
     template: ':widget',
     defaults: {},
   },
+  {
+    template: ':widget/:infoPaneType/:infoPaneId',
+    defaults: {},
+  },
 ];
 
 export class RoutesConfig {
