@@ -288,12 +288,6 @@ import {
       return this.trigger_expand();
     },
 
-    display_path: function (path) {
-      return this.display().then(this._ifNotRemoved(function () {
-        return TreeViewUtils.displayTreeSubpath(this.element, path);
-      }.bind(this)));
-    },
-
     display_subtrees: function () {
       var childTreeDfds = [];
       var that = this;
