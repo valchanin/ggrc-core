@@ -297,12 +297,6 @@ import {
       list.replace(itemsToKeep);
     },
 
-    display_path: function (path, refetch) {
-      return this.display(refetch).then(this._ifNotRemoved(function () {
-        return TreeViewUtils.displayTreeSubpath(this.element, path);
-      }.bind(this)));
-    },
-
     prepare_child_options: function (v, forceReload) {
       //  v may be any of:
       //    <model_instance>

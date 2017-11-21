@@ -335,18 +335,18 @@ import appState from '../appState';
       }
       if (widget) {
         this.set_active_widget(widget);
-        return this.display_widget_path('', widget.forceRefetch);
+        return this.display_widget(widget.forceRefetch);
       }
       return new $.Deferred().resolve();
     },
 
-    display_widget_path: function (path, refetch) {
+    display_widget: function (refetch) {
       var activeWidgetSelector = this.options.contexts.active_widget.selector;
       var $activeWidget = $(activeWidgetSelector);
       var widgetController = $activeWidget.control();
 
-      if (widgetController && widgetController.display_path) {
-        return widgetController.display_path(path, refetch);
+      if (widgetController && widgetController.display) {
+        return widgetController.display(refetch);
       }
       return new $.Deferred().resolve();
     },

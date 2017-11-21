@@ -47,6 +47,7 @@ import {
   getWidgetConfig,
 } from '../../plugins/utils/object-versions-utils';
 import Pagination from '../base-objects/pagination';
+import appState from '../../appState';
 
 var viewModel;
 
@@ -330,7 +331,7 @@ viewModel = can.Map.extend({
     var that = this;
     var loadedItems;
 
-    if (!this.attr('loaded') || needToRefresh) {
+    if (!this.attr('loaded') || needToRefresh || appState.attr('refetch')) {
       loadedItems = this
       .loadItems()
       .then(function () {

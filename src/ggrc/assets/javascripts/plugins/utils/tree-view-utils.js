@@ -347,51 +347,6 @@ function getSortingForModel(modelType) {
   };
 }
 
-function displayTreeSubpath(el, path, attemptCounter) {
-  var rest = path.split('/');
-  var type = rest.shift();
-  var id = rest.shift();
-  var selector = '[data-object-type=\'' + type +
-    '\'][data-object-id=' + id + ']';
-  var $node;
-  var nodeController;
-  var controller;
-
-  if (!attemptCounter) {
-    attemptCounter = 0;
-  }
-
-  rest = rest.join('/');
-
-  if (type || id) {
-    $node = el.find(selector);
-
-    // sometimes nodes haven't loaded yet, wait for them
-    if (!$node.size() && attemptCounter < 5) {
-      setTimeout(function () {
-        displayTreeSubpath(el, path, attemptCounter + 1);
-      }, 100);
-      return undefined;
-    }
-
-    if (!rest.length) {
-      controller = $node
-        .closest('.cms_controllers_tree_view_node')
-        .control();
-
-      if (controller) {
-        controller.select();
-      }
-    } else {
-      nodeController = $node.control();
-      if (nodeController && nodeController.display_path) {
-        return nodeController.display_path(rest);
-      }
-    }
-  }
-  return can.Deferred().resolve();
-}
-
 /**
  * Get available and selected models for the Model sub tier
  * @param {String} modelName - Model name.
@@ -759,7 +714,6 @@ export {
   getColumnsForModel,
   setColumnsForModel,
   getSortingForModel,
-  displayTreeSubpath,
   getModelsForSubTier,
   loadFirstTierItems,
   loadItemsForSubTier,

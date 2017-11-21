@@ -152,17 +152,7 @@ CMS.Controllers.Filterable('CMS.Controllers.DashboardWidgets', {
 
     return this._display_deferred;
   },
-  'updateCount': function (el, ev, count, updateCount) {
+  updateCount: function (el, ev, count, updateCount) {
     this.options.widget_count.attr('count', '' + count);
-  },
-  display_path: function (path, refetch) {
-    var that = this;
-    if (!that.content_controller) {
-      return this.display(refetch);
-    }
-    return this.display().then(function () {
-      if (that.content_controller && that.content_controller.display_path)
-        return that.content_controller.display_path(path, refetch);
-    });
   },
 });
