@@ -7,7 +7,7 @@
 <li class="{{internav_icon}} {{widgetType}}">
   {{#displayWidgetTab . instance}}
 
-  <a href="{{urlPath}}{{ selector }}" rel="tooltip" data-placement="bottom" title="{{ internav_display }}">
+  <a href="{{urlPath}}{{ internav_href }}" rel="tooltip" data-placement="bottom" title="{{ internav_display }}">
     <div class="oneline">
       <i class="fa fa-{{ internav_icon }} color"></i>
       {{#if show_title}}
@@ -19,7 +19,7 @@
       {{^count}}{{#has_count}}
         {{^instance.constructor.obj_nav_options.show_all_tabs}}
           {{^in_array internav_display instance.constructor.obj_nav_options.force_show_list}}
-            <span class="closed"><i class="fa fa-times"></i></span>
+            <span class="closed" data-widget="{{selector}}"><i class="fa fa-times"></i></span>
           {{/in_array}}
         {{/instance.constructor.obj_nav_options.show_all_tabs}}
       {{/has_count}}{{/count}}
@@ -53,7 +53,7 @@
               #if_instance_of' instance 'Program' '\
               and #if_equals' model.shortName 'Audit'}}
               <a
-                href="{{urlPath}}{{selector}}"
+                href="{{urlPath}}{{internav_href}}"
                 rel="tooltip"
                 data-placement="left"
                 data-original-title="Create {{model.title_singular}}"
@@ -82,7 +82,7 @@
               </a>
             {{else}}
               <a
-                href="{{urlPath}}{{ selector }}"
+                href="{{urlPath}}{{ internav_href }}"
                 {{^is_dashboard_or_all}}
                 {{#is_mappable_type instance.type model.shortName}}
                 {{#is_allowed_to_map instance model.shortName}}

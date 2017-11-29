@@ -11,6 +11,7 @@ import {isDashboardEnabled} from '../plugins/utils/dashboards-utils';
 import {isObjectVersion} from '../plugins/utils/object-versions-utils';
 
 import router from '../router';
+import {buildUrl} from '../router';
 
 (function (can, $) {
   can.Control('CMS.Controllers.Dashboard', {
@@ -368,14 +369,12 @@ import router from '../router';
         widget.attr('force_show', true);
         this.update_add_more_link();
         this.options.contexts.attr('active_widget', widget);
-        this.show_active_widget();
+        this.show_active_widget(widget);
       }
     },
 
-    show_active_widget: function (selector) {
-      var panel = selector ||
-        this.options.contexts.attr('active_widget').selector;
-      var widget = $(panel);
+    show_active_widget: function (widgetModel) {
+      var widget = $(widgetModel.selector);
       var dashboardCtr = this.options.dashboard_controller;
 
       if (dashboardCtr.hideInfoPin) {
@@ -387,7 +386,8 @@ import router from '../router';
         widget.siblings().addClass('hidden').trigger('widget_hidden');
         widget.removeClass('hidden').trigger('widget_shown');
         this.element.find('li').removeClass('active');
-        $('[href$="' + panel + '"]').closest('li').addClass('active');
+        this.element.find('[href$="' + widgetModel.internav_href + '"]')
+          .closest('li').addClass('active');
       }
     },
 
@@ -487,6 +487,7 @@ import router from '../router';
         widgetType: getWidgetType(widgetOptions.widget_id),
         internav_display: title,
         internav_id: widgetOptions.widget_id,
+        internav_href: buildUrl({widget: widgetOptions.widget_id + '_widget'}),
         forceRefetch: widgetOptions && widgetOptions.forceRefetch,
         spinner: this.options.spinners['#' + $widget.attr('id')],
         model: widgetOptions && widgetOptions.model,
@@ -589,9 +590,8 @@ import router from '../router';
       }
     },
     '.closed click': function (el, ev) {
-      var $link = el.closest('a');
-      var widget = this.widget_by_selector('#' + $link.attr('href')
-                                                      .split('#')[1]);
+      let widgetSelector = el.data('widget');
+      var widget = this.widget_by_selector(widgetSelector);
       var widgets = this.options.widget_list;
 
       widget.attr('force_show', false);

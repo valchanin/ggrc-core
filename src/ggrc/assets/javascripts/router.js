@@ -15,5 +15,13 @@ class RouterConfig {
   };
 };
 
+const buildUrl = (data) => {
+  let url = can.route.url(data);
+  return url;
+};
+
 export default router;
-export {RouterConfig};
+export {
+  RouterConfig,
+  buildUrl,
+};
