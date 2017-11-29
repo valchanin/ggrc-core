@@ -5,15 +5,13 @@
     </div>
   </div>
   <div class="pagination dropdown-container">
-    {{#paging}}
-      <select class="pagination-dropdown"
-              can-value="pageSize"
-              {{#if disabled}}disabled{{/if}}>
-      {{#pageSizeSelect}}
-        <option value="{{.}}">{{.}}</option>
-      {{/pageSizeSelect}}
-      </select>
-    {{/paging}}
+    <select class="pagination-dropdown"
+            can-value="paging.pageSize"
+            {{#if paging.disabled}}disabled{{/if}}>
+      {{#paging.pageSizeSelect}}
+      <option value="{{.}}">{{.}}</option>
+      {{/paging.pageSizeSelect}}
+    </select>
   </div>
   <div class="tree-pagination__count per-page">
     <div class="tree-view-pagination__count__title">per page</div>
