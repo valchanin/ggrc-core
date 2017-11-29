@@ -49,7 +49,7 @@
     </a>
   </li>
   <li>
-    <a href="/dashboard#task_widget">
+    <a href="/dashboard#!task_widget">
       <div class="oneline">
         {{#if showTitles}}My Tasks{{/if}}
         <tasks-counter {person}="current_user"
@@ -67,7 +67,7 @@
   {{!/isMyAssessments}}
   {{!^is_allobjectview}}
     <li>
-      <a id="allObjectView" href="/objectBrowser#regulation_widget">
+      <a id="allObjectView" href="/objectBrowser#!regulation_widget">
         <div class="oneline">
           {{#if showTitles}}All Objects{{/if}}
         </div>
@@ -102,7 +102,7 @@
       </li>
       {{#current_user_is_admin}}
         <li>
-          <a href="/admin#people_list_widget" class="admin-btn">
+          <a href="/admin#!people_list_widget" class="admin-btn">
             <div class="oneline">
               <i class="fa fa-tachometer"></i>
               {{#if showTitles}}Administration{{/if}}

@@ -26,7 +26,7 @@
         %span
           Global Search
     %li
-      %a{ 'href': "/dashboard#task_widget" }
+      %a{ 'href': "/dashboard#!task_widget" }
         %span
           My Tasks
           %span.task-count
@@ -35,7 +35,7 @@
         %span
           My Assessments
     %li
-      %a{ 'href': '/objectBrowser#regulation_widget' }
+      %a{ 'href': '/objectBrowser#!regulation_widget' }
         %span
           All Objects
     %li
@@ -54,7 +54,7 @@
 
         -if user_role == 'administrator' or user_role == 'superuser'
           %li
-            %a{ 'href': '/admin#people_list_widget', 'class': 'admin-btn' }
+            %a{ 'href': '/admin#!people_list_widget', 'class': 'admin-btn' }
               %i.fa.fa-tachometer
               %span
                 Administration
