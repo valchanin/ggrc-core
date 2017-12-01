@@ -93,7 +93,7 @@ class PageHeader(object):
   BUTTON_SEARCH = (
       By.CSS_SELECTOR, _CONTENT + ' [data-toggle="unified-search"]')
   BUTTON_MY_TASKS = (
-      By.CSS_SELECTOR, _CONTENT + ' [href="/dashboard#task_widget"]')
+      By.CSS_SELECTOR, _CONTENT + ' [href="/dashboard#!task_widget"]')
   BUTTON_ALL_OBJECTS = (
       By.CSS_SELECTOR, _CONTENT + ' [href^="/objectBrowser"]')
   TOGGLE_USER_DROPDOWN = (By.CSS_SELECTOR, _CONTENT + " .dropdown-toggle")
@@ -109,7 +109,7 @@ class PageHeader(object):
   NOTIFICATIONS = (By.CSS_SELECTOR, USER_MENU + ' .notify-wrap')
   BUTTON_ADMIN_DASHBOARD = (
       By.CSS_SELECTOR,
-      Common.DROPDOWN_MENU + ' [href="/admin#people_list_widget"]')
+      Common.DROPDOWN_MENU + ' [href="/admin#!people_list_widget"]')
   CHECKBOX_DAILY_DIGEST = (By.CSS_SELECTOR, USER_MENU + ' input')
   CHECKBOX_DISABLED = (By.CSS_SELECTOR, USER_MENU + ' input.disabled')
 
@@ -547,9 +547,8 @@ class WidgetBar(object):
     """Locators for Menu in header."""
     @staticmethod
     def get_widget(object_name):
-      return (
-          By.CSS_SELECTOR,
-          '.object-nav [href$="#{}_widget"]'.format(object_name))
+      return (By.CSS_SELECTOR,
+              '.object-nav [href$="#!{}_widget"]'.format(object_name))
 
   class __metaclass__(type):
     def __init__(cls, *args):
@@ -564,6 +563,7 @@ class WidgetBar(object):
   ADMIN_ROLES = _Locator.get_widget("roles_list")
   ADMIN_EVENTS = _Locator.get_widget("events_list")
   ADMIN_CUSTOM_ATTRIBUTE = _Locator.get_widget("custom_attribute")
+  ADMIN_CUSTOM_ROLES = _Locator.get_widget("custom_roles")
   INFO = _Locator.get_widget("info")
   CUSTOM_ATTRIBUTES = _Locator.get_widget("custom_attribute")
   EVENTS = _Locator.get_widget("events_list")

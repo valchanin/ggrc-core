@@ -4,17 +4,15 @@
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-lines
 
-import re
 import pytest
-
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote import webelement
 
 from lib import constants, exception, mixin
-from lib.constants import messages, objects
-from lib.constants.element import MappingStatusAttrs, WidgetBar
+from lib.constants import messages, objects, url
+from lib.constants.element import MappingStatusAttrs
 from lib.constants.locator import CommonDropdownMenu
 from lib.decorator import lazy_property
 from lib.entities.entity import Entity
@@ -554,15 +552,14 @@ class Widget(AbstractPage):
     Args: driver (CustomDriver)
     """
     super(Widget, self).__init__(driver)
-    matched_url_parts = re.search(
-        constants.regex.URL_WIDGET_INFO, self.url + "/").groups()
-    (source_obj_plural, source_obj_id, widget_name,
-     mapped_obj_singular, mapped_obj_id) = matched_url_parts
-    self.source_obj_from_url = source_obj_plural
-    self.source_obj_id_from_url = source_obj_id
-    self.widget_name_from_url = widget_name.split("_")[0]
-    self.mapped_obj_from_url = mapped_obj_singular
-    self.mapped_obj_id_from_url = mapped_obj_id
+    self.source_url = url.Utils.get_src_obj_url(self.url)
+    url_parts = url.Utils.split_url_into_parts(self.url)
+    self.source_obj_from_url = url_parts["source_obj_from_url"]
+    self.source_obj_id_from_url = url_parts["source_obj_id_from_url"]
+    self.widget_name_from_url = (
+        url_parts["widget_name_from_url"].replace("!", ""))
+    self.mapped_obj_from_url = url_parts["mapped_obj_from_url"]
+    self.mapped_obj_id_from_url = url_parts["mapped_obj_id_from_url"]
 
   @property
   def is_info_page(self):
@@ -572,7 +569,7 @@ class Widget(AbstractPage):
     if selenium_utils.is_element_exist(
         self._driver, (By.XPATH, constants.locator.Common.INFO_PAGE_XPATH)
     ):
-      if ((self.widget_name_from_url == WidgetBar.INFO.lower()) or
+      if ((self.widget_name_from_url in url.Widget.INFO) or
           ((objects.get_singular(self.source_obj_from_url) ==
            self.mapped_obj_from_url) and
           (self.source_obj_id_from_url == self.mapped_obj_id_from_url)) or

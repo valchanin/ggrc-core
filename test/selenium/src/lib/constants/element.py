@@ -51,7 +51,6 @@ class Lhn(object):
 
 class WidgetBar(object):
   """Elements' labels and properties for Generic widget bar."""
-  INFO = "Info"
 
   class __metaclass__(type):
     def __init__(cls, *args):
