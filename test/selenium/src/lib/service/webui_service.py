@@ -30,7 +30,8 @@ class BaseWebUiService(object):
     self.entities_factory_cls = factory.get_cls_entity_factory(
         object_name=self.obj_name)
     self.url_mapped_objs = (
-        "{src_obj_url}" + url.get_widget_name_of_mapped_objs(self.obj_name))
+        "{src_obj_url}" +
+        url.Utils.get_widget_name_of_mapped_objs(self.obj_name))
     self.url_obj_info_page = "{obj_url}" + url.Widget.INFO
     self._unified_mapper = None
 
@@ -404,7 +405,7 @@ class SnapshotsWebUiService(BaseWebUiService):
     self.is_versions_widget = is_versions_widget
     if self.is_versions_widget:
       self.url_mapped_objs = (
-          "{src_obj_url}" + url.get_widget_name_of_mapped_objs(
+          "{src_obj_url}" + url.Utils.get_widget_name_of_mapped_objs(
               self.obj_name, self.is_versions_widget))
 
   def update_obj_ver_via_info_panel(self, src_obj, obj):
@@ -441,7 +442,7 @@ class AuditsService(BaseWebUiService):
     (audit_info_page.
      open_info_3bbs().select_clone().confirm_clone(is_full=True))
     cloned_audit_obj = self.entities_factory_cls().create_empty().update_attrs(
-        url=self.driver.current_url)
+        url=url.Utils.get_src_obj_url(self.driver.current_url))
     actual_cloned_audit_obj = self.get_obj_from_info_page(obj=cloned_audit_obj)
     self.driver.refresh()
     return actual_cloned_audit_obj.update_attrs(url=cloned_audit_obj.url)
