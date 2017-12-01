@@ -9,7 +9,7 @@
 import pytest  # pylint: disable=import-error
 
 from lib import base
-from lib.constants import objects
+from lib.constants import objects, url
 from lib.page import dashboard, lhn
 from lib.page.widget import generic_widget
 from lib.utils import selenium_utils
@@ -42,7 +42,7 @@ class TestMyWorkPage(base.Test):
     """Tests if user is redirected to My Work page after clicking on
     the my work button in user dropdown."""
     header_dashboard.select_my_work()
-    expected_url = dashboard.Dashboard.URL
+    expected_url = dashboard.Dashboard.URL + url.Widget.INFO
     actual_url = selenium.current_url
     assert expected_url == actual_url
 

@@ -82,6 +82,7 @@ class TestProgramPage(base.Test):
     _, program_info_page = new_program_ui
     selenium_utils.open_url(selenium, program_info_page.url)
     program_info_page = info_widget.Programs(selenium)
+    expected_url = url.Utils.get_src_obj_url(program_info_page.url)
     program_info_page.open_info_3bbs().select_get_permalink()
     # test notification alert
     base.AnimatedComponent(
@@ -90,7 +91,6 @@ class TestProgramPage(base.Test):
     # test generated link
     modal = program_info_page.open_info_3bbs().select_edit()
     modal.ui_title.paste_from_clipboard(modal.ui_description)
-    expected_url = program_info_page.url
     actual_url = modal.ui_title.text
     assert expected_url in actual_url
 
