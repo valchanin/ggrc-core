@@ -17,6 +17,7 @@
     'Contract',
     'Control',
     'DataAsset',
+    'Document',
     'Facility',
     'Issue',
     'Market',
@@ -66,6 +67,7 @@
     'Person',
     'Program',
     'Issue',
+    'Document',
   ];
   let baseWidgetsByType;
 
@@ -85,9 +87,11 @@
     Contract: _.difference(filteredTypes,
       ['Contract', 'Policy', 'Regulation', 'Standard']),
     Control: filteredTypes,
-    Assessment: snapshotWidgetsConfig.concat(['Audit', 'Issue']).sort(),
+    Assessment: snapshotWidgetsConfig.concat(
+      ['Audit', 'Issue', 'Document']).sort(),
     AssessmentTemplate: ['Audit'],
     DataAsset: filteredTypes,
+    Document: filteredTypes,
     Facility: filteredTypes,
     Issue: objectVersions.concat(filteredTypes),
     Market: filteredTypes,

@@ -31,6 +31,7 @@ import {
         facility: CMS.Models.Facility,
         product: CMS.Models.Product,
         data_asset: CMS.Models.DataAsset,
+        document: CMS.Models.Document,
         access_group: CMS.Models.AccessGroup,
         market: CMS.Models.Market,
         system_or_process: {
@@ -71,7 +72,6 @@ import {
       let possibleModelType;
       let farModels;
       let extraDescriptorOptions;
-      let overriddenModels;
       let extraContentControllerOptions;
 
       // TODO: Really ugly way to avoid executing IIFE - needs cleanup
@@ -223,10 +223,6 @@ import {
             };
           });
 
-          all.Document = {
-            widget_icon: 'fa fa-link!',
-            order: 150,
-          };
           all.Person.widget_icon = 'person';
           return all;
         })(),
@@ -259,7 +255,7 @@ import {
           Issue: {
             order: 8,
           },
-          Program: {
+          Document: {
             order: 9,
           },
           program: {
@@ -277,18 +273,6 @@ import {
               allow_creating: false,
             },
           },
-        },
-      };
-      // Prevent widget creation with <model_name>: false
-      // e.g. to prevent ever creating People widget:
-      //     { all : { Person: false }}
-      // or to prevent creating People widget on Objective page:
-      //     { Objective: { Person: false } }
-      overriddenModels = {
-        Program: {
-        },
-        all: {
-          Document: false,
         },
       };
 
@@ -357,7 +341,7 @@ import {
             draw_children: true,
           },
           Document: {
-            mapping: 'documents',
+            mapping: 'related_documents',
             draw_children: true,
           },
           Person: {
@@ -762,8 +746,6 @@ import {
         let widgetConfig = getWidgetConfig(model_name);
         model_name = widgetConfig.name;
 
-        if ((overriddenModels.all && overriddenModels.all.hasOwnProperty(model_name) && !overriddenModels[model_name]) || (overriddenModels[object.constructor.shortName] && overriddenModels[object.constructor.shortName].hasOwnProperty(model_name) && !overriddenModels[object.constructor.shortName][model_name]))
-          return;
         let sources = [],
           far_model, descriptor = {},
           widget_id;
@@ -787,12 +769,6 @@ import {
 
         if (extraDescriptorOptions[object.constructor.shortName] && extraDescriptorOptions[object.constructor.shortName][model_name]) {
           $.extend(descriptor, extraDescriptorOptions[object.constructor.shortName][model_name]);
-        }
-
-        if (extraContentControllerOptions.all && extraContentControllerOptions.all[model_name]) {
-          $.extend(true, descriptor, {
-            content_controller_options: extraContentControllerOptions.all[model_name],
-          });
         }
 
         if (extraContentControllerOptions[object.constructor.shortName] && extraContentControllerOptions[object.constructor.shortName][model_name]) {

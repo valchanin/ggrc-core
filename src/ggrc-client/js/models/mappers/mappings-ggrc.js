@@ -57,6 +57,9 @@ import RefreshQueue from '../refresh_queue';
     Clause: {
       _mixins: ['related_object', 'personable'],
     },
+    Document: {
+      _mixins: ['related_object', 'personable'],
+    },
     personable: {
       _canonical: {
         people: 'Person',
@@ -90,7 +93,7 @@ import RefreshQueue from '../refresh_queue';
           'Product', 'Project', 'System', 'Regulation', 'Policy', 'Contract',
           'Standard', 'Program', 'Issue', 'Control', 'Section', 'Clause',
           'Objective', 'Audit', 'Assessment', 'AssessmentTemplate',
-          'AccessGroup', 'Risk', 'Threat',
+          'AccessGroup', 'Risk', 'Threat', 'Document',
         ],
       },
       related_objects_as_source: Proxy(
@@ -104,6 +107,7 @@ import RefreshQueue from '../refresh_queue';
       relationships: Multi(['sources', 'destinations']),
       related_access_groups: TypeFilter('related_objects', 'AccessGroup'),
       related_data_assets: TypeFilter('related_objects', 'DataAsset'),
+      related_documents: TypeFilter('related_objects', 'Document'),
       related_facilities: TypeFilter('related_objects', 'Facility'),
       related_markets: TypeFilter('related_objects', 'Market'),
       related_org_groups: TypeFilter('related_objects', 'OrgGroup'),
@@ -382,6 +386,8 @@ import RefreshQueue from '../refresh_queue';
         TypeFilter('related_objects_via_search', 'Risk'),
       extended_related_threats_via_search:
         TypeFilter('related_objects_via_search', 'Threat'),
+      extended_related_documents_via_search:
+        TypeFilter('related_objects_via_search', 'Document'),
     },
     Context: {
       _canonical: {

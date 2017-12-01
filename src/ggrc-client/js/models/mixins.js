@@ -247,7 +247,8 @@ import {REFRESH_PROPOSAL_DIFF} from '../events/eventTypes';
   }, {});
 
   can.Model.Mixin('mapping-limit-issue', {
-    getAllowedMappings: _.partial(getAllowedMappings, ['Program', 'Project', 'TaskGroup']),
+    getAllowedMappings: _.partial(getAllowedMappings, [
+      'Program', 'Project', 'TaskGroup', 'Document']),
   }, {});
 
   can.Model.Mixin('issueTrackerIntegratable', {

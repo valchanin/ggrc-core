@@ -338,6 +338,7 @@ import Permission from '../permission';
         Audit: ['Assessment', 'Program'],
         Assessment: ['Workflow', 'TaskGroup'],
         Person: ['Issue'],
+        Document: ['Audit', 'Assessment'],
       };
       options = options || {};
       if (!type) {

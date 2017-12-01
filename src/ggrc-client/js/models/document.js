@@ -22,8 +22,8 @@
   can.Model.Cacheable('CMS.Models.Document', {
     root_object: 'document',
     root_collection: 'documents',
-    title_singular: 'Reference',
-    title_plural: 'References',
+    title_singular: 'Document',
+    title_plural: 'Documents',
     category: 'business',
     findAll: 'GET /api/documents',
     findOne: 'GET /api/documents/{id}',
@@ -64,7 +64,13 @@
     },
     tree_view_options: {
       show_view: GGRC.mustache_path + '/documents/tree.mustache',
-      add_item_view: GGRC.mustache_path + '/documents/tree_add_item.mustache',
+      display_attr_names: ['title', 'status', 'updated_at', 'document_type'],
+      attr_list: [
+        {attr_title: 'Title', attr_name: 'title'},
+        {attr_title: 'State', attr_name: 'status'},
+        {attr_title: 'Last Updated', attr_name: 'updated_at'},
+        {attr_title: 'Type', attr_name: 'document_type'},
+      ],
     },
     init: function () {
       this.validateNonBlank('link');
