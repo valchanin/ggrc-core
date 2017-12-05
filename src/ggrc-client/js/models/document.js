@@ -24,7 +24,7 @@
     root_collection: 'documents',
     title_singular: 'Document',
     title_plural: 'Documents',
-    category: 'business',
+    category: 'governance',
     findAll: 'GET /api/documents',
     findOne: 'GET /api/documents/{id}',
     create: 'POST /api/documents',
