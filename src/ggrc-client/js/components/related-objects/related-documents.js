@@ -7,6 +7,7 @@ import {
   buildParam,
   batchRequests,
 } from '../../plugins/utils/query-api-utils';
+import {initCounts} from '../../plugins/utils/current-page-utils';
 
 (function (can, $, _, GGRC) {
   'use strict';
@@ -63,6 +64,7 @@ import {
         const query = this.getDocumentsQuery();
 
         this.attr('isLoading', true);
+        this.refreshDocumentCounts();
 
         return batchRequests(query).then((response) => {
           const documents = response.Document.values;
@@ -252,6 +254,14 @@ import {
         if (this.autorefresh) {
           this.loadDocuments();
         }
+      },
+      refreshDocumentCounts: function () {
+        let pageInstance = GGRC.page_instance();
+        initCounts(
+          ['Document'],
+          pageInstance.type,
+          pageInstance.id
+        );
       },
     },
     init: function () {
