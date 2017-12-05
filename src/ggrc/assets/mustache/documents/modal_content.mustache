@@ -3,8 +3,6 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-{{!div class="modal-body"}}
-
 {{#instance}}
 <form action="javascript://">
   <div class="row-fluid">
@@ -26,77 +24,24 @@
       <input tabindex="2" class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{title}}">
     </div>
   </div>
-  <div class="row-fluid">
-    <div class="span9">
-      <label>
-        Preview
-      </label>
-      {{{renderLive '/static/mustache/pbc/iframe_tooltip.mustache' url=instance.link}}}
-    </div>
-  </div>
-  <div class="row-fluid">
+  <div class="row-fluid"
     <div class="span12">
-      <div class="expand-link">
-        <a class="show-hidden-fields" href="javascript://">
-          <span class="out">
-            <i class="fa fa-caret-right"></i>
-            Show
-          </span>
-          <span class="in">
-            <i class="fa fa-caret-down"></i>
-            Hide
-          </span>
-          Advanced
-          <span class="hidden-fields out">
-            Description
-          </span>
-        </a>
+      <label>
+        Description
+        <i class="fa fa-question-circle" rel="tooltip" title="Enter Description"></i>
+      </label>
+      <div class="wysiwyg-area">
+        <textarea tabindex="3" id="link-description" class="span12 double wysihtml5" name="description" placeholder="Enter description">{{{description}}}</textarea>
       </div>
     </div>
   </div>
-  <div class="hidden-fields-area" style="display:none">
-    <div class="row-fluid">
-      <div class="span12">
-        <label>
-          Description
-          <i class="fa fa-question-circle" rel="tooltip" title="Enter Description"></i>
-        </label>
-        <div class="wysiwyg-area">
-          <textarea tabindex="3" id="link-description" class="span12 double wysihtml5" name="description" placeholder="Enter description">{{{description}}}</textarea>
-        </div>
-      </div>
+  <div class="row-fluid">
+    <div class="span12 hide-wrap hidable">
+      <access-control-list-roles-helper
+        {instance}="."
+        {is-new-instance}="new_object_form">
+      </access-control-list-roles-helper>
     </div>
   </div>
 </form>
 {{/instance}}
-{{!/div}}
-
-
-{{!<div class="span2">
-  <label for="document_year_id">Year</label>
-  <select class="span12" id="document_year_id" name="year_id">
-    <option value=""></option>
-  </select>
-  <span class="help-inline"></span>
-</div>
-<div class="span2">
-  <label for="document_language_id">Language</label>
-  <select class="span12" id="document_language_id" name="language_id">
-    <option value=""></option>
-  </select>
-  <span class="help-inline"></span>
-</div>
-<div class="span2">
-  <label for="document_kind_id">Reference Kind</label>
-  <select class="span12 " id="document_kind_id" name="kind_id">
-    <option value=""></option>
-  </select>
-  <span class="help-inline"></span>
-</div>
-<div class="span2">
-  <label for="document_type_id">DocType</label>
-  <select class="span12 " id="document_type_id" name="type_id">
-    <option value=""></option>
-  </select>
-  <span class="help-inline"></span>
-</div>}}
