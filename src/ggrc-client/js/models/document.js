@@ -34,6 +34,7 @@ can.Model.Cacheable('CMS.Models.Document', {
   attributes: {
     context: 'CMS.Models.Context.stub',
   },
+  isRoleable: true,
   defaults: {
     access_control_list: getAccessControlList(),
     document_type: 'EVIDENCE',
