@@ -12,11 +12,11 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
 (function (can, $, _, GGRC) {
   'use strict';
 
-  let DOCUMENT_TYPES_MAP = {};
-
-  DOCUMENT_TYPES_MAP[CMS.Models.Document.EVIDENCE] = 'document_evidence';
-  DOCUMENT_TYPES_MAP[CMS.Models.Document.URL] = 'document_url';
-  DOCUMENT_TYPES_MAP[CMS.Models.Document.REFERENCE_URL] = 'reference_url';
+  let DOCUMENT_TYPES_MAP = {
+    EVIDENCE: 'document_evidence',
+    URL: 'document_url',
+    REFERENCE_URL: 'reference_url',
+  };
 
   GGRC.Components('relatedDocuments', {
     tag: 'related-documents',

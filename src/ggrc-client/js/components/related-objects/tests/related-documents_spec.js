@@ -33,11 +33,11 @@ describe('GGRC.Components.relatedDocuments', function () {
     }
 
     it('should get query for urls', function () {
-      checkAdditionFilter(CMS.Models.Document.URL);
+      checkAdditionFilter('URL');
     });
 
     it('should get query for evidences', function () {
-      checkAdditionFilter(CMS.Models.Document.EVIDENCE);
+      checkAdditionFilter('EVIDENCE');
     });
 
     it('should get query for all documents', function () {

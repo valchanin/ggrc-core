@@ -66,9 +66,9 @@ import template from './info-pane.mustache';
     template: template,
     viewModel: {
       documentTypes: {
-        evidences: CMS.Models.Document.EVIDENCE,
-        urls: CMS.Models.Document.URL,
-        referenceUrls: CMS.Models.Document.REFERENCE_URL,
+        evidences: 'EVIDENCE',
+        urls: 'URL',
+        referenceUrls: 'REFERENCE_URL',
       },
       define: {
         verifiers: {

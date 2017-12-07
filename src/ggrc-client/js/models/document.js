@@ -28,13 +28,15 @@ can.Model.Cacheable('CMS.Models.Document', {
   mixins: [
     'accessControlList',
   ],
-  EVIDENCE: 'EVIDENCE',
-  URL: 'URL',
-  REFERENCE_URL: 'REFERENCE_URL',
   attributes: {
     context: 'CMS.Models.Context.stub',
   },
   isRoleable: true,
+  types: [
+    'EVIDENCE',
+    'URL',
+    'REFERENCE_URL',
+  ],
   defaults: {
     access_control_list: getAccessControlList(),
     document_type: 'EVIDENCE',
