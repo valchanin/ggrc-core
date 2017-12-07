@@ -4,13 +4,11 @@
  */
 
 import '../../collapsible-panel/collapsible-panel';
+import template from './mapped-control-related-objects.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/assessment/mapped-objects/' +
-    'mapped-control-related-objects.mustache');
   var tag = 'assessment-mapped-control-related-objects';
   /**
    * ViewModel for Assessment Mapped Controls Related Objectives and Regulations.
@@ -31,7 +29,7 @@ import '../../collapsible-panel/collapsible-panel';
    */
   GGRC.Components('assessmentMappedControlsPopover', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: viewModel
   });
 })(window.can, window.GGRC);

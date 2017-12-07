@@ -3,15 +3,14 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './prev-next-buttons.mustache';
+
 (function (can, GGRC, CMS) {
   'use strict';
 
   GGRC.Components('prevNextButtons', {
     tag: 'prev-next-buttons',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/prev-next-buttons/prev-next-buttons.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         currentIndex: {

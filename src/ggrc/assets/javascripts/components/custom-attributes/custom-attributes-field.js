@@ -9,16 +9,14 @@ import '../form/fields/dropdown-form-field';
 import '../form/fields/person-form-field';
 import '../form/fields/rich-text-form-field';
 import '../form/fields/text-form-field';
+import template from './custom-attributes-field.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   GGRC.Components('localCustomAttributesField', {
     tag: 'custom-attributes-field',
-    template: can.view(
-      GGRC.mustache_path + '/components/custom-attributes/' +
-        'custom-attributes-field.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         disabled: {

@@ -13,18 +13,17 @@ import '../show-more/show-more';
 import '../related-objects/related-comments';
 import './object-popover';
 import {convertValuesToFormFields} from '../../plugins/utils/ca-utils';
+import template from './related-assessment-popover.mustache';
 
 (function (can) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-popover/related-assessment-popover.mustache');
   /**
    * Simple wrapper component to load Related to Parent Object Snapshots of Controls and Objectives
    */
   can.Component.extend({
     tag: 'related-assessment-popover',
-    template: tpl,
+    template: template,
     viewModel: {
       selectedAssessment: {},
       popoverTitleInfo: 'Assessment Title: ',

@@ -11,14 +11,14 @@ import '../../components/unified-mapper/mapper-results';
 import '../../components/mapping-controls/mapping-type-selector';
 import '../../components/collapsible-panel/collapsible-panel';
 import ObjectOperationsBaseVM from '../view-models/object-operations-base-vm';
+import template from './object-search.mustache';
 
 (function (can, $) {
   'use strict';
 
   GGRC.Components('objectSearch', {
     tag: 'object-search',
-    template: can.view(GGRC.mustache_path +
-      '/components/object-search/object-search.mustache'),
+    template: template,
     viewModel: function () {
       return ObjectOperationsBaseVM.extend({
         object: 'MultitypeSearch',

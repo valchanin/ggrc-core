@@ -3,18 +3,18 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './person-list-item.mustache';
+
 (function (can, GGRC, CMS, RefreshQueue) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-list-item/person-list-item.mustache');
   var tag = 'person-list-item';
   /**
    * Person List Item Component
    */
   GGRC.Components('personListItem', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         personId: {

@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './show-more.mustache';
+
 /**
  * A component that limits list of items to acceptable count and shows
  * "Show more(<items count>)" link
@@ -12,9 +14,6 @@
  *        </show-more>
  */
 (function (GGRC, can) {
-  var template = can.view(GGRC.mustache_path +
-    '/components/show-more/show-more.mustache');
-
   GGRC.Components('showMore', {
     tag: 'show-more',
     template: template,

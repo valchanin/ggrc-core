@@ -4,19 +4,18 @@
  */
 
 import '../object-list-item/person-list-item';
+import template from './comment-list-item.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-list-item/comment-list-item.mustache');
   var tag = 'comment-list-item';
   /**
    * Simple component to show Comment Objects
    */
   can.Component.extend({
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       instance: {},
       define: {

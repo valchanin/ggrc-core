@@ -3,11 +3,10 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './advanced-search-filter-operator.mustache';
+
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-filter-operator.mustache');
 
   /**
    * Filter Operator view model.

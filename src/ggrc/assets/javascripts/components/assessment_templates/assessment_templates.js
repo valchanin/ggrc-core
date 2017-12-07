@@ -8,8 +8,7 @@ import {
   buildParam,
   makeRequest,
 } from '../../plugins/utils/query-api-utils';
-import template from
-  '../../../mustache/components/assessment_templates/assessment_templates.mustache'; // eslint-disable-line
+import template from './assessment_templates.mustache';
 import tracker from '../../tracker';
 
 export default can.Component.extend({

@@ -10,6 +10,7 @@ import oneColorLogo from '../../../images/ggrc-one-color.svg';
 import {
   isMyAssessments,
 } from '../../plugins/utils/current-page-utils';
+import template from './page-header.mustache';
 
 (function (GGRC, can) {
   'use strict';
@@ -37,9 +38,6 @@ import {
     Program: 'header-style-5'
   };
 
-  var template = can.view(GGRC.mustache_path +
-    '/components/page-header/page-header.mustache'
-  );
   var viewModel = can.Map.extend({
     define: {
       isMyAssessments: {

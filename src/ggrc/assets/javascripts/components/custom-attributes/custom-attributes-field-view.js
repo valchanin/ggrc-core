@@ -8,16 +8,14 @@ import '../form/field-views/date-form-field-view';
 import '../form/field-views/person-form-field-view';
 import '../form/field-views/rich-text-form-field-view';
 import '../form/field-views/text-form-field-view';
+import template from './custom-attributes-field-view.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   GGRC.Components('localCustomAttributesFieldView', {
     tag: 'custom-attributes-field-view',
-    template: can.view(
-      GGRC.mustache_path + '/components/custom-attributes/' +
-        'custom-attributes-field-view.mustache'
-    ),
+    template: template,
     viewModel: {
       type: null,
       value: null

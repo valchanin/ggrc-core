@@ -3,11 +3,10 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './simple-popover.mustache';
+
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/simple-popover/simple-popover.mustache');
 
   can.Component.extend({
     tag: 'simple-popover',

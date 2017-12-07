@@ -11,19 +11,18 @@ import {
 } from '../../plugins/utils/snapshot-utils';
 import '../custom-attributes/custom-attributes-field-view';
 import '../related-objects/related-people-access-control';
+import template from './detailed-business-object-list-item.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-list-item/detailed-business-object-list-item.mustache');
   var tag = 'detailed-business-object-list-item';
   /**
    * Assessment specific mapped objects popover view component
    */
   GGRC.Components('detailedBusinessObjectListItem', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       instance: {},
       customAttributes: null,

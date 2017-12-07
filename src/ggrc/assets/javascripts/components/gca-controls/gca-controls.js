@@ -10,11 +10,10 @@ import {
   convertToFormViewField,
   applyChangesToCustomAttributeValue,
 } from '../../plugins/utils/ca-utils';
+import template from './gca-controls.mustache';
 
 (function (can, GGRC) {
   'use strict';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/gca-controls/gca-controls.mustache');
 
   /**
    * This component renders edit controls for Global Custom Attributes
@@ -22,7 +21,7 @@ import {
 
   GGRC.Components('gcaControls', {
     tag: 'gca-controls',
-    template: tpl,
+    template: template,
     viewModel: {
       instance: {},
       items: [],

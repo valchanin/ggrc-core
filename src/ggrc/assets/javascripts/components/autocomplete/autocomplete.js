@@ -3,6 +3,8 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './autocomplete.mustache';
+
 /**
  * A component that renders an autocomplete text input field.
  */
@@ -13,10 +15,7 @@
   var component = {
     tag: 'autocomplete',
 
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/autocomplete/autocomplete.mustache'
-    ),
+    template: template,
 
     viewModel: {
       placeholder: '@',

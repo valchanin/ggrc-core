@@ -4,17 +4,16 @@
  */
 
 import '../object-list-item/document-object-list-item';
+import template from './editable-document-object-list-item.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-list-item/editable-document-object-list-item.mustache');
   var tag = 'editable-document-object-list-item';
 
   GGRC.Components('editableDocumentObjectListItem', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       document: {}
     }

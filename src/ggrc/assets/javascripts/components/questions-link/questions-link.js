@@ -7,16 +7,14 @@ import {
   hasQuestions,
   getQuestionsUrl,
 } from '../../plugins/utils/ggrcq-utils';
+import template from './questions-link.mustache';
 
 (function (can) {
   'use strict';
 
   GGRC.Components('questionsLink', {
     tag: 'questions-link',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/questions-link/questions-link.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         hasQuestions: {

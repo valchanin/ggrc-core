@@ -3,15 +3,14 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './reusable-objects-item.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/reusable-objects/reusable-objects-item.mustache');
-
   can.Component.extend({
     tag: 'reusable-objects-item',
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         disabled: {

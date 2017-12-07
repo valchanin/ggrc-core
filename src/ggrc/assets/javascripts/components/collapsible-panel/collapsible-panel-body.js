@@ -3,18 +3,18 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './collapsible-panel-body.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
   var tag = 'collapsible-panel-body';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/collapsible-panel/collapsible-panel-body.mustache');
   /**
    * Collapsible Panel component to add collapsing behavior
    */
   GGRC.Components('collapsiblePanelBody', {
     tag: tag,
-    template: tpl,
+    template: template,
     scope: {
       renderContent: function () {
         return this.attr('softMode') || this.attr('expanded');

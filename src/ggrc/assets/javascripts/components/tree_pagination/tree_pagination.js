@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './tree_pagination.mustache';
+
 /**
  * A component that renders a tree pagination widget
  * Usage: <tree-pagination paging="paging"></tree-pagination>
@@ -10,10 +12,7 @@
 (function (GGRC, can) {
   GGRC.Components('treePagination', {
     tag: 'tree-pagination',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/tree_pagination/tree_pagination.mustache'
-    ),
+    template: template,
     init: function () {
       /**
        * Entrance object validation

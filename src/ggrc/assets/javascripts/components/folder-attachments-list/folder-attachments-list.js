@@ -4,13 +4,12 @@
  */
 
 import '../object-list-item/editable-document-object-list-item';
+import template from './folder-attachments-list.mustache';
 
 (function (GGRC, can) {
   'use strict';
 
   var tag = 'folder-attachments-list';
-  var template = can.view(GGRC.mustache_path +
-    '/components/folder-attachments-list/folder-attachments-list.mustache');
 
   /**
    * Wrapper Component for rendering and managing of folder and

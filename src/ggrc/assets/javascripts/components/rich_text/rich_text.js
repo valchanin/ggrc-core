@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './rich_text.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
@@ -11,10 +13,7 @@
 
   GGRC.Components('richText', {
     tag: 'rich-text',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/rich_text/rich_text.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         placeholder: {

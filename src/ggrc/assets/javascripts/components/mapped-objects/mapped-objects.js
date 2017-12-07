@@ -8,19 +8,18 @@
    batchRequests,
  } from '../../plugins/utils/query-api-utils';
 import '../object-list/object-list';
+import template from './mapped-objects.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/mapped-objects/mapped-objects.mustache');
   var tag = 'mapped-objects';
   /**
    * Mapped objects view component
    */
   GGRC.Components('mappedObjects', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         emptyMessage: {

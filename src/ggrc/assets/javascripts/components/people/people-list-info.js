@@ -3,11 +3,10 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './people-list-info.mustache';
+
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/people/people-list-info.mustache');
 
   var viewModel = can.Map.extend({
     instance: null,

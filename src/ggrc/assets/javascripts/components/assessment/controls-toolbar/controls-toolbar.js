@@ -5,15 +5,14 @@
 
 import '../../custom-attributes/custom-attributes-actions';
 import '../../object-state-toolbar/object-state-toolbar';
+import template from './controls-toolbar.mustache';
 
 (function (can, GGRC) {
   'use strict';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/assessment/controls-toolbar/controls-toolbar.mustache');
 
   can.Component.extend({
     tag: 'assessment-controls-toolbar',
-    template: tpl,
+    template: template,
     viewModel: {
       instance: null,
       verifiers: [],

@@ -3,15 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './view-object-buttons.mustache';
+
 (function (can) {
   'use strict';
 
   GGRC.Components('viewObjectButtons', {
     tag: 'view-object-buttons',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/view-object-buttons/view-object-buttons.mustache'
-    ),
+    template: template,
     viewModel: {
       instance: null,
       openIsHidden: false,

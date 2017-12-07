@@ -4,12 +4,10 @@
 */
 
 import './confirm-edit-action';
+import template from './inline-item.mustache';
 
 (function (can) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/assessment/info-pane/inline-item.mustache');
 
   GGRC.Components('assessmentInlineItem', {
     tag: 'assessment-inline-item',

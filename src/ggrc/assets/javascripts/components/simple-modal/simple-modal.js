@@ -3,11 +3,11 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './simple-modal.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/simple-modal/simple-modal.mustache');
   /**
    * Simple Modal Component is a general abstraction to visualize
    * modal and pop-ups with overlay.
@@ -17,7 +17,7 @@
    */
   can.Component.extend({
     tag: 'simple-modal',
-    template: tpl,
+    template: template,
     viewModel: {
       extraCssClass: '@',
       instance: {},

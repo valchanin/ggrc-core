@@ -4,16 +4,14 @@
  */
 
 import '../../datepicker/datepicker';
+import template from './date-form-field.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   GGRC.Components('dateFormField', {
     tag: 'date-form-field',
-    template: can.view(
-      GGRC.mustache_path + '/components/form/' +
-        'fields/date-form-field.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         _value: {

@@ -3,11 +3,11 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './read-more.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/read-more/read-more.mustache');
   var tag = 'read-more';
   var readMore = 'Read More';
   var readLess = 'Read Less';
@@ -17,7 +17,7 @@
    */
   GGRC.Components('readMore', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         text: {

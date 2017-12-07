@@ -3,8 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-import template from
-  '../../../mustache/components/bulk-update-button/bulk-update-button.mustache';
+import template from './bulk-update-button.mustache';
 import updateService from '../../plugins/utils/bulk-update-service';
 
 export default can.Component.extend({

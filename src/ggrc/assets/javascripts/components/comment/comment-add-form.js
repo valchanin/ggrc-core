@@ -5,13 +5,12 @@
 
 import './comment-input';
 import './comment-add-button';
+import template from './comment-add-form.mustache';
 
 (function (GGRC, can, CMS) {
   'use strict';
 
   var tag = 'comment-add-form';
-  var template = can.view(GGRC.mustache_path +
-    '/components/comment/comment-add-form.mustache');
 
   /**
    * A component that takes care of adding comments

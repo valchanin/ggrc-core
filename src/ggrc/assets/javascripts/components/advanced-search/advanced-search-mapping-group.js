@@ -5,12 +5,10 @@
 
 import AdvancedSearchContainer from '../view-models/advanced-search-container-vm';
 import * as AdvancedSearch from '../../plugins/utils/advanced-search-utils';
+import template from './advanced-search-mapping-group.mustache';
 
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-mapping-group.mustache');
 
   /**
    * Mapping Group view model.

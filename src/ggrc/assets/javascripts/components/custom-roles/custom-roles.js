@@ -6,17 +6,16 @@
 import '../related-objects/related-people-access-control';
 import '../related-objects/related-people-access-control-group';
 import '../people/editable-people-group';
+import template from './custom-roles.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   var tag = 'custom-roles';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/custom-roles/custom-roles.mustache');
 
   GGRC.Components('customRoles', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       instance: {},
       updatableGroupId: null,

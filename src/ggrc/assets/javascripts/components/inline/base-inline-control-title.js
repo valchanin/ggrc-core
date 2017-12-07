@@ -3,15 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './base-inline-control-title.mustache';
+
 (function (can) {
   'use strict';
 
   GGRC.Components('baseInlineControlTitle', {
     tag: 'base-inline-control-title',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/inline/base-inline-control-title.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         isEditIconAllowed: {

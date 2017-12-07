@@ -5,12 +5,10 @@
 
 import '../dropdown/multiselect-dropdown';
 import * as StateUtils from '../../plugins/utils/state-utils';
+import template from './advanced-search-filter-state.mustache';
 
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-filter-state.mustache');
 
   /**
    * Filter State view model.

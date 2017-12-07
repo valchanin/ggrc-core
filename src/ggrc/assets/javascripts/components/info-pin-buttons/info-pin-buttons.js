@@ -3,15 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './info-pin-buttons.mustache';
+
 (function (can) {
   'use strict';
 
   GGRC.Components('infoPinButtons', {
     tag: 'info-pin-buttons',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/info-pin-buttons/info-pin-buttons.mustache'
-    ),
+    template: template,
     viewModel: {
       onChangeMaximizedState: null,
       onClose: null,

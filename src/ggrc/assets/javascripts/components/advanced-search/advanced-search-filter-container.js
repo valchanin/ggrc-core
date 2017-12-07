@@ -10,12 +10,10 @@ import './advanced-search-filter-state';
 import AdvancedSearchContainer from '../view-models/advanced-search-container-vm';
 import * as StateUtils from '../../plugins/utils/state-utils';
 import * as AdvancedSearch from '../../plugins/utils/advanced-search-utils';
+import template from './advanced-search-filter-container.mustache';
 
 (function (can, GGRC) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-filter-container.mustache');
 
   /**
    * Filter Container view model.

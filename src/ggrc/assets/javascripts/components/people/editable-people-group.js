@@ -9,6 +9,7 @@ import '../autocomplete/autocomplete';
 import '../external-data-autocomplete/external-data-autocomplete';
 import '../object-list-item/person-list-item';
 import peopleGroupVM from '../view-models/people-group-vm';
+import template from './editable-people-group.mustache';
 
 const SHOW_MODAL_LIMIT = 4;
 
@@ -83,10 +84,7 @@ var viewModel = peopleGroupVM.extend({
 
 export default GGRC.Components('editablePeopleGroup', {
   tag: 'editable-people-group',
-  template: can.view(
-    GGRC.mustache_path +
-    '/components/people/editable-people-group.mustache'
-  ),
+  template: template,
   viewModel: viewModel,
   events: {
     '{window} mousedown': function (el, ev) {

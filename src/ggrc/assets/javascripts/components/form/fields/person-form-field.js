@@ -4,16 +4,14 @@
  */
 
 import '../../object-list-item/person-list-item';
+import template from './person-form-field.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   GGRC.Components('personFormField', {
     tag: 'person-form-field',
-    template: can.view(
-      GGRC.mustache_path + '/components/form/' +
-        'fields/person-form-field.mustache'
-    ),
+    template: template,
     viewModel: {
       define: {
         _value: {

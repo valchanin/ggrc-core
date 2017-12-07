@@ -3,12 +3,12 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './attach-button.mustache';
+
 (function (GGRC, can) {
   'use strict';
 
   var tag = 'attach-button';
-  var template = can.view(GGRC.mustache_path +
-    '/components/assessment/attach-button.mustache');
 
   GGRC.Components('attachButton', {
     tag: tag,

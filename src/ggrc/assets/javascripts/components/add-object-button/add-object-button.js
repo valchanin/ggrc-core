@@ -3,15 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './add-object-button.mustache';
+
 (function (can) {
   'use strict';
 
   GGRC.Components('addObjectButton', {
     tag: 'add-object-button',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/add-object-button/add-object-button.mustache'
-    ),
+    template: template,
     viewModel: {
       instance: null,
       linkclass: '@',

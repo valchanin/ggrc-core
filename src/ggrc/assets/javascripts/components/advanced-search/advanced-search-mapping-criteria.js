@@ -6,12 +6,10 @@
 import '../simple-popover/simple-popover';
 import {getColumnsForModel} from '../../plugins/utils/tree-view-utils';
 import * as AdvancedSearch from '../../plugins/utils/advanced-search-utils';
+import template from './advanced-search-mapping-criteria.mustache';
 
 (function (can, GGRC, CMS) {
   'use strict';
-
-  var template = can.view(GGRC.mustache_path +
-    '/components/advanced-search/advanced-search-mapping-criteria.mustache');
 
   /**
    * Mapping Criteria view model.

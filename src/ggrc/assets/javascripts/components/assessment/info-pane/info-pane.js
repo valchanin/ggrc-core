@@ -46,11 +46,10 @@ import {
 } from '../../../plugins/utils/ca-utils';
 import DeferredTransaction from '../../../plugins/utils/deferred-transaction-utils';
 import tracker from '../../../tracker';
+import template from './info-pane.mustache';
 
 (function (can, GGRC, CMS) {
   'use strict';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/assessment/info-pane/info-pane.mustache');
   const editableStatuses = ['Not Started', 'In Progress', 'Rework Needed'];
 
   /**
@@ -58,7 +57,7 @@ import tracker from '../../../tracker';
    */
   GGRC.Components('assessmentInfoPane', {
     tag: 'assessment-info-pane',
-    template: tpl,
+    template: template,
     viewModel: {
       documentTypes: {
         evidences: CMS.Models.Document.EVIDENCE,

@@ -3,15 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import template from './multiselect_dropdown.mustache';
+
 (function (can, $) {
   'use strict';
 
   GGRC.Components('multiselectDropdown', {
     tag: 'multiselect-dropdown',
-    template: can.view(
-      GGRC.mustache_path +
-      '/components/dropdown/multiselect_dropdown.mustache'
-    ),
+    template: template,
     viewModel: {
       disabled: false,
       _stateWasUpdated: '',

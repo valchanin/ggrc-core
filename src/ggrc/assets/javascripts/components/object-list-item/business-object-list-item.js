@@ -3,18 +3,18 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './business-object-list-item.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-list-item/business-object-list-item.mustache');
   var tag = 'business-object-list-item';
   /**
    * Mapped objects item view component
    */
   can.Component.extend({
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       instance: {},
       define: {

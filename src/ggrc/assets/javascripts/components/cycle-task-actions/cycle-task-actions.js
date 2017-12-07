@@ -6,12 +6,11 @@
 import {
   getPageType,
 } from '../../plugins/utils/current-page-utils';
+import template from './cycle-task-actions.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var template = can.view(GGRC.mustache_path +
-    '/components/cycle-task-actions/cycle-task-actions.mustache');
   var viewModel = can.Map.extend({
     define: {
       cycle: {

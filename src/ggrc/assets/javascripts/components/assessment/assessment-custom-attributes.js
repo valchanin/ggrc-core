@@ -4,15 +4,14 @@
  */
 
 import './info-pane/confirm-edit-action';
+import template from './custom-attributes.mustache';
 
 (function (can, GGRC) {
   'use strict';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/assessment/custom-attributes.mustache');
 
   GGRC.Components('assessmentCustomAttributes', {
     tag: 'assessment-custom-attributes',
-    template: tpl,
+    template: template,
     viewModel: {
       globalAttributes: [],
       items: [],

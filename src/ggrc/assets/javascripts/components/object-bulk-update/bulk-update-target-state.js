@@ -3,8 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-import template from
-  '../../../mustache/components/object-bulk-update/bulk-update-target-state.mustache'; // eslint-disable-line
+import template from './bulk-update-target-state.mustache';
 
 var objectStateToWarningMap = {
   CycleTaskGroupObjectTask: {

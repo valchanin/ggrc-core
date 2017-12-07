@@ -7,12 +7,11 @@ import {
   buildParam,
   batchRequests,
 } from '../../plugins/utils/query-api-utils';
+import template from './object-tasks.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var template = can.view(GGRC.mustache_path +
-    '/components/object-tasks/object-tasks.mustache');
   var REQUIRED_TYPE = 'CycleTaskGroupObjectTask';
   var REQUIRED_FIELDS = Object.freeze([
     'title',

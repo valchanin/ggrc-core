@@ -5,13 +5,12 @@
 
 import './collapsible-panel-header';
 import './collapsible-panel-body';
+import template from './collapsible-panel.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
   var tag = 'collapsible-panel';
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/collapsible-panel/collapsible-panel.mustache');
   var viewModel = can.Map.extend({
     titleText: '@',
     titleIcon: '@',
@@ -34,7 +33,7 @@ import './collapsible-panel-body';
    */
   GGRC.Components('collapsiblePanel', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: viewModel
   });
 })(window.can, window.GGRC);

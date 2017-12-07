@@ -4,12 +4,11 @@
  */
 
 import '../show-more/show-more';
+import template from './object-popover.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/object-popover/object-popover.mustache');
   var tag = 'object-popover';
   var defaultMaxInnerHeight = 400;
   var defaultRightPosition = 60;
@@ -18,7 +17,7 @@ import '../show-more/show-more';
    */
   GGRC.Components('objectPopover', {
     tag: tag,
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         hideTitle: {

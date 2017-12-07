@@ -7,16 +7,14 @@ import '../comment/comment-input';
 import '../comment/comment-add-button';
 import '../object-list-item/editable-document-object-list-item';
 import '../assessment/attach-button';
+import template from './ca-object-modal-content.mustache';
 
 (function (can, GGRC) {
   'use strict';
 
-  var tpl = can.view(GGRC.mustache_path +
-    '/components/ca-object/ca-object-modal-content.mustache');
-
   can.Component.extend({
     tag: 'ca-object-modal-content',
-    template: tpl,
+    template: template,
     viewModel: {
       define: {
         comment: {

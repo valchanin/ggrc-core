@@ -3,12 +3,12 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import template from './comment-input.mustache';
+
 (function (can, GGRC) {
   'use strict';
 
   var tag = 'comment-input';
-  var template = can.view(GGRC.mustache_path +
-    '/components/comment/comment-input.mustache');
 
   GGRC.Components('commentInput', {
     tag: tag,
