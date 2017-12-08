@@ -1,0 +1,18 @@
+{{!
+  Copyright (C) 2018 Google Inc.
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+}}
+
+{{#if showAttach}}
+  <button class="{{link_class}} btn btn-small btn-white" ($click)="pickFile" {{#if loading}}disabled{{/if}}>Attach</button>
+  <spinner {toggle}="loading"></spinner>
+{{else}}
+  <editable-document-object-list-item
+    {document}="instance">
+    <a ($click)="unpickFile">
+      <action-toolbar-control>
+          <i class="fa fa-trash"></i>
+      </action-toolbar-control>
+    </a>
+  </editable-document-object-list-item>
+{{/if}}

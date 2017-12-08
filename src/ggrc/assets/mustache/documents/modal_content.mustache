@@ -23,53 +23,31 @@
         </dropdown>
       </div>
     </div>
-
+    
     <div class="ggrc-form-item">
-      {{#switch instance.document_type}}
-        {{#case "EVIDENCE"}}
-        <div class="ggrc-form-item__row">
-          <label class="form-label required-label ggrc-form-item__label">
-            Attachment
-            <i class="fa fa-asterisk"></i>
-          </label>
-          {{^if instance.isNew}}
-          <document-object-list-item
-            {instance}="instance">
-          </document-object-list-item>
-          {{/if}}
-        </div>
-        {{/case}}
-        {{#case "URL"}}
-        <div class="ggrc-form-item__row">
-          <label class="form-label required-label ggrc-form-item__label">
-            Url
-            <i class="fa fa-asterisk"></i>
-          </label>
-          {{#if instance.isNew}}
-          <input class="input-block-level" placeholder="Add Url" type="text" {($value)}="instance.link" {^$value}="instance.title">
+      <div class="ggrc-form-item__row">
+        <label class="form-label required-label ggrc-form-item__label">
+          {{#if_equals instance.document_type "EVIDENCE"}}
+          Attachment
           {{else}}
-          <document-object-list-item
-            {instance}="instance">
-          </document-object-list-item>
-          {{/if}}
-        </div>
-        {{/case}}
-        {{#case "REFERENCE_URL"}}
-        <div class="ggrc-form-item__row">
-          <label class="form-label required-label ggrc-form-item__label">
-            Url
-            <i class="fa fa-asterisk"></i>
-          </label>
-          {{#if instance.isNew}}
-          <input class="input-block-level" placeholder="Add Url" type="text" {($value)}="instance.link" {^$value}="instance.title">
+          Url
+          {{/if_equals}}
+          <i class="fa fa-asterisk"></i>
+        </label>
+        {{#if instance.isNew}}
+          {{#if_equals instance.document_type "EVIDENCE"}}
+          <document-file-picker
+            {document}="instance">
+          </document-file-picker>
           {{else}}
-          <document-object-list-item
-            {instance}="instance">
-          </document-object-list-item>
-          {{/if}}
-        </div>
-        {{/case}}
-      {{/switch}}
+          <input class="input-block-level" placeholder="Add Url" type="text" {($value)}="instance.link" {^$value}="instance.title">
+          {{/if_equals}}
+        {{else}}
+        <document-object-list-item
+          {instance}="instance">
+        </document-object-list-item>
+        {{/if}}
+      </div>
     </div>
 
     <div class="ggrc-form-item">

@@ -56,6 +56,7 @@ can.Model.Cacheable('CMS.Models.Document', {
     ],
   },
   init: function () {
+    this.validateNonBlank('title');
     this.validateNonBlank('link');
     this._super(...arguments);
   },
