@@ -4,44 +4,98 @@
 }}
 
 {{#instance}}
-<form action="javascript://">
-  <div class="row-fluid">
-    <div class="span12">
-      <label>
-        URL
-        <span class="required">*</span>
-        <i class="fa fa-question-circle" rel="tooltip" title="Enter Title"></i>
-      </label>
-      <input tabindex="1" id="document_link" class="input-block-level" placeholder="https://www.example.com/" name="link" type="text" value="{{link}}" autofocus>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span9">
-      <label>
-        Title
-        <i class="fa fa-question-circle" rel="tooltip" title="Enter Title"></i>
-      </label>
-      <input tabindex="2" class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{title}}">
-    </div>
-  </div>
-  <div class="row-fluid"
-    <div class="span12">
-      <label>
-        Description
-        <i class="fa fa-question-circle" rel="tooltip" title="Enter Description"></i>
-      </label>
-      <div class="wysiwyg-area">
-        <textarea tabindex="3" id="link-description" class="span12 double wysihtml5" name="description" placeholder="Enter description">{{{description}}}</textarea>
+<div class="ggrc-form">
+  <form action="javascript://">
+    <div class="ggrc-form-item">
+      <div class="ggrc-form-item__multiple-row">
+        <label class="form-label ggrc-form-item__label">State</label>
+        <dropdown
+          options-list="model.statuses"
+          name="instance.status">
+        </dropdown>
+      </div>
+      <div class="ggrc-form-item__multiple-row">
+        <label class="form-label ggrc-form-item__label">Document Type</label>
+        <dropdown
+          options-list="model.document_types"
+          name="instance.document_type"
+          {{^if instance.isNew}}is-disabled="true"{{/if}}>
+        </dropdown>
       </div>
     </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span12 hide-wrap hidable">
-      <access-control-list-roles-helper
-        {instance}="."
-        {is-new-instance}="new_object_form">
-      </access-control-list-roles-helper>
+
+    <div class="ggrc-form-item">
+      {{#switch instance.document_type}}
+        {{#case "EVIDENCE"}}
+        <div class="ggrc-form-item__row">
+          <label class="form-label required-label ggrc-form-item__label">
+            Attachment
+            <i class="fa fa-asterisk"></i>
+          </label>
+          {{^if instance.isNew}}
+          <document-object-list-item
+            {instance}="instance">
+          </document-object-list-item>
+          {{/if}}
+        </div>
+        {{/case}}
+        {{#case "URL"}}
+        <div class="ggrc-form-item__row">
+          <label class="form-label required-label ggrc-form-item__label">
+            Url
+            <i class="fa fa-asterisk"></i>
+          </label>
+          {{#if instance.isNew}}
+          <input class="input-block-level" placeholder="Add Url" type="text" {($value)}="instance.link" {^$value}="instance.title">
+          {{else}}
+          <document-object-list-item
+            {instance}="instance">
+          </document-object-list-item>
+          {{/if}}
+        </div>
+        {{/case}}
+        {{#case "REFERENCE_URL"}}
+        <div class="ggrc-form-item__row">
+          <label class="form-label required-label ggrc-form-item__label">
+            Url
+            <i class="fa fa-asterisk"></i>
+          </label>
+          {{#if instance.isNew}}
+          <input class="input-block-level" placeholder="Add Url" type="text" {($value)}="instance.link" {^$value}="instance.title">
+          {{else}}
+          <document-object-list-item
+            {instance}="instance">
+          </document-object-list-item>
+          {{/if}}
+        </div>
+        {{/case}}
+      {{/switch}}
     </div>
-  </div>
-</form>
+
+    <div class="ggrc-form-item">
+      <div class="ggrc-form-item__row">
+        <label class="ggrc-form-item__label">
+          Description
+        </label>
+        <div class="wysiwyg-area">
+          <textarea tabindex="2" id="document_description" class="span12 triple wysihtml5" name="description" placeholder="Enter Description">{{{instance.description}}}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <access-control-list-roles-helper
+      {instance}="."
+      {is-new-instance}="new_object_form">
+    </access-control-list-roles-helper>
+
+    <div class="ggrc-form-item">
+      <div class="ggrc-form-item__multiple-row">
+        <label class="ggrc-form-item__label">
+          Code
+        </label>
+        <input class="input-block-level" name="slug" placeholder="DOCUMENT-XXX" type="text" {$value}="slug">
+      </div>
+    </div>
+  </form>
+</div>
 {{/instance}}

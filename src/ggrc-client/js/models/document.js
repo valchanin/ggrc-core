@@ -32,7 +32,11 @@ can.Model.Cacheable('CMS.Models.Document', {
     context: 'CMS.Models.Context.stub',
   },
   isRoleable: true,
-  types: [
+  statuses: [
+    'Active',
+    'Deprecated',
+  ],
+  document_types: [
     'EVIDENCE',
     'URL',
     'REFERENCE_URL',
@@ -40,6 +44,7 @@ can.Model.Cacheable('CMS.Models.Document', {
   defaults: {
     access_control_list: getAccessControlList(),
     document_type: 'EVIDENCE',
+    status: 'Active',
   },
   tree_view_options: {
     display_attr_names: ['title', 'status', 'updated_at', 'document_type'],
