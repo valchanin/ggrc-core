@@ -87,6 +87,7 @@ dashboard-js-template-files:
   - dashboard/lhn.mustache
   - dashboard/lhn_search.mustache
   - documents/modal_content.mustache
+  - documents/info.mustache
   - dashboard/modal_preload.mustache
   - dashboard/object_list.mustache
   - dashboard/object_widget.mustache
