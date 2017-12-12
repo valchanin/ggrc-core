@@ -55,6 +55,7 @@ import template from './folder-attachments-list.mustache';
       isUploading: false,
       isUnmapping: false,
       isListLoading: false,
+      useMapper: false,
       itemsUploadedCallback: function () {
         if (this.instance instanceof CMS.Models.Control) {
           this.instance.dispatch('refreshInstance');

@@ -184,6 +184,7 @@ function initWidgetCounts(widgets, type, id) {
 
   return result.then((counts) => {
     getCounts().attr(counts);
+    return counts;
   });
 }
 

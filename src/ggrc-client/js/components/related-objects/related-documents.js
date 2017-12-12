@@ -279,6 +279,9 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
       '{viewModel.instance} resolvePendingBindings': function () {
         this.viewModel.refreshRelatedDocuments();
       },
-    },
+      '{viewModel.instance} refreshMapping': function () {
+        this.viewModel.refreshRelatedDocuments();
+      },
+    }
   });
 })(window.can, window.can.$, window._, window.GGRC);

@@ -48,6 +48,15 @@
         {{#is_allowed 'update' instance context='for'}}
             <span class="attachments-list-action">
                 {{#if currentFolder}}
+                    {{#if useMapper}}
+                    <button class="btn btn-small btn-white"
+                        data-toggle="unified-mapper"
+                        data-join-object-id="{{instance.id}}"
+                        data-join-object-type="{{instance.class.shortName}}"
+                        data-join-option-type="Document">
+                        Attach
+                    </button>
+                    {{else}}
                     <ggrc-gdrive-picker-launcher
                             instance="instance"
                             {items-uploaded-callback}="@loadDocuments"
@@ -56,6 +65,7 @@
                             {^is-uploading}="../isUploading">
                         Attach
                     </ggrc-gdrive-picker-launcher>
+                    {{/if}}
                 {{else}}
                     {{#if isNoFolderUploadingAllowed}}
                         <ggrc-gdrive-picker-launcher
