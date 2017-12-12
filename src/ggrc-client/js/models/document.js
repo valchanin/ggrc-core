@@ -47,12 +47,20 @@ can.Model.Cacheable('CMS.Models.Document', {
     status: 'Active',
   },
   tree_view_options: {
-    display_attr_names: ['title', 'status', 'updated_at', 'document_type'],
+    attr_view: GGRC.mustache_path + '/documents/tree-item-attr.mustache',
+    display_attr_names: [
+      'title',
+      'status',
+      'updated_at',
+    ],
     attr_list: [
       {attr_title: 'Title', attr_name: 'title'},
       {attr_title: 'State', attr_name: 'status'},
-      {attr_title: 'Last Updated', attr_name: 'updated_at'},
       {attr_title: 'Type', attr_name: 'document_type'},
+      {attr_title: 'Last Updated By', attr_name: 'modified_by'},
+      {attr_title: 'Last Updated', attr_name: 'updated_at'},
+      {attr_title: 'Last Deprecated Date', attr_name: 'end_date'},
+      {attr_title: 'Archived', attr_name: 'archived'},
     ],
   },
   init: function () {
