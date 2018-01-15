@@ -22,6 +22,7 @@ describe('GGRC.Mappings', function () {
         'Control',
         'DataAsset',
         'Document',
+        'Evidence',
         'Facility',
         'Issue',
         'Market',
@@ -41,7 +42,7 @@ describe('GGRC.Mappings', function () {
         'Risk',
         'Threat',
       ],
-      notMappable: ['Assessment', 'AssessmentTemplate'],
+      notMappable: ['Assessment', 'AssessmentTemplate', 'Evidence'],
     },
     risk_assessments: {
       models: ['RiskAssessment'],
@@ -102,6 +103,7 @@ describe('GGRC.Mappings', function () {
     DataAsset: filtered,
     Document: _.difference(filtered, [
       'Audit', 'Assessment', 'AssessmentTemplate']),
+    Evidence: [],
     Facility: filtered,
     Issue: _.difference(filtered, ['Audit', 'Person', 'Workflow']),
     Market: filtered,

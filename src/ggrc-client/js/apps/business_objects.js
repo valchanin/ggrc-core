@@ -32,6 +32,7 @@ import {
         product: CMS.Models.Product,
         data_asset: CMS.Models.DataAsset,
         document: CMS.Models.Document,
+        evidence: CMS.Models.Evidence,
         access_group: CMS.Models.AccessGroup,
         market: CMS.Models.Market,
         system_or_process: {
@@ -255,7 +256,7 @@ import {
           Issue: {
             order: 8,
           },
-          Document: {
+          Evidence: {
             order: 9,
           },
           program: {

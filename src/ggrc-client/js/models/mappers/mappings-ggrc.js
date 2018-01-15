@@ -93,7 +93,7 @@ import RefreshQueue from '../refresh_queue';
           'Product', 'Project', 'System', 'Regulation', 'Policy', 'Contract',
           'Standard', 'Program', 'Issue', 'Control', 'Section', 'Clause',
           'Objective', 'Audit', 'Assessment', 'AssessmentTemplate',
-          'AccessGroup', 'Risk', 'Threat', 'Document',
+          'AccessGroup', 'Risk', 'Threat', 'Document', 'Evidence',
         ],
       },
       related_objects_as_source: Proxy(

@@ -56,7 +56,7 @@ import Permission from '../permission';
     obj_nav_options: {
       show_all_tabs: false,
       force_show_list: ['In Scope Controls', 'Assessment Templates',
-        'Issues', 'Assessments', 'Documents'],
+        'Issues', 'Assessments', 'Evidences'],
     },
     tree_view_options: {
       attr_view: GGRC.mustache_path + '/audits/tree-item-attr.mustache',
