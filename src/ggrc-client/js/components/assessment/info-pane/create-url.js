@@ -33,7 +33,7 @@
           _stamp: Date.now(),
         };
 
-        document = new CMS.Models.Document(attrs);
+        document = new CMS.Models.Evidence(attrs);
         this.dispatch({type: 'beforeCreate', items: [document]});
         document.save()
           .fail(function () {

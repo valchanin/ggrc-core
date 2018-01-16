@@ -55,6 +55,7 @@
                   #if' instance.archived '\
                   or ^is_allowed' "update" instance context="for"}}
                     <folder-attachments-list {title}="'Attachment'"
+                      {model-type}="'Evidence'"
                       readonly="true"
                       {instance}="instance"
                       deny-no-folder="true"
@@ -62,6 +63,7 @@
                     </folder-attachments-list>
                 {{else}}
                   <folder-attachments-list {title}="'Attachment'"
+                    {model-type}="'Evidence'"
                     {instance}="instance"
                     deny-no-folder="true"
                     {tooltip}="'A new copy of the file will be stored at the destination Audit folder if exists or main gDrive folder of user.''">

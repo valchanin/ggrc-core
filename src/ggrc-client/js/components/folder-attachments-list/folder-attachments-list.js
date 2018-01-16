@@ -46,6 +46,7 @@ import template from './folder-attachments-list.mustache';
           },
         },
       },
+      modelType: 'Document',
       title: null,
       subLabel: '@',
       tooltip: null,

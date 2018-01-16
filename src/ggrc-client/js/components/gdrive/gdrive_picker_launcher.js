@@ -25,6 +25,7 @@ import RefreshQueue from '../../models/refresh_queue';
           },
         },
       },
+      modelType: 'Document',
       tooltip: null,
       assessmentTypeObjects: [],
       instance: {},
@@ -386,9 +387,10 @@ import RefreshQueue from '../../models/refresh_queue';
 
       handle_file_upload: function (files) {
         let that = this;
+        let modelType = this.attr('modelType');
 
         let dfdDocs = files.map(function (file) {
-          return new CMS.Models.Document({
+          return new CMS.Models[modelType]({
             context: that.instance.context || {id: null},
             title: file.title,
             link: file.alternateLink,

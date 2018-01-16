@@ -32,6 +32,7 @@ import {findGDriveItemById} from '../../plugins/utils/gdrive-picker-utils';
           },
         },
       },
+      modelType: 'Evidence',
       assessmentTypeObjects: [],
       canAttach: false,
       isFolderAttached: false,

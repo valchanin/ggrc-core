@@ -221,7 +221,7 @@ import template from './info-pane.mustache';
       },
       getDocumentQuery: function (documentType) {
         let query = this.getQuery(
-          'Document',
+          'Evidence',
           {sortBy: 'created_at', sortDirection: 'desc'},
           this.getDocumentAdditionFilter(documentType));
         return query;
@@ -390,9 +390,9 @@ import template from './info-pane.mustache';
           .then((data) => {
             this.attr('mappedSnapshots').replace(data.Snapshot);
             this.attr('comments').replace(data.Comment);
-            this.attr('evidences').replace(data['Document:EVIDENCE']);
-            this.attr('urls').replace(data['Document:URL']);
-            this.attr('referenceUrls').replace(data['Document:REFERENCE_URL']);
+            this.attr('evidences').replace(data['Evidence:EVIDENCE']);
+            this.attr('urls').replace(data['Evidence:URL']);
+            this.attr('referenceUrls').replace(data['Evidence:REFERENCE_URL']);
 
             this.attr('isUpdatingRelatedItems', false);
             this.attr('instance').dispatch(RELATED_ITEMS_LOADED);

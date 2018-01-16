@@ -22,6 +22,7 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
     tag: 'related-documents',
     viewModel: {
       instance: {},
+      modelType: 'Document',
       documentType: '@',
       documents: [],
       isLoading: false,
@@ -54,8 +55,10 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
         } :
         [];
 
+        let modelType = this.attr('modelType');
+
         let query =
-          buildParam('Document', {}, relevantFilters, [], additionalFilter);
+          buildParam(modelType, {}, relevantFilters, [], additionalFilter);
         query.order_by = [{name: 'created_at', desc: true}];
 
         return query;
@@ -66,8 +69,9 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
         this.attr('isLoading', true);
         this.refreshDocumentCounts();
 
+        let modelType = this.attr('modelType');
         return batchRequests(query).then((response) => {
-          const documents = response.Document.values;
+          const documents = response[modelType].values;
           this.attr('documents').replace(documents);
           this.attr('isLoading', false);
         });
@@ -140,7 +144,8 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
       },
       createDocument: function (data) {
         let date = new Date();
-        let document = new CMS.Models.Document({
+        let modelType = this.attr('modelType');
+        let document = new CMS.Models[modelType]({
           link: data,
           title: data,
           created_at: date.toISOString(),
@@ -257,8 +262,9 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
       },
       refreshDocumentCounts: function () {
         let pageInstance = GGRC.page_instance();
+        let modelType = this.attr('modelType');
         initCounts(
-          ['Document'],
+          [modelType],
           pageInstance.type,
           pageInstance.id
         );
