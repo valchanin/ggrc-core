@@ -336,7 +336,7 @@ import Permission from '../permission';
       let forbiddenList = {
         Program: ['Audit'],
         Audit: ['Assessment', 'Program'],
-        Assessment: ['Workflow', 'TaskGroup'],
+        Assessment: ['Workflow', 'TaskGroup', 'Evidence'],
         Person: ['Issue'],
         Document: ['Audit', 'Assessment'],
       };
