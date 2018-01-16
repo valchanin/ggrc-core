@@ -52,6 +52,7 @@ import {REFRESH_TAB_CONTENT,
   REFRESH_MAPPING,
 } from '../../../events/eventTypes';
 import Permission from '../../../permission';
+import {initCounts} from '../../../plugins/utils/current-page-utils';
 import template from './info-pane.mustache';
 
 (function (can, GGRC, CMS) {
@@ -194,6 +195,14 @@ import template from './info-pane.mustache';
       noItemsText: '',
       initialState: 'Not Started',
       assessmentMainRoles: ['Creators', 'Assignees', 'Verifiers'],
+      refreshCounts: function (types) {
+        let pageInstance = GGRC.page_instance();
+        initCounts(
+          types,
+          pageInstance.attr('type'),
+          pageInstance.attr('id')
+        );
+      },
       setUrlEditMode: function (value, type) {
         this.attr(type + 'EditMode', value);
       },
@@ -276,6 +285,8 @@ import template from './info-pane.mustache';
         can.makeArray(arguments).forEach(function (type) {
           this.attr(type).replace(this['load' + can.capitalize(type)]());
         }.bind(this));
+
+        this.refreshCounts(['Evidence']);
       },
       afterCreate: function (event, type) {
         let createdItems = event.items;
@@ -358,6 +369,8 @@ import template from './info-pane.mustache';
             assessment.removeAttr('actions');
             // dispatching event on instance to pass to the auto-save-form
             self.attr('instance').dispatch(RELATED_ITEMS_LOADED);
+
+            self.refreshCounts(['Evidence']);
           });
       },
       removeRelatedItem: function (item, type) {
@@ -381,6 +394,8 @@ import template from './info-pane.mustache';
         .always(function (assessment) {
           assessment.removeAttr('actions');
           self.attr('isUpdating' + can.capitalize(type), false);
+
+          self.refreshCounts(['Evidence']);
         });
       },
       updateRelatedItems: function () {
