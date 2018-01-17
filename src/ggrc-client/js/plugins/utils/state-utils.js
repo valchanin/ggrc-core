@@ -60,6 +60,11 @@ let statesModels = [
     states: [
       'Active', 'Draft', 'Deprecated', 'Fixed', 'Fixed and Verified',
     ],
+  }, {
+    models: ['Document', 'Evidence'],
+    states: [
+      'Active', 'Deprecated',
+    ],
   },
 ];
 
