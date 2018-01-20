@@ -441,7 +441,6 @@ function resize_areas(event, target_info_pin_height) {
   var winHeight = $window.height();
   var winWidth = $window.width();
   var lhsHeight = winHeight - 180; // new ui
-  var footerMargin = lhsHeight + 130; // new UI
   var internavHeight = object_area_height();
   var internavWidth = $innerNav.width() || 0; // || 0 for pages without inner-nav
   var lhsWidth = $lhsHolder.width();
@@ -450,7 +449,6 @@ function resize_areas(event, target_info_pin_height) {
   $lhnType.css('width', lhsWidth);
   $lhsHolder.css('height', lhsHeight);
   $bar.css('height', lhsHeight);
-  $footer.css('margin-top', footerMargin);
   $innerNav.css('height', internavHeight);
   $objectArea
     .css('margin-left', internavWidth)
@@ -488,7 +486,7 @@ function resize_areas(event, target_info_pin_height) {
     // the 5 gives user peace of mind they've reached bottom
     var UIHeight = [$topNav.height(), $header.height(),
                       $footer.height(),
-                      margins, 5]
+                      margins, 10]
               .reduce(function (m, h) {
                 return m + h;
               }, 0);

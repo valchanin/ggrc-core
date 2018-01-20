@@ -6,7 +6,7 @@
 .top-inner-nav {
   @include box-shadow(inset 1px 4px 9px -6px rgba(0,0,0,0.4));
   width: 100%;
-  top: 48px;
+  margin-top: 47px;
   background: $white;
 }
 
