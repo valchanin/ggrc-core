@@ -9,17 +9,21 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from ggrc import db
 from ggrc.access_control.roleable import Roleable
+from ggrc.builder import simple_property
 from ggrc.fulltext.mixin import Indexed
-from ggrc.models.deferred import deferred
-from ggrc.models.mixins import Base
-from ggrc.models.relationship import Relatable
 from ggrc.models import exceptions
 from ggrc.models import reflection
 from ggrc.models import mixins
+from ggrc.models.deferred import deferred
+from ggrc.models.mixins import Base
+from ggrc.models.mixins import before_flush_handleable as bfh
+from ggrc.models.relationship import Relatable
+from ggrc.utils import referenced_objects
 
 
-class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model):
-  """Audit model."""
+class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
+               bfh.BeforeFlushHandleable):
+  """Document model."""
   __tablename__ = 'documents'
 
   _title_uniqueness = False
@@ -48,7 +52,8 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model):
       'title',
       'link',
       'description',
-      "document_type",
+      'document_type',
+      reflection.Attribute('documentable_obj', read=False, update=False)
   )
 
   _sanitize_html = [
@@ -57,10 +62,12 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model):
   ]
 
   _aliases = {
-      'title': "Title",
-      'link': "Link",
-      'description': "description",
+      'title': 'Title',
+      'link': 'Link',
+      'description': 'description',
   }
+
+  _allowed_documentables = {'Assessment', 'Control', 'Audit', 'Issue'}
 
   @orm.validates('document_type')
   def validate_document_type(self, key, document_type):
@@ -105,3 +112,78 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model):
     tmp = super(Document, self).log_json()
     tmp['type'] = "Document"
     return tmp
+
+  @simple_property
+  def documentable_obj(self):
+    return self._documentable_obj
+
+  @documentable_obj.setter
+  def documentable_obj(self, value):
+    self._documentable_obj = value
+
+  def _get_documentable_obj(self):
+    """Get documentable object specified"""
+    if 'id' not in self._documentable_obj:
+      raise exceptions.ValidationError('"id" is mandatory for documentable_obj')
+    if 'type' not in self._documentable_obj:
+      raise exceptions.ValidationError(
+        '"type" is mandatory for documentable_obj')
+    if self._documentable_obj['type'] not in self._allowed_documentables:
+      raise exceptions.ValidationError(
+        'Allowed types are: {}.'.format(', '.join(self._allowed_documentables)))
+
+    doc_type = self._documentable_obj['type']
+    doc_id = self._documentable_obj['id']
+    obj = referenced_objects.get(doc_type, doc_id)
+
+    if not obj:
+      raise ValueError(
+        'Documentable object not found: {type} {id}'.format(type=doc_type,
+                                                            id=doc_id))
+    return obj
+
+  def _build_file_name_postfix(self, documentable_obj):
+    """Build postfix for given documentable object"""
+    postfix_parts = ['_ggrc', documentable_obj.slug]
+
+    related_snapshots = documentable_obj.related_objects(_types=['Snapshot'])
+    related_snapshots = sorted(related_snapshots, key=lambda it: it.id)
+
+    slugs = (sn.revision.content['slug'] for sn in related_snapshots if
+             sn.child_type == documentable_obj.assessment_type)
+
+    postfix_parts.extend(slugs)
+    postfix_sting = '_'.join(postfix_parts).lower()
+
+    return postfix_sting
+
+  def _build_relationship(self, documentable_obj):
+    """Build relationship between document and documentable object"""
+    from ggrc.models import relationship
+    rel = relationship.Relationship(
+      source=documentable_obj,
+      destination=self
+    )
+    db.session.add(rel)
+
+  def _update_fields(self, responce):
+    """Update fields of document with values of the copied file"""
+    self.link = responce['webViewLink']
+    self.title = responce['name']
+    self.document_type = Document.ATTACHMENT
+
+  def _execute_file_copy_flow(self):
+    if hasattr(self, '_documentable_obj') and self._documentable_obj:
+
+      documentable_obj = self._get_documentable_obj()
+      postfix = self._build_file_name_postfix(documentable_obj)
+      folder_id = documentable_obj.folder
+      file_id = self.link
+      from ggrc.gdrive.file_actions import copy_file
+      response = copy_file(folder_id, file_id, postfix)
+      self._update_fields(response)
+      self._build_relationship(documentable_obj)
+      self._documentable_obj = None
+
+  def handle_before_flush(self):
+    self._execute_file_copy_flow()

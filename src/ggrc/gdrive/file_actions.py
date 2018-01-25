@@ -4,7 +4,7 @@
 """File action utitlities for GDrive module"""
 
 from StringIO import StringIO
-
+from os import path
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
@@ -71,3 +71,48 @@ def get_gdrive_file(file_data):
   except:  # pylint: disable=bare-except
     raise InternalServerError("Import failed due to internal server error.")
   return csv_data
+
+
+def generate_file_name(original_name, postfix):
+  original_name, extension = path.splitext(original_name)
+  # remove an old postfix
+  original_name = original_name.split('_ggrc_')[0]
+  new_name = '_'.join([original_name, postfix]).strip('_')
+  # sanitaze file name
+  new_name = ''.join(
+    [char if char.isalnum() or char == '_' else '-' for char in new_name]
+  )
+  return new_name + extension
+
+
+def _build_request_body(folder_id, new_file_name):
+  body = {'name': new_file_name}
+  if folder_id:
+    body['parents'] = [folder_id]
+  return body
+
+
+def copy_file(folder_id, file_id, postfix):
+  try:
+    drive_service = init_gdrive_service()
+    file_meta = drive_service.files().get(fileId=file_id).execute()
+    new_file_name = generate_file_name(file_meta['name'], postfix)
+    body = _build_request_body(folder_id, new_file_name)
+    response = drive_service.files().copy(
+        fileId=file_id,
+        body=body,
+        fields='webViewLink,name'
+    ).execute()
+    return response
+  except HttpError as e:
+    message = json.loads(e.content).get("error").get("message")
+    if e.resp.status == 404:
+      raise NotFound(message)
+    if e.resp.status == 401:
+      raise Unauthorized(message)
+    if e.resp.status == 400:
+      raise BadRequest(message)
+    raise InternalServerError(message)
+  except:  # pylint: disable=bare-except
+    raise InternalServerError("Copying of the file failed due to"
+                              " internal server error.")
