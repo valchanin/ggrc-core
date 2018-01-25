@@ -113,7 +113,7 @@ class Documentable(object):
         orm.subqueryload(
             'documents',
         ).undefer_group(
-            "Document_complete",
+            'Document_complete',
         ),
     )
 
@@ -140,29 +140,26 @@ class Documentable(object):
     )
 
 
-PublicDocumentable = type(
-    "PublicDocumentable",
-    (Documentable, ),
-    {
-        "_aliases": {
-            "document_url": {
-                "display_name": "Evidence URL",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": "New line separated list of URLs.",
-            },
-            "document_evidence": {
-                "display_name": "Evidence File",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": (
-                    "New line separated list of evidence links and "
-                    "titles.\nExample:\n\nhttp://my.gdrive.link/file "
-                    "Title of the evidence link"
-                ),
-            },
-            "reference_url": {
-                "display_name": "Reference URL",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": "New line separated list of Reference URLs.",
-            },
-        }
-    })
+class PublicDocumentable(Documentable):
+  _aliases = {
+      "document_url": {
+          "display_name": "Evidence URL",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": "New line separated list of URLs.",
+      },
+
+      "document_evidence": {
+          "display_name": "Evidence File",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": (
+              "New line separated list of evidence links and "
+              "titles.\nExample:\n\nhttp://my.gdrive.link/file "
+              "Title of the evidence link"
+          ),
+      },
+      "reference_url": {
+          "display_name": "Reference URL",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": "New line separated list of Reference URLs.",
+      },
+  }
