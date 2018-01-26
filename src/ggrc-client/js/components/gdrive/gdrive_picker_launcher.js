@@ -28,7 +28,6 @@ import RefreshQueue from '../../models/refresh_queue';
       tooltip: null,
       assessmentTypeObjects: [],
       instance: {},
-      deferred: '@',
       link_class: '@',
       click_event: '@',
       itemsUploadedCallback: '@',
@@ -395,17 +394,11 @@ import RefreshQueue from '../../models/refresh_queue';
           }).save().then(function (doc) {
             let objectDoc;
 
-            if (that.deferred) {
-              that.instance.mark_for_addition('documents', doc, {
-                context: that.instance.context || {id: null},
-              });
-            } else {
-              objectDoc = new CMS.Models.Relationship({
-                context: that.instance.context || {id: null},
-                source: that.instance,
-                destination: doc,
-              }).save();
-            }
+            objectDoc = new CMS.Models.Relationship({
+              context: that.instance.context || {id: null},
+              source: that.instance,
+              destination: doc,
+            }).save();
 
             return objectDoc;
           });
