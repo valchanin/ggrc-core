@@ -87,26 +87,17 @@ import template from './rich_text.mustache';
         });
       },
       urlMatcher: function (node, delta) {
-        var matches;
-        var ops;
-        var str;
-        if (typeof (node.data) !== 'string') {
-          return;
-        }
-        matches = node.data.match(URL_CLIPBOARD_REGEX);
+        let matches = node.data.match(URL_CLIPBOARD_REGEX);
 
-        if (matches && matches.length > 0) {
-          ops = [];
-          str = node.data;
-          matches.forEach(function (match) {
-            var split = str.split(match);
-            var beforeLink = split.shift();
-            ops.push({insert: beforeLink});
-            ops.push({insert: match, attributes: {link: match}});
-            str = split.join(match);
+        // if there is no match, null will be returned
+        if (matches) {
+          delta.ops = [];
+          matches.forEach((match)=> {
+            delta.ops.push({
+              insert: match,
+              attributes: {link: match}
+            });
           });
-          ops.push({insert: str});
-          delta.ops = ops;
         }
 
         return delta;
