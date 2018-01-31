@@ -38,7 +38,6 @@
                 </editable-document-object-list-item>
             </object-list>
             <attach-button
-		    {assessment-type-objects}="assessmentTypeObjects"
                     (before-create)="addItems(%event, 'evidences')"
                     (refresh-evidences)="updateItems('evidences')"
                     {is-attach-action-disabled}="isUpdatingEvidences"
