@@ -85,7 +85,12 @@
           Attachment
           <i class="fa fa-question-circle" rel="tooltip" title="If selected, all Workflow attachments go here."></i>
         </label>
-        {{{render_hooks "Workflow.storage_folder_picker"}}}
+        <ggrc-gdrive-folder-picker
+          instance="instance"
+          deferred="true"
+          tabindex="5"
+          hide-label="true"
+          placeholder="If selected, all workflow attachments go here."/>
       </div>
     </div>
 

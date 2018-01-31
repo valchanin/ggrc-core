@@ -16,13 +16,4 @@
     delete window['resolvegapi' + random];
   };
   $('head').append('<script type="text/javascript" src="https://apis.google.com/js/client.js?onload=resolvegapi' + random + '"></script>');
-
-  GGRC.register_hook('Audit.storage_folder_picker',
-    GGRC.mustache_path + '/audits/gdrive_folder_picker.mustache');
-
-  GGRC.register_hook('Role.option_detail', GGRC.mustache_path +
-    '/roles/gdrive_option_detail.mustache');
-
-  GGRC.register_hook('Workflow.storage_folder_picker',
-    GGRC.mustache_path + '/workflows/gdrive_folder_picker.mustache');
 })(window.can, window.can.$, window.CMS, window.GGRC);
