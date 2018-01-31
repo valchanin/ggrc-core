@@ -31,7 +31,12 @@
       </label>
       <div class="role-description">
         <p>{{{description}}}</p>
-        {{{render_hooks 'Role.option_detail'}}}
+        {{#if_equals name "Administrator"}}
+          <p>
+          <strong>Note</strong>: This role does not automatically confer Admin access to gDrive resources.
+            Please ensure that all Administrator users are also members of <span style="white-space: nowrap">{{ggrc_config_value "GAPI_ADMIN_GROUP"}}</span>
+          </p>
+        {{/if_equals}}
         {{#scope}}<p><strong>Role Scope:</strong> {{role_scope scope}}</p>{{/scope}}
       </div>
     </li>

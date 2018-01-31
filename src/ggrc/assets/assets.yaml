@@ -198,9 +198,6 @@ dashboard-js-template-files:
   - gdrive/gdrive_folder.mustache
   - gdrive/gdrive_file.mustache
   - gdrive/confirm_buttons.mustache
-  - roles/gdrive_option_detail.mustache
-  - audits/gdrive_folder_picker.mustache
-  - workflows/gdrive_folder_picker.mustache
   # ggrc_risk_assessments
   - dashboard/lhn_risk_assessments.mustache
   - dashboard/lhn_search_result_risk_assessments.mustache
