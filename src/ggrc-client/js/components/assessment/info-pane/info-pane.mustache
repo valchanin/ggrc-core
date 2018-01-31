@@ -123,7 +123,6 @@
                                         {on-state-change-dfd}="onStateChangeDfd"
                                         {edit-mode}="editMode">
                             <attach-button
-					{assessment-type-objects}="assessmentTypeObjects"
                                         (before-create)="addItems(%event, 'evidences')"
                                         (refresh-evidences)="updateItems('evidences')"
                                         {is-attach-action-disabled}="isUpdatingEvidences"
@@ -210,7 +209,6 @@
                                     {instance}="instance"
                                     {is-disabled}="isUpdatingEvidences">
                           <ca-object-modal-content {instance}="instance"
-                                                   {assessment-type-objects}="assessmentTypeObjects"
                                                    {content}="modal.content"
                                                    {state}="state"
                                                    {evidences}="evidences"

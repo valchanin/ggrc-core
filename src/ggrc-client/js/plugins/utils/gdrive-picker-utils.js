@@ -86,14 +86,8 @@ export function uploadFiles(opts = {}) {
       // NB: picker file object have different format then GDrive file objects
       // "name" <=> "title", "url" <=> "alternateLink"
       // RefreshQueue converts picker file objects into GDrive file objects
-      let pickedFilesById = _.indexBy(pickedFiles, 'id');
       let refreshDfds = pickedFiles.map((file)=> findGDriveItemById(file.id));
       can.when(...refreshDfds).then((...files)=> {
-        // adding a newUpload flag so we can later distinguish newly
-        // uploaded files from the picked ones.
-        files.forEach((file)=>{
-          file.newUpload = pickedFilesById[file.id].isNew;
-        });
         dfd.resolve(files);
       }, dfd.reject);
     } else if (data[ACTION] === CANCEL) {
