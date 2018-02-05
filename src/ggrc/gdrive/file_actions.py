@@ -94,7 +94,8 @@ def _build_request_body(folder_id, new_file_name):
 
 def copy_file(folder_id, file_id, postfix):
   try:
-    drive_service = init_gdrive_service()
+    drive_service = discovery.build(
+      API_SERVICE_NAME, API_VERSION, credentials=get_credentials())
     file_meta = drive_service.files().get(fileId=file_id).execute()
     new_file_name = generate_file_name(file_meta['name'], postfix)
     body = _build_request_body(folder_id, new_file_name)

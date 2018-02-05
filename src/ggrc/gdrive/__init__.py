@@ -6,11 +6,13 @@
 import flask
 import google.oauth2.credentials as oauth2_credentials
 import google_auth_oauthlib.flow
+from flask import render_template
 
 from werkzeug.exceptions import BadRequest
 
 from ggrc import settings
 from ggrc.app import app
+from ggrc.login import login_required
 
 _GOOGLE_AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 _GOOGLE_TOKEN_URI = "https://accounts.google.com/o/oauth2/token"
@@ -51,6 +53,17 @@ def verify_credentials():
   if gdrive_credentials.expired:
     return authorize_gdrive()
   return None
+
+
+@app.route("/check_be_authorization")
+@login_required
+def check_be_authorization():
+  """Get export view"""
+  if getattr(settings, "GAPI_CLIENT_ID", None):
+    authorize = verify_credentials()
+    if authorize:
+      return authorize
+  return render_template("gdrive/check_be_authorization.haml")
 
 
 @app.route("/authorize_gdrive")
