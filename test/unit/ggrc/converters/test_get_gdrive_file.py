@@ -22,10 +22,11 @@ class TestGetGDRiveFile(unittest.TestCase):
       {"id": "123123", "mimeType": "text/csv"},
       {"id": "123123"},
   )
-  @mock.patch("ggrc.gdrive.file_actions.get_http_auth")
+  @mock.patch("ggrc.gdrive.file_actions.get_credentials")
   @mock.patch("ggrc.gdrive.file_actions.discovery")
-  def test_getter_csv(self, file_data, disco_mock, auth_mock):
+  def test_getter_csv(self, file_data, disco_mock, cred_mock):
     """Test getter csv data over GDrive."""
+
     disco_files = disco_mock.build.return_value.files.return_value
     disco_files.get.return_value.execute.return_value = file_data
     if "mimeType" in file_data:
@@ -37,8 +38,8 @@ class TestGetGDRiveFile(unittest.TestCase):
         [[u'Object_tyle', u'Code*', u'Title*', u'LIST*'],
          [u'', u'OBJ-1185', u'OBJ_title', u'user1\nuser2']],
         file_actions.get_gdrive_file(file_data))
-    auth_mock.assert_called_once_with()
+    cred_mock.assert_called_once_with()
     disco_mock.build.assert_called_once_with("drive",
                                              "v3",
-                                             http=auth_mock.return_value)
+                                             credentials=cred_mock.return_value)
     disco_files.get.assert_called_once_with(fileId=file_data["id"])
