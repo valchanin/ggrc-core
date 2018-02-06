@@ -6,17 +6,17 @@
 from StringIO import StringIO
 from os import path
 
-from googleapiclient import discovery
-from googleapiclient.errors import HttpError
-from googleapiclient import http
+from apiclient import discovery
+from apiclient import http
+from apiclient.errors import HttpError
 from flask import json
+
 from werkzeug.exceptions import (
     BadRequest, NotFound, InternalServerError, Unauthorized
 )
 
 from ggrc.converters.import_helper import read_csv_file
-from ggrc.gdrive import get_credentials
-from ggrc.gdrive import UserCredentialException
+from ggrc.gdrive import get_http_auth
 
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v3'
@@ -24,9 +24,8 @@ API_VERSION = 'v3'
 
 def create_gdrive_file(csv_string, filename):
   """Post text/csv data to a gdrive file"""
-  drive_service = discovery.build(
-      API_SERVICE_NAME, API_VERSION, credentials=get_credentials())
-
+  http_auth = get_http_auth()
+  drive_service = discovery.build(API_SERVICE_NAME, API_VERSION, http=http_auth)
   # make export to sheets
   file_metadata = {
       'name': filename,
@@ -42,9 +41,9 @@ def create_gdrive_file(csv_string, filename):
 
 def get_gdrive_file(file_data):
   """Get text/csv data from gdrive file"""
+  http_auth = get_http_auth()
   try:
-    drive_service = discovery.build(
-        API_SERVICE_NAME, API_VERSION, credentials=get_credentials())
+    drive_service = discovery.build(API_SERVICE_NAME, API_VERSION, http=http_auth)
     # check file type
     file_meta = drive_service.files().get(fileId=file_data['id']).execute()
     if file_meta.get("mimeType") == "text/csv":
@@ -57,15 +56,15 @@ def get_gdrive_file(file_data):
   except AttributeError:
     # when file_data has no splitlines() method
     raise BadRequest("Wrong file format.")
-  except UserCredentialException as ex:
+  except Unauthorized as ex:
     raise Unauthorized("{} Try to reload /import page".format(ex.message))
-  except HttpError as ex:
-    message = json.loads(ex.content).get("error").get("message")
-    if ex.resp.status == 404:
+  except HttpError as e:
+    message = json.loads(e.content).get("error").get("message")
+    if e.resp.status == 404:
       raise NotFound(message)
-    if ex.resp.status == 401:
+    if e.resp.status == 401:
       raise Unauthorized("{} Try to reload /import page".format(message))
-    if ex.resp.status == 400:
+    if e.resp.status == 400:
       raise BadRequest(message + " Probably the file is of a wrong type.")
     raise InternalServerError(message)
   except:  # pylint: disable=bare-except
@@ -95,7 +94,7 @@ def _build_request_body(folder_id, new_file_name):
 def copy_file(folder_id, file_id, postfix):
   try:
     drive_service = discovery.build(
-      API_SERVICE_NAME, API_VERSION, credentials=get_credentials())
+      API_SERVICE_NAME, API_VERSION, http=get_http_auth())
     file_meta = drive_service.files().get(fileId=file_id).execute()
     new_file_name = generate_file_name(file_meta['name'], postfix)
     body = _build_request_body(folder_id, new_file_name)
@@ -105,6 +104,9 @@ def copy_file(folder_id, file_id, postfix):
         fields='webViewLink,name'
     ).execute()
     return response
+  except UserCredentialsException as ex:
+    raise Unauthorized("{} Please authorize at /authorize_gdrive first"
+                       .format(ex.message))
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.status == 404:

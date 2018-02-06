@@ -9,7 +9,7 @@ including the import/export api endponts.
 
 from logging import getLogger
 
-from googleapiclient.errors import HttpError
+from apiclient.errors import HttpError
 
 from flask import current_app
 from flask import request
@@ -19,8 +19,6 @@ from werkzeug.exceptions import (
     BadRequest, InternalServerError, Unauthorized
 )
 
-from ggrc import settings
-from ggrc.gdrive import verify_credentials
 from ggrc.gdrive import file_actions as fa
 from ggrc.app import app
 from ggrc.converters.base import Converter
@@ -91,6 +89,8 @@ def handle_export_request():
         return current_app.make_response((csv_string, 200, headers))
   except BadQueryException as exception:
     raise BadRequest(exception.message)
+  except Unauthorized as ex:
+    raise Unauthorized("{} Try to reload /Export page".format(ex.message))
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.code == 401:
