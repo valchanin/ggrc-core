@@ -4,6 +4,7 @@
 */
 
 import Component from '../import';
+import gapiClient from '../../../plugins/ggrc-gapi-client';
 
 describe('GGRC.Components.csvImportWidget', function () {
   'use strict';
@@ -265,32 +266,31 @@ describe('GGRC.Components.csvImportWidget', function () {
     });
   });
 
-  describe('"#import_btn.state-select click" handler',
-  function () {
-    let authDfd;
-
+  describe('"#import_btn.state-select click" handler', function () {
+    let gapiStub;
     beforeEach(function () {
-      method = Component.prototype
-        .events['#import_btn.state-select click'];
-      authDfd = new can.Deferred();
-      spyOn(GGRC.Controllers.GAPI, 'reAuthorize').and.returnValue(authDfd);
-      spyOn(gapi.auth, 'getToken').and.returnValue('mockToken');
-      spyOn(gapi, 'load');
-      spyOn(GGRC.Controllers.GAPI, 'oauth_dfd');
+      method = Component.prototype.events['#import_btn.state-select click'];
+      gapiStub = jasmine.createSpyObj(['load']);
+      spyOn(gapiClient, 'authorizeGapi').and.returnValue(Promise.resolve({
+        gapi: gapiStub,
+      }));
     });
 
-    it('calls gdrive authorization', function () {
-      method();
-      expect(GGRC.Controllers.GAPI.reAuthorize)
-        .toHaveBeenCalledWith('mockToken');
+    it('calls gdrive authorization', function (done) {
+      method().then(()=> {
+        expect(gapiClient.authorizeGapi)
+          .toHaveBeenCalledWith(['https://www.googleapis.com/auth/drive']);
+        done();
+      });
     });
 
-    it('loads gdrive picker after authorization', function () {
-      authDfd.resolve();
-
-      method();
-      expect(gapi.load).toHaveBeenCalledWith('picker',
-        {callback: jasmine.any(Function)});
+    it('loads gdrive picker after authorization', function (done) {
+      method().then(()=> {
+        expect(gapiStub.load).toHaveBeenCalledWith('picker', {
+          callback: jasmine.any(Function)
+        });
+        done();
+      });
     });
   });
 });
