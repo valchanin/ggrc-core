@@ -12,7 +12,10 @@ import '../import-export/download-template/download-template';
 import '../collapsible-panel/collapsible-panel';
 import quickTips from './templates/quick-tips.mustache';
 import template from './templates/csv-import.mustache';
-import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
+import {
+  backendGdriveClient,
+  gapiClient,
+} from '../../plugins/ggrc-gapi-client';
 
 export default can.Component.extend({
   tag: 'csv-import',
@@ -232,39 +235,36 @@ export default can.Component.extend({
       let allowedTypes = ['text/csv', 'application/vnd.google-apps.document',
         'application/vnd.google-apps.spreadsheet'];
 
-      GGRC.Controllers.GAPI
-        .reAuthorize(gapi.auth.getToken())
-        .done(()=>{
+      return gapiClient.authorizeGapi(['https://www.googleapis.com/auth/drive'])
+        .then(()=> {
           gapi.load('picker', {callback: createPicker});
         });
 
       function createPicker() {
-        GGRC.Controllers.GAPI.oauth_dfd.done(function (token, oauth_user) {
-          let dialog;
-          let docsUploadView;
-          let docsView;
-          let picker = new google.picker.PickerBuilder()
-            .setOAuthToken(gapi.auth.getToken().access_token)
-            .setDeveloperKey(GGRC.config.GAPI_KEY)
-            .setCallback(pickerCallback);
+        let dialog;
+        let docsUploadView;
+        let docsView;
+        let picker = new google.picker.PickerBuilder()
+          .setOAuthToken(gapi.auth.getToken().access_token)
+          .setDeveloperKey(GGRC.config.GAPI_KEY)
+          .setCallback(pickerCallback);
 
-          docsUploadView = new google.picker.DocsUploadView();
-          docsView = new google.picker.DocsView()
-            .setMimeTypes(allowedTypes);
+        docsUploadView = new google.picker.DocsUploadView();
+        docsView = new google.picker.DocsView()
+          .setMimeTypes(allowedTypes);
 
-          picker.addView(docsUploadView)
-            .addView(docsView);
+        picker.addView(docsUploadView)
+          .addView(docsView);
 
-          picker = picker.build();
-          picker.setVisible(true);
+        picker = picker.build();
+        picker.setVisible(true);
 
-          $('div.picker-dialog-bg').css('zIndex', 4000);
+        $('div.picker-dialog-bg').css('zIndex', 4000);
 
-          dialog = GGRC.Utils.getPickerElement(picker);
-          if (dialog) {
-            dialog.style.zIndex = 4001;
-          }
-        });
+        dialog = GGRC.Utils.getPickerElement(picker);
+        if (dialog) {
+          dialog.style.zIndex = 4001;
+        }
       }
 
       function pickerCallback(data) {

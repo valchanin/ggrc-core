@@ -7,8 +7,6 @@
 import '../controllers/contributions';
 
 // ggrc_gdrive_integration
-import '../controllers/gapi_controllers';
-import '../apps/gdrive';
 import '../components/gdrive/gdrive_picker_launcher';
 import '../components/gdrive/gdrive_folder_picker';
 

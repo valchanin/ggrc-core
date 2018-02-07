@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import {gapiClient} from '../ggrc-gapi-client';
+
 export const GDRIVE_PICKER_ERR_CANCEL = 'GDRIVE_PICKER_ERR_CANCEL';
 
 /**
@@ -19,53 +21,49 @@ export function uploadFiles(opts = {}) {
   let pickerBuilder;
   let picker;
 
-  GGRC.Controllers.GAPI
-    .reAuthorize(gapi.auth.getToken())
-    .done(()=>{
+  gapiClient.authorizeGapi(['https://www.googleapis.com/auth/drive'])
+    .then(()=> {
       gapi.load('picker', {callback: createPicker});
-    })
-    .fail(dfd.reject);
+    }, dfd.reject);
 
-    // Create and render a Picker object for searching images.
+  // Create and render a Picker object for searching images.
   function createPicker() {
-    GGRC.Controllers.GAPI.oauth_dfd.done(function (token, oauthUser) {
-      let dialog;
-      let view;
+    let dialog;
+    let view;
 
-      pickerBuilder = new google.picker.PickerBuilder();
+    pickerBuilder = new google.picker.PickerBuilder();
 
-      if (pickFolder) {
-        view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
-          // .setMimeTypes(['application/vnd.google-apps.folder'])
-          .setIncludeFolders(true)
-          .setSelectFolderEnabled(true);
-        pickerBuilder.addView(view);
-        pickerBuilder.setTitle('Select folder');
-      } else {
+    if (pickFolder) {
+      view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
+        // .setMimeTypes(['application/vnd.google-apps.folder'])
+        .setIncludeFolders(true)
+        .setSelectFolderEnabled(true);
+      pickerBuilder.addView(view);
+      pickerBuilder.setTitle('Select folder');
+    } else {
+      pickerBuilder
+        .addView(new google.picker.DocsUploadView().setParent(parentId))
+        .addView(google.picker.ViewId.DOCS);
+      // .addView(new google.picker.DocsView().setParent(parentId));
+      if (multiSelect) {
         pickerBuilder
-          .addView(new google.picker.DocsUploadView().setParent(parentId))
-          .addView(google.picker.ViewId.DOCS);
-          // .addView(new google.picker.DocsView().setParent(parentId));
-        if (multiSelect) {
-          pickerBuilder
-            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
-        }
+          .enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
       }
+    }
 
-      picker = pickerBuilder.setOAuthToken(gapi.auth.getToken().access_token)
-            .setDeveloperKey(GGRC.config.GAPI_KEY)
-            .setMaxItems(10)
-            .setCallback(pickerCallback)
-            .build();
+    picker = pickerBuilder.setOAuthToken(gapi.auth.getToken().access_token)
+      .setDeveloperKey(GGRC.config.GAPI_KEY)
+      .setMaxItems(10)
+      .setCallback(pickerCallback)
+      .build();
 
-      console.warn('Next two errors are expected.');
-      picker.setVisible(true);
+    console.warn('Next two errors are expected.');
+    picker.setVisible(true);
 
-      dialog = GGRC.Utils.getPickerElement(picker);
-      if (dialog) {
-        dialog.style.zIndex = 4001; // our modals start with 2050
-      }
-    });
+    dialog = GGRC.Utils.getPickerElement(picker);
+    if (dialog) {
+      dialog.style.zIndex = 4001; // our modals start with 2050
+    }
   }
 
   // A simple callback implementation.
@@ -112,28 +110,7 @@ export function uploadFiles(opts = {}) {
 
 export function findGDriveItemById(id) {
   let path = `/drive/v2/files/${id}`;
-  let scopes = [
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/apps.groups.settings',
-  ];
 
-  return GGRC.Controllers.GAPI.gapi_request_with_auth({
-    path: path,
-    method: 'get', // "post"
-    callback: function (dfd, result) {
-      let objs;
-      if (!result || result.error) {
-        dfd.reject(result ? result.error : JSON.parse(arguments[1]));
-      } else if (result.items) {
-        objs = result.items;
-        can.each(objs, function (obj) {
-          obj.selfLink = obj.selfLink || '#';
-        });
-        dfd.resolve(objs);
-      } else { // single object case
-        dfd.resolve(result);
-      }
-    },
-    scopes: scopes,
-  });
+  return gapiClient.authorizeGapi(['https://www.googleapis.com/auth/drive'])
+    .then(()=> gapiClient.makeGapiRequest({path, method: 'get'}));
 }

@@ -5,6 +5,7 @@
 
 import Component from '../import';
 import * as Utils from '../import-export-utils';
+import {gapiClient} from '../../../plugins/ggrc-gapi-client';
 
 describe('GGRC.Components.csvImportWidget', function () {
   'use strict';
@@ -266,23 +267,21 @@ describe('GGRC.Components.csvImportWidget', function () {
     });
   });
 
-  describe('"#import_btn.state-select click" handler',
-  function () {
+  describe('"#import_btn.state-select click" handler', function () {
     let authDfd;
 
     beforeEach(function () {
       method = Component.prototype.viewModel.selectFile;
       authDfd = new can.Deferred();
-      spyOn(GGRC.Controllers.GAPI, 'reAuthorize').and.returnValue(authDfd);
+      spyOn(gapiClient, 'authorizeGapi').and.returnValue(authDfd);
       spyOn(gapi.auth, 'getToken').and.returnValue('mockToken');
       spyOn(gapi, 'load');
-      spyOn(GGRC.Controllers.GAPI, 'oauth_dfd');
     });
 
     it('calls gdrive authorization', function () {
       method();
-      expect(GGRC.Controllers.GAPI.reAuthorize)
-        .toHaveBeenCalledWith('mockToken');
+      expect(gapiClient.authorizeGapi)
+        .toHaveBeenCalledWith(['https://www.googleapis.com/auth/drive']);
     });
 
     it('loads gdrive picker after authorization', function () {
