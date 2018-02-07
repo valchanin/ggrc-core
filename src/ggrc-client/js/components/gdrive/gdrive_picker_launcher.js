@@ -8,6 +8,7 @@ import {
   findGDriveItemById,
   GDRIVE_PICKER_ERR_CANCEL,
 } from '../../plugins/utils/gdrive-picker-utils.js';
+import {withBackendAuth} from '../../plugins/ggrc-gapi-client';
 
 (function (can, $, GGRC, CMS) {
   'use strict';
@@ -137,6 +138,11 @@ import {
                 that.createDocumentModel(files).then(function (docs) {
                   can.trigger(that, 'modal:success', {arr: docs});
                   el.trigger('modal:success', {arr: docs});
+                }, function () {
+                  that.dispatch({
+                    type: 'resetItems',
+                  });
+                }).always(function () {
                   that.attr('isUploading', false);
                 });
               })
@@ -170,7 +176,7 @@ import {
         let instance = this.attr('instance');
 
         let dfdDocs = files.map(function (file) {
-          return new CMS.Models.Document({
+          let model = new CMS.Models.Document({
             context: that.instance.context || {id: null},
             title: file.title,
             link: file.id,
@@ -178,7 +184,9 @@ import {
               id: instance.attr('id'),
               type: instance.attr('type'),
             },
-          }).save();
+          });
+
+          return withBackendAuth(()=> model.save());
         });
         // waiting for all docs promises
         return can.when(...dfdDocs).then(function () {

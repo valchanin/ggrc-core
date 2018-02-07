@@ -85,16 +85,18 @@ class GGRCGapiClient {
    * @return {Promise} - Auth result.
    */
   async runAuthorization() {
-    return new Promise((resolve, reject)=> {
+    // authorize backend client.
+    await this.authorizeBackendGapi();
+
+    try {
       // try to authorized immediately.
-      this.makeGapiAuthRequest(true).then(resolve, ()=> {
-        // if immediate-auth failed, show modal.
-        this.showGapiModal().then(()=>{
-          // if user accepted, authorize with gapi form.
-          this.makeGapiAuthRequest().then(resolve, reject);
-        }, reject);
-      });
-    });
+      return await this.makeGapiAuthRequest(true);
+    } catch (e) {
+      // if immediate-auth failed, show modal.
+      await this.showGapiModal();
+      // if user accepted, authorize with gapi form.
+      return await this.makeGapiAuthRequest()
+    }
   }
 
   /**
@@ -153,6 +155,55 @@ class GGRCGapiClient {
   }
 
   /**
+   * Checks whether backend is authorized.
+   * @return {Promise} - The flag indicating auth status.
+   */
+  async checkBackendAuth() {
+    let response = await fetch('/is_gdrive_authorized', {
+      credentials: 'same-origin',
+    });
+
+    if (response.status === 200) {
+      return Promise.resolve();
+    } else {
+      return Promise.reject();
+    }
+  }
+
+  /**
+   * Authorizes backend google api client.
+   * @return {Promise} - The flag indicating whether authorization was successful.
+   */
+  async authorizeBackendGapi() {
+    const popupSize = 600;
+    const windowConfig = `
+      toolbar=no,
+      location=no,
+      directories=no,
+      status=no,
+      menubar=no,
+      scrollbars=yes,
+      resizable=yes,
+      copyhistory=no,
+      width=${popupSize},
+      height=${popupSize},
+      left=${(window.screen.width - popupSize)/2},
+      top=${(window.screen.height - popupSize)/2}`;
+
+    return this.checkBackendAuth().then(null, ()=> {
+      return new Promise((resolve, reject)=> {
+        let popup = window.open('/authorize', '_blank', windowConfig);
+        let timer = setInterval(()=> {
+          if (popup.closed) {
+            clearInterval(timer);
+            this.checkBackendAuth().then(resolve, reject);
+          }
+        }, 1000);
+      });
+    });
+  }
+
+  /**
    * Check whether user looged in google with ggrc email.
    */
   async checkLoggedUser() {
@@ -194,4 +245,26 @@ class GGRCGapiClient {
   };
 }
 
-export default new GGRCGapiClient();
+let client = new GGRCGapiClient();
+export default client;
+
+/**
+ * Makes additional auth request if backend returned "Unauthorized" status.
+ * @param {*} action - Action that should be executed.
+ * @param {*} rejectResponse - Data that should be returned if authorization will be failed.
+ * @return {can.Deferred} - The deferred object containing result of action or predefined data in case of auth failure.
+ */
+export const withBackendAuth = (action, rejectResponse) => {
+  return action().then(null, (e)=> {
+    // if BE auth token was corrupted
+    if (e.status === 401) {
+      let dfd = can.Deferred();
+      // then reauthorize backend and try again
+      client.authorizeBackendGapi().then(()=> {
+        action().then(dfd.resolve, dfd.reject);
+      }, ()=> dfd.reject(rejectResponse));
+      return dfd;
+    }
+    return e;
+  });
+}

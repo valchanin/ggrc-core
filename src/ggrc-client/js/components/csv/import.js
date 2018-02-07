@@ -9,7 +9,7 @@ import {hasWarningType} from '../../plugins/utils/controllers';
 import './csv-template';
 import '../show-more/show-more';
 import template from './templates/csv-import.mustache';
-import gapiClient from '../../plugins/ggrc-gapi-client';
+import gapiClient, {withBackendAuth} from '../../plugins/ggrc-gapi-client';
 
 export default GGRC.Components('csvImportWidget', {
   tag: 'csv-import',
@@ -194,7 +194,9 @@ export default GGRC.Components('csvImportWidget', {
       this.attr('fileId', file.id);
       this.attr('fileName', file.name);
 
-      GGRC.Utils.import_request({data: {id: file.id}}, true)
+      withBackendAuth(()=> {
+        return GGRC.Utils.import_request({data: {id: file.id}}, true);
+      }, {responseJSON: {message: 'Unable to Authorize'}})
         .then(this.prepareDataForCheck.bind(this))
         .then(function (checkObject) {
           this.beforeProcess(
