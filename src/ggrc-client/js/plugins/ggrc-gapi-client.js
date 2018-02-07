@@ -68,7 +68,7 @@ class BackendGdriveClient {
       left=${(window.screen.width - popupSize)/2},
       top=${(window.screen.height - popupSize)/2}`;
 
-    let popup = window.open('/authorize', '_blank', windowConfig);
+    let popup = window.open('/auth_gdrive', '_blank', windowConfig);
 
     return popup;
   }
@@ -89,6 +89,21 @@ class BackendGdriveClient {
   }
 
   /**
+   * Shows gapi modal and runs authorization if user confirmed the action.
+   */
+  runBackendAuth() {
+    this.authDfd = can.Deferred();
+    this.showGapiModal({
+      scopes: ['https://www.googleapis.com/auth/drive'],
+      onAccept: ()=> {
+        this.authorizeBackendGapi(this.authDfd);
+        return this.authDfd.promise();
+      },
+      onDecline: ()=> this.authDfd.reject('User canceled operation'),
+    });
+  }
+
+  /**
    * Makes auth request if backend returned "Unauthorized" status.
    * @param {*} action - Action that should be executed.
    * @param {*} rejectResponse - Data that should be returned if authorization will be failed.
@@ -98,21 +113,15 @@ class BackendGdriveClient {
     return action().then(null, (e)=> {
       // if BE auth token was corrupted or missed.
       if (e.status === 401) {
-        let authDfd = can.Deferred();
+        // We need to reuse the same dfd to handle case of multiple requests.
+        if (!this.authDfd || this.authDfd.state() !== 'pending') {
+          this.runBackendAuth();
+        }
+
         let resultDfd = can.Deferred();
-
-        this.showGapiModal({
-          scopes: ['https://www.googleapis.com/auth/drive'],
-          onAccept: ()=> {
-            this.authorizeBackendGapi(authDfd);
-            return authDfd.promise();
-          },
-          onDecline: ()=> authDfd.reject('User canceled operation'),
-        });
-
-        authDfd.then(()=> {
+        this.authDfd.then(()=> {
           action().then(resultDfd.resolve, resultDfd.reject);
-        }, ()=> resultDfd.reject(rejectResponse));
+        }, (error)=> resultDfd.reject(rejectResponse || error));
 
         return resultDfd;
       }

@@ -8,6 +8,7 @@ import {
   findGDriveItemById,
   GDRIVE_PICKER_ERR_CANCEL,
 } from '../../plugins/utils/gdrive-picker-utils.js';
+import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
 (function (can, $, GGRC, CMS) {
   'use strict';
@@ -137,6 +138,11 @@ import {
                 that.createDocumentModel(files).then(function (docs) {
                   can.trigger(that, 'modal:success', {arr: docs});
                   el.trigger('modal:success', {arr: docs});
+                }, function () {
+                  that.dispatch({
+                    type: 'resetItems',
+                  });
+                }).always(function () {
                   that.attr('isUploading', false);
                 });
               })
@@ -166,24 +172,29 @@ import {
       },
 
       createDocumentModel: function (files) {
-        let that = this;
-        let instance = this.attr('instance');
+        let instanceId = this.attr('instance.id');
+        let instanceType = this.attr('instance.type');
+        let contextId = this.attr('instance.context.id') || null;
 
         let dfdDocs = files.map(function (file) {
-          return new CMS.Models.Document({
-            context: that.instance.context || {id: null},
+          let model = new CMS.Models.Document({
+            context: {id: contextId},
             title: file.title,
             link: file.id,
             is_uploaded: file.newUpload,
             documentable_obj: {
-              id: instance.attr('id'),
-              type: instance.attr('type'),
+              id: instanceId,
+              type: instanceType,
             },
-          }).save();
+          });
+
+          return backendGdriveClient.withAuth(()=> {
+            return model.save();
+          });
         });
         // waiting for all docs promises
-        return can.when(...dfdDocs).then(function () {
-          instance.refresh();
+        return can.when(...dfdDocs).then(()=> {
+          this.attr('instance').refresh();
           return can.makeArray(arguments);
         });
       },
