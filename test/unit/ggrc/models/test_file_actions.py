@@ -20,12 +20,14 @@ class TestFileActions(unittest.TestCase):
       ('orig_file_name.doc', 'assessment-1', 'orig_file_name_assessment-1.doc'),
       ('orig_f_ggrc_name', 'assessment-1', 'orig_f_assessment-1'),
       ('or*ig_fi/le_name', 'assessment-1', 'or-ig_fi-le_name_assessment-1'),
+      ("GGRC's (automation process)_ggrc", 'control-2',
+                              "GGRC's (automation process)_ggrc_control-2"),
   )
   @ddt.unpack
   def test_generate_file_name(self, original_file_name, postfix, expected, _):
     """Test of generate_file_name function
 
-    Copied file name should be alfanumeric + '_' + '.'
+    Copied file name should be alfanumeric + "_ ()-'"
     Copied file name should have postfix e.g (assessment-1)
     Copied file name should have file extension of the original file
     Copied file name should't have 'old' postfix e.g (assessment-1)

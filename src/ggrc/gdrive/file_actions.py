@@ -23,6 +23,7 @@ from ggrc.gdrive import handle_token_error
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v3'
 
+ALLOWED_FILENAME_CHARS = "_ ()-'"
 
 def create_gdrive_file(csv_string, filename):
   """Post text/csv data to a gdrive file"""
@@ -77,18 +78,20 @@ def get_gdrive_file(file_data):
 
 
 def generate_file_name(original_name, postfix):
+  """Helper for sanitize filename"""
   original_name, extension = path.splitext(original_name)
   # remove an old postfix
   original_name = original_name.split('_ggrc_')[0]
   new_name = '_'.join([original_name, postfix]).strip('_')
   # sanitaze file name
-  new_name = ''.join(
-    [char if char.isalnum() or char == '_' else '-' for char in new_name]
-  )
+  new_name = ''.join([char if char.isalnum() or char in ALLOWED_FILENAME_CHARS
+                      else '-' for char in new_name]
+                     )
   return new_name + extension
 
 
 def _build_request_body(folder_id, new_file_name):
+  """Helper for generate request body"""
   body = {'name': new_file_name}
   if folder_id:
     body['parents'] = [folder_id]
