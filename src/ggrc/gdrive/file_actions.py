@@ -104,8 +104,8 @@ def copy_file(folder_id, file_id, postfix):
         fields='webViewLink,name'
     ).execute()
     return response
-  except UserCredentialsException as ex:
-    raise Unauthorized("{} Please authorize at /authorize_gdrive first"
+  except Unauthorized as ex:
+    raise Unauthorized("{} Please authorize at /authorize first"
                        .format(ex.message))
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")

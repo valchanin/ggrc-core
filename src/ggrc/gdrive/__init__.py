@@ -54,7 +54,6 @@ def is_credential_valid():
 
 
 @app.route("/authorize")
-@app.route("/authorize_gdrive")
 def authorize_app():
   """Redirect to Google API auth page to authorize"""
   if is_credential_valid():
