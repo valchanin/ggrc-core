@@ -4,6 +4,7 @@
 """GDrive module"""
 
 import httplib2
+import uuid
 
 import flask
 from flask import render_template
@@ -90,8 +91,14 @@ def authorize_app():
       token_uri=_GOOGLE_TOKEN_URI,
   )
   if 'code' not in flask.request.args:
-    auth_uri = flow.step1_get_authorize_url()
+    state = str(uuid.uuid4())
+    auth_uri = flow.step1_get_authorize_url(state=state)
+    flask.session['state'] = state
     return flask.redirect(auth_uri)
+
+  # Cross Site Request Forgery (XRSF) guard.
+  if flask.request.args['state'] != flask.session['state']:
+    raise Unauthorized('Wrong state.')
 
   auth_code = flask.request.args["code"]
   credentials = flow.step2_exchange(auth_code)
