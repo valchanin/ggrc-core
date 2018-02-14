@@ -15,11 +15,13 @@ from flask import current_app
 from flask import request
 from flask import json
 from flask import render_template
+from oauth2client.client import HttpAccessTokenRefreshError
 from werkzeug.exceptions import (
     BadRequest, InternalServerError, Unauthorized
 )
 
 from ggrc.gdrive import file_actions as fa
+from ggrc.gdrive import handle_token_error
 from ggrc.app import app
 from ggrc.converters.base import Converter
 from ggrc.converters.import_helper import generate_csv_string
@@ -90,7 +92,9 @@ def handle_export_request():
   except BadQueryException as exception:
     raise BadRequest(exception.message)
   except Unauthorized as ex:
-    raise Unauthorized("{} Try to reload /Export page".format(ex.message))
+    raise Unauthorized("{} Try to reload /export page".format(ex.message))
+  except HttpAccessTokenRefreshError:
+    handle_token_error('Try to reload /export page')
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.code == 401:

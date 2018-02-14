@@ -39,24 +39,46 @@ def get_http_auth():
         credentials.refresh(http_auth)
   except Exception:
     del flask.session['credentials']
-    raise Unauthorized('Unable to get valid credentials')
-
+    raise Unauthorized('Unable to get valid credentials.')
   flask.session['credentials'] = credentials.to_json()
   return http_auth
 
 
-def is_credential_valid():
-  try:
-    get_http_auth()
-  except Unauthorized:
-    return False
-  return True
+def handle_token_error(message=''):
+  """Helper method to clean credentials"""
+  del flask.session['credentials']
+  raise Unauthorized('Unable to get valid credentials. {}'.format(message))
+
+
+@app.route("/is_gdrive_authorized")
+def is_gdrive_authorized():
+  if 'credentials' in flask.session:
+    return 'OK'
+  else:
+    raise Unauthorized('')
+
+
+@app.route("/remove_token")
+def remove_token():
+  # TODO remove
+  del flask.session['credentials']
+  return 'removed'
+
+
+@app.route("/corrupt_token")
+def corrupt_token():
+  # TODO remove
+  credentials = client.OAuth2Credentials.from_json(
+    flask.session['credentials'])
+  credentials.access_token = '123'
+  flask.session['credentials'] = credentials.to_json()
+  return 'corrupted'
 
 
 @app.route("/authorize")
 def authorize_app():
   """Redirect to Google API auth page to authorize"""
-  if is_credential_valid():
+  if 'credentials' in flask.session:
     return render_template("gdrive/auth_gdrive.haml")
 
   flow = client.OAuth2WebServerFlow(

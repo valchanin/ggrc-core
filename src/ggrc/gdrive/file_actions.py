@@ -10,6 +10,7 @@ from apiclient import discovery
 from apiclient import http
 from apiclient.errors import HttpError
 from flask import json
+from oauth2client.client import HttpAccessTokenRefreshError
 
 from werkzeug.exceptions import (
     BadRequest, NotFound, InternalServerError, Unauthorized
@@ -17,6 +18,7 @@ from werkzeug.exceptions import (
 
 from ggrc.converters.import_helper import read_csv_file
 from ggrc.gdrive import get_http_auth
+from ggrc.gdrive import handle_token_error
 
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v3'
@@ -58,6 +60,8 @@ def get_gdrive_file(file_data):
     raise BadRequest("Wrong file format.")
   except Unauthorized as ex:
     raise Unauthorized("{} Try to reload /import page".format(ex.message))
+  except HttpAccessTokenRefreshError:
+    handle_token_error('Try to reload /import page')
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.status == 404:
@@ -107,6 +111,8 @@ def copy_file(folder_id, file_id, postfix):
   except Unauthorized as ex:
     raise Unauthorized("{} Please authorize at /authorize first"
                        .format(ex.message))
+  except HttpAccessTokenRefreshError:
+    handle_token_error()
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.status == 404:
