@@ -12,7 +12,7 @@ from integration.ggrc import generator
 from integration.ggrc.models import factories
 
 
-def dummy_gdrive_responce(x, y):
+def dummy_gdrive_responce(x, y, z):
   return {'webViewLink': 'http://mega.doc',
           'name': 'test_name'}
 
@@ -30,33 +30,20 @@ class TestDocument(TestCase):
   def test_get_documentable_obj_assessment_type(self):
     """Test documentable postfix for assessment with one control."""
 
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control = factories.ControlFactory()
-      snapshot = self._create_snapshots(audit, [control])[0]
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment, destination=snapshot)
-
+    control = factories.ControlFactory()
     document = factories.DocumentFactory(
       title='Simple title',
       document_type=all_models.Document.ATTACHMENT,
       documentable_obj={
-        'id': assessment.id,
-        'type': 'Assessment'
+        'id': control.id,
+        'type': 'Control'
       })
 
-    self.assertEqual(assessment, document._get_documentable_obj())
+    self.assertEqual(control, document._get_documentable_obj())
 
   @mock.patch('ggrc.models.document.Document.handle_before_flush', lambda x: '')
   def test_get_documentable_obj_validation_is_id_presents(self):
     """Test documentable _get_documentable_obj validation of id."""
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control = factories.ControlFactory()
-      snapshot = self._create_snapshots(audit, [control])[0]
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment, destination=snapshot)
-
     document = factories.DocumentFactory(
       title='Simple title',
       document_type=all_models.Document.ATTACHMENT,
@@ -70,18 +57,13 @@ class TestDocument(TestCase):
   @mock.patch('ggrc.models.document.Document.handle_before_flush', lambda x: '')
   def test_get_documentable_obj_validation_is_type_presents(self):
     """Test documentable _get_documentable_obj validation of type."""
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control = factories.ControlFactory()
-      snapshot = self._create_snapshots(audit, [control])[0]
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment, destination=snapshot)
+    control = factories.ControlFactory()
 
     document = factories.DocumentFactory(
       title='Simple title',
       document_type=all_models.Document.ATTACHMENT,
       documentable_obj={
-        'id': assessment.id
+        'id': control.id
       })
 
     with self.assertRaises(exceptions.ValidationError):
@@ -90,18 +72,13 @@ class TestDocument(TestCase):
   @mock.patch('ggrc.models.document.Document.handle_before_flush', lambda x: '')
   def test_get_documentable_obj_validation_wrong_type(self):
     """Test documentable _get_documentable_obj validation of type."""
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control = factories.ControlFactory()
-      snapshot = self._create_snapshots(audit, [control])[0]
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment, destination=snapshot)
+    control = factories.ControlFactory()
 
     document = factories.DocumentFactory(
       title='Simple title',
       document_type=all_models.Document.ATTACHMENT,
       documentable_obj={
-        'id': assessment.id,
+        'id': control.id,
         'type': 'Program'
       })
 
@@ -172,18 +149,15 @@ class TestDocument(TestCase):
       snapshot = self._create_snapshots(audit, [control])[0]
       factories.RelationshipFactory(source=assessment, destination=snapshot)
 
-    document = factories.DocumentFactory(
+    factories.DocumentFactory(
       title='Simple title',
       document_type=all_models.Document.ATTACHMENT,
       documentable_obj={
         'id': control.id,
         'type': 'Control'
       })
-
-    # response = self.api.put(document, {"title": update_title})
-    # self.assert200(response)
-    # self.assertEqual(all_models.Document.query.get(document.id).title,
-    #                  update_title)
+    self.assertEqual(len(control.documents), 1)
+    self.assertEqual(control.document_evidence[0].title, 'test_name')
 
   def test_update_title(self):
     """Test update document title."""
