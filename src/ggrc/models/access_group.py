@@ -19,6 +19,6 @@ class AccessGroup(Roleable, HasObjectState, PublicDocumentable, Commentable,
   __tablename__ = 'access_groups'
 
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }

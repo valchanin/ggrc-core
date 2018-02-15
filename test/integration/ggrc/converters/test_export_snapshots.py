@@ -117,9 +117,9 @@ class TestExportSnapshots(TestCase):
             "person": self._get_cav(control, "person"),
             # Special snapshot export fields
             "Audit": audit.slug,
-            "Evidence File": u"\n".join(c.slug for c in
-                                        control.document_evidence),
-            "Reference URL": u"\n".join(c.slug for c in control.reference_url),
+            "Document File": u"\n".join(c.slug for c in
+                                        control.documents_file),
+            "Reference URL": u"\n".join(c.slug for c in control.documents_reference_url),
             "Assertions": u"\n".join(c.name for c in control.assertions),
             "Categories": u"\n".join(c.name for c in control.categories),
             "Folder": u"",
@@ -152,6 +152,8 @@ class TestExportSnapshots(TestCase):
     parsed_data = self.export_parsed_csv(search_request)["Control Snapshot"]
     parsed_dict = {line["Code"]: line for line in parsed_data}
 
+
+    #TODO: FIX
     self.assertEqual(
         parsed_dict["*Control 1"],
         control_dicts["Control 1"],
@@ -245,7 +247,7 @@ class TestExportSnapshots(TestCase):
             # Fields that are not included in snapshots - Known bugs.
             "Assertions": u"",
             "Categories": u"",
-            "Evidence File": u"",
+            "Document File": u"",
             "Admin": u"",
             "Primary Contacts": u"",
             "Secondary Contacts": u"",
@@ -445,7 +447,7 @@ class TestExportSnapshots(TestCase):
           "Audit": audit.slug,
           "Assertions": u"",
           "Categories": u"",
-          "Evidence File": u"",
+          "Document File": u"",
           'Created Date': control.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
           'Last Updated Date':
               control.updated_at.strftime("%Y-%m-%dT%H:%M:%S"),

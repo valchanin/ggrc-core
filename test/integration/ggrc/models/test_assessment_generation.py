@@ -502,11 +502,11 @@ class TestAssessmentGeneration(TestAssessmentBase):
     for num, asmt in asmts.items():
       asmt = all_models.Assessment.query.get(asmt.id)
       if num == test_asmt_num:
-        self.assertFalse(asmt.document_url)
-        self.assertFalse(asmt.document_evidence)
+        self.assertFalse(asmt.evidences_url)
+        self.assertFalse(asmt.evidences_file)
       else:
-        self.assertEqual([url.link for url in asmt.document_url], urls)
-        self.assertEqual([ev.link for ev in asmt.document_evidence], evidences)
+        self.assertEqual([url.link for url in asmt.evidences_url], urls)
+        self.assertEqual([ev.link for ev in asmt.evidences_file], evidences)
 
   @ddt.data(
       (None, "Control", "Control"),

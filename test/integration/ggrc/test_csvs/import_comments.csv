@@ -1,5 +1,5 @@
 Object type,,,,,,,,,,,,,,
-Assessment,Code*,Audit*,Title*,Description,Notes,State*,Assignees*,Creators*,Recipients,Send by default,Reference URL,evidence file,comments,
+Assessment,Code*,Audit*,Title*,Description,Notes,State*,Assignees*,Creators*,Recipients,Send by default,Evidence URL,evidence file,comments,
 ,Assessment 1,Audit,Assessment title 1,,,Not Started,user@example.com,user@example.com,,,,,comment,
 ,Assessment 2,Audit,Assessment title 2,,,Not Started,user@example.com,user@example.com,,,,,some comment,
 ,Assessment 3,Audit,Assessment title 3,,,Not Started,user@example.com,user@example.com,,,,,"<a href=""goooge.com"">link</a>",

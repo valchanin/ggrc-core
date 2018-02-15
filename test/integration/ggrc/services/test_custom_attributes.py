@@ -80,7 +80,7 @@ class TestGlobalCustomAttributes(ProductTestCase):
                 "secondary_contact": None,
                 "notes": "",
                 "url": "",
-                "reference_url": "",
+                "documents_reference_url": "",
                 "slug": "",
                 "context": None
             }
@@ -124,7 +124,7 @@ class TestGlobalCustomAttributes(ProductTestCase):
                 "secondary_contact": None,
                 "notes": "",
                 "url": "",
-                "reference_url": "",
+                "documents_reference_url": "",
                 "slug": "",
                 "context": None
             }
@@ -209,7 +209,7 @@ class TestGlobalCustomAttributes(ProductTestCase):
                 "secondary_contact": None,
                 "notes": "",
                 "url": "",
-                "reference_url": "",
+                "documents_reference_url": "",
                 "slug": "",
                 "context": None
             }
@@ -310,7 +310,7 @@ class TestOldApiCompatibility(ProductTestCase):
                 "secondary_contact": None,
                 "notes": "",
                 "url": "",
-                "reference_url": "",
+                "documents_reference_url": "",
                 "slug": "",
                 "context": None
             }
@@ -366,7 +366,7 @@ class TestOldApiCompatibility(ProductTestCase):
                 "secondary_contact": None,
                 "notes": "",
                 "url": "",
-                "reference_url": "",
+                "documents_reference_url": "",
                 "slug": "",
                 "context": None
             }

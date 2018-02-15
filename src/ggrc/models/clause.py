@@ -30,8 +30,8 @@ class Clause(Roleable, HasObjectState, Hierarchical, CustomAttributable,
   _aliases = {
       "description": "Text of Clause",
       "directive": None,
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }
 
   # pylint: disable=invalid-name

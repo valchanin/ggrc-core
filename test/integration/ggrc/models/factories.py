@@ -299,16 +299,34 @@ class DocumentFactory(ModelFactory):
   link = "some link"
 
 
-class UrlTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.URL
+class EvidenceFactory(ModelFactory):
+
+  class Meta:
+    model = all_models.Evidence
+
+  link = "some link"
+  title = "some title"
 
 
-class EvidenceTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.ATTACHMENT
+class EvidenceUrlFactory(EvidenceFactory):
+  kind = all_models.Evidence.URL
 
 
-class ReferenceUrlTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.REFERENCE_URL
+class EvidenceFileFactory(EvidenceFactory):
+  kind = all_models.Evidence.FILE
+  source_gdrive_id = 'source_gdrive_id'
+
+
+class DocumentUrlFactory(DocumentFactory):
+  kind = all_models.Document.URL
+
+
+class DocumentFileFactory(DocumentFactory):
+  kind = all_models.Document.FILE
+
+
+class DocumentReferenceUrlFactory(DocumentFactory):
+  kind = all_models.Document.REFERENCE_URL
 
 
 class ObjectiveFactory(TitledFactory):

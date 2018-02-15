@@ -16,7 +16,7 @@ Contract,Code*,Title*,Description,Notes,,Admin*,Effective Date,State,Reference U
 user1@example.com",20/2/2020,Draft,http://url.example.zzz,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,
 Object type,,,,,,,,,,,,,,,,,,,,,,,,,,
-Control,Code*,Title*,Description,Notes,Assessment Procedure,Admin*,Effective Date,State,Reference URL,Assertions,Categories,Fraud Related,Significance,Kind/Nature,Type/Means,Frequency,Evidence File,,,Delete,CA date,CA dropdown,CA text,CA rich text,CA checkbox,CA person
+Control,Code*,Title*,Description,Notes,Assessment Procedure,Admin*,Effective Date,State,Reference URL,Assertions,Categories,Fraud Related,Significance,Kind/Nature,Type/Means,Frequency,Document File,,,Delete,CA date,CA dropdown,CA text,CA rich text,CA checkbox,CA person
 ,Control code,Control title,Control description,Control notes,Control test plan,"user@example.com
 user1@example.com",20/2/2020,Draft,http://url.example.zzz,"Privacy
 Integrity","Sites

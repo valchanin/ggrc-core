@@ -1237,7 +1237,7 @@ class TestAssignableNotificationUsingAPI(TestAssignableNotification):
 
     # add a URL, there should be no notifications because the Assessment
     # has not been started yet
-    url = factories.DocumentFactory(link="www.foo.com")
+    url = factories.EvidenceUrlFactory(link="www.foo.com")
     response, relationship = self.objgen.generate_relationship(url, asmt)
     self.assertEqual(response.status_code, 201)
 
@@ -1254,7 +1254,7 @@ class TestAssignableNotificationUsingAPI(TestAssignableNotification):
     asmt = Assessment.query.get(asmts["A 5"].id)
 
     # add another URL, change notification should be created
-    url2 = factories.DocumentFactory(link="www.bar.com")
+    url2 = factories.EvidenceUrlFactory(link="www.bar.com")
     response, _ = self.objgen.generate_relationship(url2, asmt)
     self.assertEqual(response.status_code, 201)
 
@@ -1279,7 +1279,7 @@ class TestAssignableNotificationUsingAPI(TestAssignableNotification):
     self.assertEqual(self._get_notifications().count(), 0)
     asmt = Assessment.query.get(asmts["A 5"].id)
 
-    url = factories.DocumentFactory(link="www.abc.com")
+    url = factories.EvidenceUrlFactory(link="www.abc.com")
     response, relationship = self.objgen.generate_relationship(url, asmt)
     self.assertEqual(response.status_code, 201)
 

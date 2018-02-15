@@ -47,8 +47,8 @@ class Risk(Roleable, HasObjectState, mixins.CustomAttributable, Relatable,
       "description": {
           "display_name": "Description",
           "mandatory": True},
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
       "status": {
           "display_name": "State",
           "mandatory": False,

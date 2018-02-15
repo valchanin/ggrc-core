@@ -44,26 +44,26 @@ class TestAuditActions(TestCase, WithQueryApi):
     data = {
         "link": "test_link",
     }
-    doc_type = all_models.Document.URL
-    data["document_type"] = doc_type
-    resp, doc = self.gen.generate_object(
-        all_models.Document,
+    evidence_kind = all_models.Evidence.URL
+    data["kind"] = evidence_kind
+    resp, evidence = self.gen.generate_object(
+        all_models.Evidence,
         data
     )
     self.assertEqual(resp.status_code, 201)
     self.assertTrue(
-        all_models.Document.query.filter(
-            all_models.Document.id == resp.json["document"]['id'],
-            all_models.Document.document_type == doc_type,
+        all_models.Evidence.query.filter(
+            all_models.Evidence.id == resp.json["evidence"]['id'],
+            all_models.Evidence.kind == evidence_kind,
         ).all()
     )
-    doc = all_models.Document.query.get(doc.id)
-    self.assertEqual(doc.link, "test_link")
+    evidence = all_models.Evidence.query.get(evidence.id)
+    self.assertEqual(evidence.link, "test_link")
 
     audit = Audit.query.filter(Audit.slug == "Aud-1").first()
     data = {
         "source": self.gen.create_stub(audit),
-        "destination": self.gen.create_stub(doc),
+        "destination": self.gen.create_stub(evidence),
         "context": self.gen.create_stub(audit.context)
     }
     resp, _ = self.gen.generate_object(
@@ -80,11 +80,11 @@ class TestAuditActions(TestCase, WithQueryApi):
   def test_evidence_create_an_map(self):
     """Test document is created and mapped to audit"""
     audit = factories.AuditFactory(slug="Audit")
-    evidence = factories.EvidenceTypeDocumentFactory(
+    evidence = factories.EvidenceFileFactory(
         title="evidence",
     )
     factories.RelationshipFactory(
         source=audit,
         destination=evidence,
     )
-    self.assertEqual(audit.document_evidence[0].title, "evidence")
+    self.assertEqual(audit.evidences_file[0].title, "evidence")

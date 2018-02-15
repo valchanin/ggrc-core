@@ -135,7 +135,7 @@ class TestColumnOrder(unittest.TestCase):
         "start_date",
         "status",
         "kind",
-        "reference_url",
+        "documents_reference_url",
         "name",
         "email",
         "is_enabled",

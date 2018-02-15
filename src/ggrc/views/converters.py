@@ -104,9 +104,9 @@ def handle_export_request():
     if e.resp.code == 401:
       raise Unauthorized("{} Try to reload /export page".format(message))
     raise InternalServerError(message)
-  except Exception as e:  # pylint: disable=broad-except
-    logger.exception("Export failed: %s", e.message)
-    raise InternalServerError("Export failed due to internal server error.")
+  # except Exception as e:  # pylint: disable=broad-except
+  #   logger.exception("Export failed: %s", e.message)
+  #   raise InternalServerError("Export failed due to internal server error.")
 
 
 def make_export(objects):

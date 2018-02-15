@@ -21,6 +21,6 @@ class Threat(Roleable, HasObjectState, CustomAttributable, Personable,
   __tablename__ = 'threats'
 
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }

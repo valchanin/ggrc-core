@@ -13,6 +13,7 @@ from ggrc.builder import simple_property
 from ggrc.login import get_current_user
 from ggrc.models.deferred import deferred
 from ggrc.models import mixins
+from ggrc.models.mixins.with_evidence import WithEvidence
 from ggrc.rbac import SystemWideRoles
 
 from ggrc.fulltext.mixin import Indexed
@@ -20,7 +21,6 @@ from ggrc.models import issuetracker_issue
 from ggrc.models import reflection
 from ggrc.models.context import HasOwnContext
 from ggrc.models.mixins import clonable
-from ggrc.models.object_document import PublicDocumentable
 from ggrc.models.mixins import WithLastDeprecatedDate
 from ggrc.models.object_person import Personable
 from ggrc.models.program import Program
@@ -31,7 +31,7 @@ from ggrc.models.snapshot import Snapshotable
 
 class Audit(Snapshotable,
             clonable.SingleClonable,
-            PublicDocumentable,
+            WithEvidence,
             mixins.CustomAttributable,
             Personable,
             HasOwnContext,
@@ -122,7 +122,7 @@ class Audit(Snapshotable,
       "report_start_date": "Planned Report Period from",
       "report_end_date": "Planned Report Period to",
       "notes": None,
-      "reference_url": None,
+      "documents_reference_url": None,
       "archived": {
           "display_name": "Archived",
           "mandatory": False
@@ -177,6 +177,8 @@ class Audit(Snapshotable,
       audit: Audit instance
     """
     for acl in audit.access_control_list:
+      if acl.parent_id:
+        continue
       data = {
           "person": acl.person,
           "ac_role": acl.ac_role,

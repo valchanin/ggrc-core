@@ -7,7 +7,7 @@ preventive
 detective
 administrative
 ",,
-control,code*,title*,description ,frequency,kind/nature,admin,evidence file
+control,code*,title*,description ,frequency,kind/nature,admin,document file
 ,control-2,control-2,desc 2,monthly,detective,user1@ggrc.com,
 ,control-3,control 3,desc 3,,,user1@ggrc.com,https://docs.google.com/drawings/d/1_J2anxP8_SLMFf1SXyVNriVh25MVgH_LfhFN1wdP1d8/edit Some title 3
 ,,,,,,,

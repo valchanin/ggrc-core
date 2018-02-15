@@ -135,14 +135,14 @@ class TestCheckPopulatedContent(unittest.TestCase):
       expected_updated_at = "2018-11-12T13:14:15"
 
     expected = [{'display_name': 'www.url-foo.com',
-                 'document_type': 'REFERENCE_URL',
+                 'kind': 'REFERENCE_URL',
                  'id': None,
                  'link': 'www.url-foo.com',
                  'title': 'www.url-foo.com',
                  'created_at': expected_created_at,
                  'updated_at': expected_updated_at, },
                 {'display_name': 'www.refurl-bar.com',
-                 'document_type': 'REFERENCE_URL',
+                 'kind': 'REFERENCE_URL',
                  'id': None,
                  'link': 'www.refurl-bar.com',
                  'title': 'www.refurl-bar.com',

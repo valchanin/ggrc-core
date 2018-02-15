@@ -52,7 +52,7 @@ class TestRelationship(TestCase):
     url_link = u"www.foo.com"
     with factories.single_commit():
       control = factories.ControlFactory()
-      url = factories.ReferenceUrlTypeDocumentFactory(link=url_link)
+      url = factories.DocumentReferenceUrlFactory(link=url_link)
 
     def get_revisions():
       return all_models.Revision.query.filter(
@@ -77,7 +77,7 @@ class TestRelationship(TestCase):
     # check if a revision was created and contains the attached url
     revisions = get_revisions()
     self.assertEqual(count + 1, len(revisions))
-    url_list = revisions[0].content.get("reference_url") or []
+    url_list = revisions[0].content.get("documents_reference_url") or []
     self.assertEqual(1, len(url_list))
     self.assertIn("link", url_list[0])
     self.assertEqual(url_link, url_list[0]["link"])
@@ -87,7 +87,7 @@ class TestRelationship(TestCase):
 
     revisions = get_revisions()
     self.assertEqual(count + 2, len(revisions))
-    url_list = revisions[0].content.get("reference_url") or []
+    url_list = revisions[0].content.get("documents_reference_url") or []
     self.assertEqual(url_list, [])
 
   def test_relationship_disallowed_type(self):
