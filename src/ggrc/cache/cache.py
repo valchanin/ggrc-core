@@ -37,6 +37,7 @@ def all_cache_entries():
       resource('regulations', 'Regulation'),
       resource('standards', 'Standard'),
       resource('documents', 'Document'),
+      resource('evidences', 'Evidence'),
       resource('events', 'Event'),
       resource('facilities', 'Facility'),
       resource('helps', 'Help'),

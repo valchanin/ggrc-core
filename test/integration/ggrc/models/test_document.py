@@ -23,7 +23,6 @@ def dummy_gdrive_response(*args, **kwargs):  # noqa
 
 class TestDocument(TestCase):
   """Document test cases"""
-
   # pylint: disable=invalid-name
 
   def setUp(self):

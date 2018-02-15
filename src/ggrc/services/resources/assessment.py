@@ -118,8 +118,8 @@ class AssessmentResource(common.ExtendedResource):
         })
     return data
 
-  def _get_document_data(self, relationships):
-    """Get assessment document data.
+  def _get_evidence_data(self, relationships):
+    """Get assessment evidence data.
 
     Args:
       relationships: list of all relationships for the current assessment.
@@ -127,19 +127,19 @@ class AssessmentResource(common.ExtendedResource):
     Returns:
       data for related urls, reference urls, and attachments.
     """
-    relationship_ids = self._filter_rels(relationships, "Document")
+    relationship_ids = self._filter_rels(relationships, "Evidence")
     if not relationship_ids:
       return [], [], []
     with benchmark("Get assessment snapshot relationships"):
-      documents = models.Document.eager_query().filter(
-          models.Document.id.in_(relationship_ids)
+      evidences = models.Evidence.eager_query().filter(
+          models.Evidence.id.in_(relationship_ids)
       ).all()
-    urls = [doc.log_json() for doc in documents
-            if doc.document_type == doc.URL]
-    ref_urls = [doc.log_json() for doc in documents
-                if doc.document_type == doc.REFERENCE_URL]
-    attachments = [doc.log_json() for doc in documents
-                   if doc.document_type == doc.ATTACHMENT]
+    urls = [evd.log_json() for evd in evidences
+            if evd.document_type == evd.URL]
+    ref_urls = [evd.log_json() for evd in evidences
+                if evd.document_type == evd.REFERENCE_URL]
+    attachments = [evd.log_json() for evd in evidences
+                   if evd.document_type == evd.ATTACHMENT]
     return urls, ref_urls, attachments
 
   def _get_issue_data(self, relationships):
@@ -174,10 +174,10 @@ class AssessmentResource(common.ExtendedResource):
     assessment.
     """
     relationships = self._get_relationships(assessment)
-    urls, ref_urls, attachments = self._get_document_data(relationships)
-    urls_key = "Document:{}".format(models.Document.URL)
-    attachments_key = "Document:{}".format(models.Document.ATTACHMENT)
-    ref_urls_key = "Document:{}".format(models.Document.REFERENCE_URL)
+    urls, ref_urls, attachments = self._get_evidence_data(relationships)
+    urls_key = "Evidence:{}".format(models.Evidence.URL)
+    attachments_key = "Evidence:{}".format(models.Evidence.FILE)
+    ref_urls_key = "Evidence:{}".format(models.Evidence.REFERENCE_URL)
     data = {
         "Audit": self._get_audit_data(assessment),
         "Snapshot": self._get_snapshot_data(assessment, relationships),

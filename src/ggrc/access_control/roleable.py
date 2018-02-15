@@ -119,7 +119,6 @@ class Roleable(object):
 
   @classmethod
   def indexed_query(cls):
-    """Query used by the indexer"""
     query = super(Roleable, cls).indexed_query()
     return query.options(
         orm.subqueryload(

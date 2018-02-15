@@ -121,6 +121,8 @@ class ObjectGenerator(Generator):
           "title": factories.random_str(),
       })
     obj_dict[obj_name].update(data)
+
+
     return self.generate(obj_class, obj_name, obj_dict)
 
   def generate_relationship(self, source, destination, context=None, **kwargs):

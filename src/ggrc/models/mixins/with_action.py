@@ -12,6 +12,7 @@ from ggrc import db
 from ggrc.login import get_current_user
 from ggrc.models.comment import Comment
 from ggrc.models.document import Document
+from ggrc.models.evidence import Evidence
 from ggrc.models.snapshot import Snapshot
 from ggrc.models.exceptions import ValidationError
 from ggrc.models.reflection import ApiAttributes
@@ -31,6 +32,7 @@ class WithAction(object):
   ]
   _object_map = {
       "Document": Document,
+      "Evidence": Evidence,
       "Comment": Comment,
       "Snapshot": Snapshot,
   }
@@ -195,6 +197,22 @@ class WithAction(object):
       obj = Document(link=action.link,
                      title=action.title,
                      document_type=action.document_type,
+                     context=parent.context)
+      return obj
+
+  class EvidenceAction(BaseAction):
+    """Document action"""
+
+    AddRelated = namedtuple("AddRelated", ["id",
+                                           "type",
+                                           "kind",
+                                           "link",
+                                           "title"])
+
+    def _create(self, parent, action):
+      obj = Evidence(link=action.link,
+                     title=action.title,
+                     kind=action.kind,
                      context=parent.context)
       return obj
 

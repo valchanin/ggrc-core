@@ -299,6 +299,14 @@ class DocumentFactory(ModelFactory):
   link = "some link"
 
 
+class EvidenceFactory(ModelFactory):
+
+  class Meta:
+    model = all_models.Evidence
+
+  title = "some title"
+
+
 class UrlTypeDocumentFactory(DocumentFactory):
   document_type = all_models.Document.URL
 
