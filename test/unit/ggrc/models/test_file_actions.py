@@ -15,12 +15,13 @@ class TestFileActions(unittest.TestCase):
   @mock.patch('ggrc.app.init_views')
   @ddt.data(
       # original_file_name, postfix, expected
-      ('orig_file_name', 'assessment-1', 'orig_file_name_assessment-1'),
-      ('orig_file_name', '', 'orig_file_name'),
-      ('orig_file_name.doc', 'assessment-1', 'orig_file_name_assessment-1.doc'),
-      ('orig_f_ggrc_name', 'assessment-1', 'orig_f_assessment-1'),
-      ('or*ig_fi/le_name', 'assessment-1', 'or-ig_fi-le_name_assessment-1'),
-      ("GGRC's (automation process)_ggrc", 'control-2',
+      ('orig_file_name', '_ggrc_assessment-1', 'orig_file_name_ggrc_assessment-1'),
+      ('orig_file_name', '_ggrc_', 'orig_file_name_ggrc'),
+      ('orig_file_name.doc', '_ggrc_assessment-1', 'orig_file_name_ggrc_assessment-1.doc'),
+      ('orig_f', '_ggrc_assessment-1', 'orig_f_ggrc_assessment-1'),
+      ('or*ig_fi/le_name', '_ggrc_assessment-1', 'or-ig_fi-le_name_ggrc_assessment-1'),
+      ('file_ggrc_control-1', '_ggrc_control-1', 'file_ggrc_control-1'),
+      ("GGRC's (automation process)_ggrc", '_ggrc_control-2',
                               "GGRC's (automation process)_ggrc_control-2"),
   )
   @ddt.unpack

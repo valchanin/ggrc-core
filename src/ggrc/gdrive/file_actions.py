@@ -81,8 +81,8 @@ def generate_file_name(original_name, postfix):
   """Helper for sanitize filename"""
   original_name, extension = path.splitext(original_name)
   # remove an old postfix
-  original_name = original_name.split('_ggrc_')[0]
-  new_name = '_'.join([original_name, postfix]).strip('_')
+  original_name = original_name.split('_ggrc')[0]
+  new_name = ''.join([original_name, postfix]).strip('_')
   # sanitaze file name
   new_name = ''.join([char if char.isalnum() or char in ALLOWED_FILENAME_CHARS
                       else '-' for char in new_name]
