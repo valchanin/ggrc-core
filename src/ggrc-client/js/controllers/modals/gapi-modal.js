@@ -25,15 +25,12 @@ export default ModalsController({
   },
   '{$content} a.btn[data-toggle=gapi]:not(.disabled) click': function (el) {
     el.addClass('disabled');
-    GGRC.Controllers.GAPI.doGAuth_step2(null, true);
-    GGRC.Controllers.GAPI.oauth_dfd.always(
-      $.proxy(this.element, 'modal_form', 'hide')
-    );
+    this.options.onAccept().always(()=> {
+      this.element.modal_form('hide');
+    });
   },
   ' hide': function () {
-    if (GGRC.Controllers.GAPI.oauth_dfd.state() === 'pending') {
-      GGRC.Controllers.GAPI.oauth_dfd.reject('User canceled operation');
-    }
+    this.options.onDecline();
     this.element && this.element.remove();
   },
 });

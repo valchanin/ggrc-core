@@ -61,7 +61,14 @@
                 .appendTo(document.body).ggrc_controllers_gapi_modal({
                 scopes: scopes,
                 modal_title: 'Please log in to Google API',
-                new_object_form: true
+                new_object_form: true,
+                onAccept: ()=> {
+                  that.doGAuth_step2(null, true);
+                  return that.oauth_dfd;
+                },
+                onDecline: ()=> {
+                  that.oauth_dfd.reject('User canceled operation');
+                },
               });
           });
         } else {

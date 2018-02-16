@@ -9,6 +9,7 @@ import exportPanelTemplate from './templates/export-panel.mustache';
 import exportGroupTemplate from './templates/export-group.mustache';
 import csvExportTemplate from './templates/csv-export.mustache';
 import {confirm} from '../../plugins/utils/modals';
+import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
 let url = can.route.deparam(window.location.search.substr(1));
 let filterModel = can.Map({
@@ -101,13 +102,14 @@ GGRC.Components('csvExport', {
     },
     '#export-csv-button click': function (el, ev) {
       this.viewModel.attr('export.loading', true);
+      let data = {
+        objects: this.getObjectsForExport(),
+        export_to: this.viewModel.attr('export.chosenFormat'),
+        current_time: GGRC.Utils.fileSafeCurrentDate(),
+      };
 
-      GGRC.Utils.export_request({
-        data: {
-          objects: this.getObjectsForExport(),
-          export_to: this.viewModel.attr('export.chosenFormat'),
-          current_time: GGRC.Utils.fileSafeCurrentDate(),
-        },
+      backendGdriveClient.withAuth(()=> {
+        return GGRC.Utils.export_request({data});
       }).then(function (data, status, jqXHR) {
         let link;
 
@@ -129,8 +131,7 @@ GGRC.Components('csvExport', {
 
           GGRC.Utils.download(filename, data);
         }
-      }.bind(this))
-      .always(function () {
+      }.bind(this)).always(function () {
         this.viewModel.attr('export.loading', false);
       }.bind(this));
     },
