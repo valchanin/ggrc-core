@@ -11,12 +11,10 @@ from logging import getLogger
 
 from apiclient.errors import HttpError
 
-import flask
 from flask import current_app
 from flask import request
 from flask import json
 from flask import render_template
-from oauth2client.client import HttpAccessTokenRefreshError
 from werkzeug.exceptions import (
     BadRequest, InternalServerError, Unauthorized
 )
@@ -93,10 +91,6 @@ def handle_export_request():
     raise BadRequest(exception.message)
   except Unauthorized as ex:
     raise Unauthorized("{} Try to reload /export page".format(ex.message))
-  except HttpAccessTokenRefreshError:
-    del flask.session['credentials']
-    raise Unauthorized('Unable to get valid credentials.'
-                       ' Try to reload /export page')
   except HttpError as e:
     message = json.loads(e.content).get("error").get("message")
     if e.resp.code == 401:

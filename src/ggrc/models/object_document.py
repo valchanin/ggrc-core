@@ -86,19 +86,22 @@ class Documentable(object):
     )
 
   @property
-  def document_url(self):  # pylint: disable=no-self-argument
+  def document_url(self):
+    """List of documents URL type"""
     # pylint: disable=not-an-iterable
     return [d for d in self.documents
             if Document.URL == d.document_type]
 
   @property
-  def document_evidence(self):  # pylint: disable=no-self-argument
+  def document_evidence(self):
+    """List of documents EVIDENCE type"""
     # pylint: disable=not-an-iterable
     return [d for d in self.documents
             if Document.ATTACHMENT == d.document_type]
 
   @property
-  def reference_url(self):  # pylint: disable=no-self-argument
+  def reference_url(self):
+    """List of documents REFERENCE_URL type"""
     # pylint: disable=not-an-iterable
     return [d for d in self.documents
             if Document.REFERENCE_URL == d.document_type]
@@ -113,7 +116,7 @@ class Documentable(object):
         orm.subqueryload(
             'documents',
         ).undefer_group(
-            "Document_complete",
+            'Document_complete',
         ),
     )
 
@@ -140,29 +143,26 @@ class Documentable(object):
     )
 
 
-PublicDocumentable = type(
-    "PublicDocumentable",
-    (Documentable, ),
-    {
-        "_aliases": {
-            "document_url": {
-                "display_name": "Evidence URL",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": "New line separated list of URLs.",
-            },
-            "document_evidence": {
-                "display_name": "Evidence File",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": (
-                    "New line separated list of evidence links and "
-                    "titles.\nExample:\n\nhttp://my.gdrive.link/file "
-                    "Title of the evidence link"
-                ),
-            },
-            "reference_url": {
-                "display_name": "Reference URL",
-                "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
-                "description": "New line separated list of Reference URLs.",
-            },
-        }
-    })
+class PublicDocumentable(Documentable):
+  _aliases = {
+      "document_url": {
+          "display_name": "Evidence URL",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": "New line separated list of URLs.",
+      },
+
+      "document_evidence": {
+          "display_name": "Evidence File",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": (
+              "New line separated list of evidence links and "
+              "titles.\nExample:\n\nhttp://my.gdrive.link/file "
+              "Title of the evidence link"
+          ),
+      },
+      "reference_url": {
+          "display_name": "Reference URL",
+          "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
+          "description": "New line separated list of Reference URLs.",
+      },
+  }
