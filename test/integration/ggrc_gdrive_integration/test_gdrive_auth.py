@@ -19,7 +19,7 @@ class TestAuthorizationFlow(TestCase):
   @mock.patch('uuid.uuid4', lambda: TestAuthorizationFlow.DUMMY_STATE)
   def test_gdrive_authorization(self):
     """Test authorization routines work correctly"""
-    gi.authorize_app()
+    gi.auth_gdrive()
     with mock.patch("ggrc.gdrive.client.OAuth2WebServerFlow") as mocked_flow:
       # after the first step:
       code = "1234567890"
@@ -32,7 +32,7 @@ class TestAuthorizationFlow(TestCase):
 
   def test_gdrive_authorization_fail(self):
     """Test authorization cross site guard"""
-    gi.authorize_app()
+    gi.auth_gdrive()
     with mock.patch("ggrc.gdrive.client.OAuth2WebServerFlow"):
       code = "1234567890"
       flask.request.args = {"code": code}
