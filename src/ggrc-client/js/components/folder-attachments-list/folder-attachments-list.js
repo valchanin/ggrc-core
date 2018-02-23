@@ -46,6 +46,8 @@ import template from './folder-attachments-list.mustache';
           },
         },
       },
+      modelType: 'Document',
+      kind: 'EVIDENCE',
       title: null,
       subLabel: '@',
       tooltip: null,

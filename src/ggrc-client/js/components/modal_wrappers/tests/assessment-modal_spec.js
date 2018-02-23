@@ -28,7 +28,7 @@ describe('<assessment-modal/> component', () => {
       spyOn(model, 'getRelatedObjects').and
         .returnValue(can.Deferred().resolve({
           Audit: {},
-          'Document:REFERENCE_URL': [{}],
+          'Evidence:REFERENCE_URL': [{}],
           Issue: [{}, {}],
           Snapshot: [{}, {}, {}],
         }));

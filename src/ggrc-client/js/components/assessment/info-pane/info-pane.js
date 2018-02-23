@@ -65,10 +65,10 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
     tag: 'assessment-info-pane',
     template: template,
     viewModel: {
-      documentKinds: {
-        evidences: CMS.Models.Document.EVIDENCE,
-        urls: CMS.Models.Document.URL,
-        referenceUrls: CMS.Models.Document.REFERENCE_URL,
+      evidenceKinds: {
+        files: 'FILE',
+        urls: 'URL',
+        referenceUrls: 'REFERENCE_URL',
       },
       define: {
         verifiers: {
@@ -146,7 +146,7 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
         referenceUrls: {
           Value: can.List,
         },
-        evidences: {
+        files: {
           Value: can.List,
         },
         editMode: {
@@ -175,7 +175,7 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
               return false;
             }
 
-            return this.attr('isUpdatingEvidences') ||
+            return this.attr('isUpdatingFiles') ||
               this.attr('isUpdatingUrls') ||
               this.attr('isUpdatingComments') ||
               this.attr('isUpdatingReferenceUrls') ||
@@ -219,11 +219,11 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
       getSnapshotQuery: function () {
         return this.getQuery('Snapshot');
       },
-      getDocumentQuery: function (kind) {
+      getEvidenceQuery: function (kind) {
         let query = this.getQuery(
-          'Document',
+          'Evidence',
           {sortBy: 'created_at', sortDirection: 'desc'},
-          this.getDocumentAdditionFilter(kind));
+          this.getEvidenceAdditionFilter(kind));
         return query;
       },
       requestQuery: function (query, type) {
@@ -257,19 +257,19 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
         let query = this.getCommentQuery();
         return this.requestQuery(query, 'comments');
       },
-      loadEvidences: function () {
-        let query = this.getDocumentQuery(
-          this.attr('documentKinds.evidences'));
-        return this.requestQuery(query, 'evidences');
+      loadFiles: function () {
+        let query = this.getEvidenceQuery(
+          this.attr('evidenceKinds.files'));
+        return this.requestQuery(query, 'files');
       },
       loadUrls: function () {
-        let query = this.getDocumentQuery(
-          this.attr('documentKinds.urls'));
+        let query = this.getEvidenceQuery(
+          this.attr('evidenceKinds.urls'));
         return this.requestQuery(query, 'urls');
       },
       loadReferenceUrls: function () {
-        let query = this.getDocumentQuery(
-          this.attr('documentKinds.referenceUrls'));
+        let query = this.getEvidenceQuery(
+          this.attr('evidenceKinds.referenceUrls'));
         return this.requestQuery(query, 'referenceUrls');
       },
       updateItems: function () {
@@ -308,7 +308,7 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
         return this.attr(type).unshift.apply(this.attr(type),
           can.makeArray(items));
       },
-      getDocumentAdditionFilter: function (kind) {
+      getEvidenceAdditionFilter: function (kind) {
         return kind ?
           {
             expression: {
@@ -390,9 +390,9 @@ import {CUSTOM_ATTRIBUTE_TYPE} from '../../../plugins/utils/custom-attribute/cus
           .then((data) => {
             this.attr('mappedSnapshots').replace(data.Snapshot);
             this.attr('comments').replace(data.Comment);
-            this.attr('evidences').replace(data['Document:EVIDENCE']);
-            this.attr('urls').replace(data['Document:URL']);
-            this.attr('referenceUrls').replace(data['Document:REFERENCE_URL']);
+            this.attr('files').replace(data['Evidence:FILE']);
+            this.attr('urls').replace(data['Evidence:URL']);
+            this.attr('referenceUrls').replace(data['Evidence:REFERENCE_URL']);
 
             this.attr('isUpdatingRelatedItems', false);
             this.attr('instance').dispatch(RELATED_ITEMS_LOADED);

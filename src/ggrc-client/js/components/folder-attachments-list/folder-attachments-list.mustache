@@ -3,7 +3,11 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 <div class="folder-attachments-list">
-    <related-documents {instance}="instance" kind="EVIDENCE" {^is-loading}="isListLoading">
+    <related-documents
+        {instance}="instance"
+        {kind}="kind"
+        {^is-loading}="isListLoading"
+        {model-type}="modelType">
         <div class="folder-attachments-list__heading">
             <spinner class="folder-attachments-list__spinner" {toggle}="showSpinner"></spinner>
             <h6>{{title}}</h6>
@@ -50,6 +54,7 @@
                 {{#if currentFolder}}
                     <ggrc-gdrive-picker-launcher
                             instance="instance"
+                            {model-type}="modelType"
                             (finish)="loadDocuments"
                             click_event="trigger_upload_parent"
                             {tooltip}="tooltip"
@@ -60,6 +65,7 @@
                     {{#if isNoFolderUploadingAllowed}}
                         <ggrc-gdrive-picker-launcher
                                 instance="instance"
+                                {model-type}="modelType"
                                 (finish)="loadDocuments"
                                 click_event="trigger_upload"
                                 {tooltip}="tooltip"

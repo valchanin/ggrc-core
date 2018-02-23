@@ -29,7 +29,7 @@ export default can.Component.extend({
             return snapshot;
           });
 
-          this.attr('referenceUrls', data['Document:REFERENCE_URL']);
+          this.attr('referenceUrls', data['Evidence:REFERENCE_URL']);
           this.attr('mappedObjects', [data.Audit, ...data.Issue, ...snapshots]);
         });
     },
