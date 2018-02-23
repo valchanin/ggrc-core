@@ -52,7 +52,10 @@
           </div>
 
           <div class="row-fluid wrap-row">
-              <related-documents instance={instance} kind="URL">
+              <related-documents
+                {instance}="instance"
+                {model-type}="'Evidence'"
+                {kind}="'URL'">
                 <related-urls
                   {instance}="instance"
                   {(urls)}="documents"
