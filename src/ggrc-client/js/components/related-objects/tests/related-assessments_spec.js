@@ -175,7 +175,7 @@ describe('GGRC.Components.relatedAssessments', () => {
 
       it('builds EVIDENCE model correctly', ()=> {
         let evidence = new can.Map({
-          document_type: 'EVIDENCE',
+          kind: 'EVIDENCE',
           title: 'title',
           source_gdrive_id: 'source_gdrive_id',
         });
@@ -191,7 +191,7 @@ describe('GGRC.Components.relatedAssessments', () => {
             id: 'instanceId',
             type: 'instanceType',
           },
-          document_type: 'EVIDENCE',
+          kind: 'EVIDENCE',
           title: 'title',
           source_gdrive_id: 'source_gdrive_id',
         });
@@ -199,7 +199,7 @@ describe('GGRC.Components.relatedAssessments', () => {
 
       it('builds URL model correctly', ()=> {
         let evidence = new can.Map({
-          document_type: 'URL',
+          kind: 'URL',
           title: 'title',
           link: 'link',
         });
@@ -215,7 +215,7 @@ describe('GGRC.Components.relatedAssessments', () => {
             id: 'instanceId',
             type: 'instanceType',
           },
-          document_type: 'URL',
+          kind: 'URL',
           title: 'title',
           link: 'link',
         });

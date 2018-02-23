@@ -74,10 +74,10 @@ export default can.Component.extend({
           id: this.attr('instance.id'),
           type: this.attr('instance.type'),
         },
-        document_type: evidence.attr('document_type'),
+        kind: evidence.attr('kind'),
         title: evidence.attr('title'),
       };
-      const specificData = evidence.attr('document_type') === 'EVIDENCE' ?
+      const specificData = evidence.attr('kind') === 'EVIDENCE' ?
         {source_gdrive_id: evidence.attr('source_gdrive_id')} :
         {link: evidence.attr('link')};
 
