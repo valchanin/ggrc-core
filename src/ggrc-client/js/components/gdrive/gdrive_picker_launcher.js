@@ -163,7 +163,7 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
           let model = new CMS.Models.Document({
             context: {id: contextId},
             title: file.title,
-            link: file.id,
+            source_gdrive_id: file.id,
             is_uploaded: file.newUpload,
             documentable_obj: {
               id: instanceId,
