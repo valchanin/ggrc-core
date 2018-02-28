@@ -53,7 +53,9 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
       'link',
       'description',
       'document_type',
-      reflection.Attribute('documentable_obj', read=False, update=False)
+      reflection.Attribute('documentable_obj', read=False, update=False),
+      reflection.Attribute('is_uploaded', read=False, update=False),
+
   )
 
   _sanitize_html = [
@@ -67,7 +69,8 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
       'description': 'description',
   }
 
-  _allowed_documentables = {'Assessment', 'Control', 'Audit', 'Issue'}
+  _allowed_documentables = {'Assessment', 'Control', 'Audit',
+                            'Issue', 'RiskAssessment'}
 
   @orm.validates('document_type')
   def validate_document_type(self, key, document_type):
@@ -113,6 +116,18 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
     tmp = super(Document, self).log_json()
     tmp['type'] = "Document"
     return tmp
+
+  @simple_property
+  def is_uploaded(self):
+    """This flag is used to know if file uploaded from a local user folder.
+
+    In that case we need just rename file, not copy.
+    """
+    return self._is_uploaded if hasattr(self, '_is_uploaded') else False
+
+  @is_uploaded.setter
+  def is_uploaded(self, value):
+    self._is_uploaded = value
 
   @simple_property
   def documentable_obj(self):
@@ -175,16 +190,20 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
     self.title = response['name']
     self.document_type = Document.ATTACHMENT
 
+  @staticmethod
+  def _get_folder(parent_obj):
+    return parent_obj.folder if hasattr(parent_obj, 'folder') else ''
+
   def _execute_file_copy_flow(self):
     """Execute file copy flow if needed"""
     if hasattr(self, '_documentable_obj') and self._documentable_obj:
-
       documentable_obj = self._get_documentable_obj()
       postfix = self._build_file_name_postfix(documentable_obj)
-      folder_id = documentable_obj.folder
+      folder_id = self._get_folder(documentable_obj)
       file_id = self.link
-      from ggrc.gdrive.file_actions import copy_file
-      response = copy_file(folder_id, file_id, postfix)
+      from ggrc.gdrive.file_actions import process_gdrive_file
+      response = process_gdrive_file(folder_id, file_id, postfix,
+                                     is_uploaded=self.is_uploaded)
       self._update_fields(response)
       self._build_relationship(documentable_obj)
       self._documentable_obj = None

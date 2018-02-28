@@ -3,13 +3,14 @@
 
 """GDrive module"""
 
+from logging import getLogger
 import uuid
 import httplib2
 
 import flask
 from flask import render_template
-from logging import getLogger
 
+from oauth2client import client
 from oauth2client.client import FlowExchangeError
 from werkzeug.exceptions import Unauthorized
 
@@ -17,7 +18,6 @@ from ggrc import settings
 from ggrc.app import app
 from ggrc.login import login_required
 
-from oauth2client import client
 
 _GOOGLE_AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 _GOOGLE_TOKEN_URI = "https://accounts.google.com/o/oauth2/token"

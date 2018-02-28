@@ -4,6 +4,7 @@
 """File action utitlities for GDrive module"""
 
 from StringIO import StringIO
+from logging import getLogger
 from os import path
 
 from apiclient import discovery
@@ -24,6 +25,9 @@ API_SERVICE_NAME = 'drive'
 API_VERSION = 'v3'
 
 ALLOWED_FILENAME_CHARS = "_ ()-'"
+
+# pylint: disable=invalid-name
+logger = getLogger(__name__)
 
 
 def hande_http_error(ex):
@@ -70,7 +74,7 @@ def get_gdrive_file(file_data):
                                     http=http_auth)
     # check file type
     file_meta = drive_service.files().get(fileId=file_data['id']).execute()
-    if file_meta.get("mimeType") == "text/csv":
+    if file_meta.get('mimeType') == 'text/csv':
       file_data = drive_service.files().get_media(
           fileId=file_data['id']).execute()
     else:
@@ -80,37 +84,60 @@ def get_gdrive_file(file_data):
     return csv_data
   except AttributeError:
     # when file_data has no splitlines() method
-    raise BadRequest("Wrong file format.")
+    raise BadRequest('Wrong file format.')
   except HttpAccessTokenRefreshError:
     handle_token_error('Try to reload /import page')
   except HttpError as ex:
     hande_http_error(ex)
-  except Exception:
-    raise InternalServerError("Import failed due to internal server error.")
+  except Exception as ex:
+    logger.error(ex.message)
+    raise InternalServerError('Import failed due to internal server error.')
 
 
-def copy_file(folder_id, file_id, postfix):
-  """Copy gdrive file to new folder with renaming"""
+def copy_file_request(drive_service, file_id, body):
+  """Send copy request to gdrive"""
+  response = drive_service.files().copy(
+      fileId=file_id,
+      body=body,
+      fields='webViewLink,name'
+  ).execute()
+  return response
+
+
+def rename_file_request(drive_service, file_id, body):
+  """Send rename request to gdrive"""
+  return drive_service.files().update(
+      fileId=file_id,
+      body=body,
+      fields='webViewLink,name'
+  ).execute()
+
+
+def process_gdrive_file(folder_id, file_id, postfix, is_uploaded=False):
+  """Process gdrive file to new folder with renaming"""
   http_auth = get_http_auth()
   try:
     drive_service = discovery.build(
         API_SERVICE_NAME, API_VERSION, http=http_auth)
     file_meta = drive_service.files().get(fileId=file_id).execute()
     new_file_name = generate_file_name(file_meta['name'], postfix)
-    body = _build_request_body(folder_id, new_file_name)
-    response = drive_service.files().copy(
-        fileId=file_id,
-        body=body,
-        fields='webViewLink,name'
-    ).execute()
+    if is_uploaded:
+      #  if file was uploaded from a local folder, FE put it into
+      #  a gdrive folder, we just need to rename file.
+      response = rename_file_request(drive_service, file_id,
+                                     body={'name': new_file_name})
+    else:
+      body = _build_request_body(folder_id, new_file_name)
+      response = copy_file_request(drive_service, file_id, body)
     return response
   except HttpAccessTokenRefreshError:
     handle_token_error()
   except HttpError as ex:
     hande_http_error(ex)
-  except Exception:
-    raise InternalServerError("Copying of the file failed due to"
-                              " internal server error.")
+  except Exception as ex:
+    logger.error(ex.message)
+    raise InternalServerError('Processing of the file failed due to'
+                              ' internal server error.')
 
 
 def _build_request_body(folder_id, new_file_name):
