@@ -12,7 +12,7 @@ from integration.ggrc import generator
 from integration.ggrc.models import factories
 
 
-def dummy_gdrive_response(*args):  # noqa
+def dummy_gdrive_response(*args, **kwargs):  # noqa
   return {'webViewLink': 'http://mega.doc',
           'name': 'test_name'}
 
@@ -147,7 +147,8 @@ class TestDocument(TestCase):
     result = document._build_file_name_postfix(assessment)
     self.assertEqual(expec, result)
 
-  @mock.patch('ggrc.gdrive.file_actions.copy_file', dummy_gdrive_response)
+  @mock.patch('ggrc.gdrive.file_actions.process_gdrive_file',
+              dummy_gdrive_response)
   def test_copy_document(self):
     """Test copy document."""
     control = factories.ControlFactory()
@@ -160,6 +161,29 @@ class TestDocument(TestCase):
         })
     self.assertEqual(len(control.documents), 1)
     self.assertEqual(control.document_evidence[0].title, 'test_name')
+
+  def test_rename_document(self):
+    """Test rename document."""
+    with mock.patch('ggrc.gdrive.file_actions.process_gdrive_file') as mocked:
+      mocked.return_value = {
+          'webViewLink': 'http://mega.doc',
+          'name': 'new_name'
+      }
+      control = factories.ControlFactory()
+      factories.DocumentFactory(
+          title='Simple title',
+          document_type=all_models.Document.ATTACHMENT,
+          is_uploaded=True,
+          documentable_obj={
+              'id': control.id,
+              'type': 'Control'
+          })
+      folder_id = ''
+      mocked.assert_called_with(folder_id, 'some link',
+                                '_ggrc_control-{}'.format(control.id),
+                                is_uploaded=True)
+      self.assertEqual(len(control.documents), 1)
+      self.assertEqual(control.document_evidence[0].title, 'new_name')
 
   def test_update_title(self):
     """Test update document title."""
@@ -178,7 +202,7 @@ class TestDocument(TestCase):
         "link": "test_link",
     }
     if doc_type is not None:
-        data["document_type"] = doc_type
+      data["document_type"] = doc_type
     doc_type = doc_type or all_models.Document.URL
     resp, doc = self.gen.generate_object(
         all_models.Document,
@@ -186,7 +210,7 @@ class TestDocument(TestCase):
     )
     self.assertTrue(
         all_models.Document.query.filter(
-            all_models.Document.id == resp.json["document"]['id'],
+            all_models.Document.id == resp.json["document"]["id"],
             all_models.Document.document_type == doc_type,
         ).all()
     )
