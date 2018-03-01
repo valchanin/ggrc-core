@@ -12,7 +12,7 @@ from ggrc.access_control.roleable import Roleable
 from ggrc.builder import simple_property
 from ggrc.fulltext import mixin
 from ggrc.models.deferred import deferred
-from ggrc.models.mixins import Base
+from ggrc.models.mixins import Base, Slugged
 from ggrc.models.mixins import WithLastDeprecatedDate
 from ggrc.models.mixins.statusable import Statusable
 from ggrc.models.relationship import Relatable
@@ -24,7 +24,7 @@ from ggrc.models.mixins import before_flush_handleable as bfh
 
 
 class Evidence(Roleable, Relatable, mixins.Titled,
-               bfh.BeforeFlushHandleable, Base, mixin.Indexed, Statusable,
+               bfh.BeforeFlushHandleable, Slugged, mixin.Indexed, Statusable,
                WithLastDeprecatedDate, db.Model):
   """Evidence (Audit-scope URLs, FILE's) model."""
   __tablename__ = "evidences"
@@ -57,6 +57,7 @@ class Evidence(Roleable, Relatable, mixins.Titled,
       reflection.Attribute("link", update=False),
       reflection.Attribute("source_gdrive_id", update=False),
       "description",
+      "status",
       reflection.Attribute("kind", update=False),
       reflection.Attribute("parent_obj", read=False, update=False),
       reflection.Attribute('archived', create=False, update=False)
@@ -130,20 +131,6 @@ class Evidence(Roleable, Relatable, mixins.Titled,
   def archived(self):
     """Returns a boolean whether parent is archived or not."""
     return self.parent.archived if self.parent else False
-
-  @hybrid_property
-  def slug(self):
-    """Emulate slug to use it in import/export."""
-    if self.kind in (self.URL, self.REFERENCE_URL):
-      return self.link
-    return u"{} {}".format(self.link, self.title)
-
-  # pylint: disable=no-self-argument
-  @slug.expression
-  def slug(cls):
-    return case([(cls.kind == cls.FILE,
-                  func.concat(cls.link, ' ', cls.title))],
-                else_=cls.link)
 
   def log_json(self):
     tmp = super(Evidence, self).log_json()

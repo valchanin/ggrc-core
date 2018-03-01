@@ -125,7 +125,7 @@ class AssessmentResource(common.ExtendedResource):
       relationships: list of all relationships for the current assessment.
 
     Returns:
-      data for related urls, reference urls, and attachments.
+      data for related urls, reference urls, and files.
     """
     relationship_ids = self._filter_rels(relationships, "Evidence")
     if not relationship_ids:
@@ -135,12 +135,12 @@ class AssessmentResource(common.ExtendedResource):
           models.Evidence.id.in_(relationship_ids)
       ).all()
     urls = [evd.log_json() for evd in evidences
-            if evd.document_type == evd.URL]
+            if evd.kind == evd.URL]
     ref_urls = [evd.log_json() for evd in evidences
-                if evd.document_type == evd.REFERENCE_URL]
-    attachments = [evd.log_json() for evd in evidences
-                   if evd.document_type == evd.ATTACHMENT]
-    return urls, ref_urls, attachments
+                if evd.kind == evd.REFERENCE_URL]
+    files = [evd.log_json() for evd in evidences
+                   if evd.kind == evd.FILE]
+    return urls, ref_urls, files
 
   def _get_issue_data(self, relationships):
     """Get related issue data."""

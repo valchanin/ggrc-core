@@ -29,6 +29,7 @@ def upgrade():
       sa.Column('kind', sa.Enum('URL', 'FILE', 'REFERENCE_URL'),
                 nullable=False),
       sa.Column('title', sa.String(length=250), nullable=False),
+      sa.Column('slug', sa.String(length=250), nullable=False),
       sa.Column('updated_at', sa.DateTime(), nullable=False),
       sa.Column('modified_by_id', sa.Integer(), nullable=True),
       sa.Column('created_at', sa.DateTime(), nullable=False),
