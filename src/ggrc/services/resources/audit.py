@@ -46,61 +46,69 @@ class AuditResource(common.ExtendedResource):
       if not permissions.is_allowed_read_for(audit):
         raise Forbidden()
     with benchmark("Get audit summary data"):
-      assessment_docs = db.session.query(
+      assessment_evidences = db.session.query(
           models.Assessment.id.label("id"),
           models.Assessment.status.label("status"),
           models.Assessment.verified.label("verified"),
-          models.Relationship.destination_id.label("doc_id"),
+          models.Relationship.destination_id.label("evidence_id"),
       ).outerjoin(
           models.Relationship,
           sa.and_(
               models.Relationship.source_id == models.Assessment.id,
               models.Relationship.source_type == "Assessment",
-              models.Relationship.destination_type == "Document",
+              models.Relationship.destination_type == "Evidence",
           )
+      ).outerjoin(
+        models.Evidence,
+        models.Evidence.id == models.Relationship.destination_id
       ).filter(
-          models.Assessment.audit_id == id
+          models.Assessment.audit_id == id,
+          models.Evidence.kind != models.Evidence.REFERENCE_URL
       ).union_all(
           db.session.query(
               models.Assessment.id.label("id"),
               models.Assessment.status.label("status"),
               models.Assessment.verified.label("verified"),
-              models.Relationship.source_id.label("doc_id"),
+              models.Relationship.source_id.label("evidence_id")
           ).outerjoin(
               models.Relationship,
               sa.and_(
-                  models.Relationship.source_type == "Document",
+                  models.Relationship.source_type == "Evidence",
                   models.Relationship.destination_id == models.Assessment.id,
                   models.Relationship.destination_type == "Assessment",
               )
+          ).outerjoin(
+            models.Evidence,
+            models.Evidence.id == models.Relationship.source_id
           ).filter(
-              models.Assessment.audit_id == id
+              models.Assessment.audit_id == id,
+              models.Evidence.kind != models.Evidence.REFERENCE_URL
           )
       )
 
       statuses_data = defaultdict(lambda: defaultdict(set))
       all_assessment_ids = set()
-      all_document_ids = set()
-      for id_, status, verified, doc_id in assessment_docs:
+      all_evidence_ids = set()
+      for id_, status, verified, evidence_id in assessment_evidences:
         if id_:
           statuses_data[(status, verified)]["assessments"].add(id_)
           all_assessment_ids.add(id_)
-        if doc_id:
-          statuses_data[(status, verified)]["documents"].add(doc_id)
-          all_document_ids.add(doc_id)
+        if evidence_id:
+          statuses_data[(status, verified)]["evidences"].add(evidence_id)
+          all_evidence_ids.add(evidence_id)
 
     with benchmark("Make response"):
       statuses_json = []
-      total = {"assessments": 0, "documents": 0}
+      total = {"assessments": 0, "evidences": 0}
       for (status, verified), data in statuses_data.items():
         statuses_json.append({
             "name": status,
             "verified": verified,
             "assessments": len(data["assessments"]),
-            "documents": len(data["documents"]),
+            "evidences": len(data["evidences"]),
         })
       total["assessments"] = len(all_assessment_ids)
-      total["documents"] = len(all_document_ids)
+      total["evidences"] = len(all_evidence_ids)
 
       statuses_json.sort(key=lambda k: (k["name"], k["verified"]))
       response_object = {"statuses": statuses_json, "total": total}

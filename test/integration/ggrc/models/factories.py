@@ -304,6 +304,7 @@ class EvidenceFactory(ModelFactory):
   class Meta:
     model = all_models.Evidence
 
+  link = "some link"
   title = "some title"
 
 
