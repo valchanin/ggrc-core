@@ -1,3 +1,4 @@
+# coding=utf-8
 # Copyright (C) 2018 Google Inc.
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
@@ -17,7 +18,6 @@ class TestFileActions(unittest.TestCase):
       # original_file_name, postfix, expected
       ('orig_file_name', '_ggrc_assessment-1',
        'orig_file_name_ggrc_assessment-1'),
-      ('orig_file_name', '_ggrc_', 'orig_file_name_ggrc'),
       ('orig_file_name.doc', '_ggrc_assessment-1',
        'orig_file_name_ggrc_assessment-1.doc'),
       ('orig_f', '_ggrc_assessment-1', 'orig_f_ggrc_assessment-1'),
@@ -26,6 +26,15 @@ class TestFileActions(unittest.TestCase):
       ('file_ggrc_control-1', '_ggrc_control-1', 'file_ggrc_control-1'),
       ("GGRC's (automation process)_ggrc", '_ggrc_control-2',
        "GGRC's (automation process)_ggrc_control-2"),
+      (u'嘗試使用這個名字', '_ggrc_control-1',
+       u'嘗試使用這個名字_ggrc_control-1'),
+      (u'försök använda det här namnet', '_ggrc_control-1',
+       u'försök använda det här namnet_ggrc_control-1'),
+      (u'zkuste použít toto jméno', '_ggrc_control-1',
+       u'zkuste použít toto jméno_ggrc_control-1'),
+      (u'попробуйте использовать это имя', '_ggrc_control-1',
+       u'попробуйте использовать это имя_ggrc_control-1'),
+
   )
   @ddt.unpack
   def test_generate_file_name(self, original_file_name, postfix, expected, _):
@@ -37,7 +46,7 @@ class TestFileActions(unittest.TestCase):
     Copied file name should't have 'old' postfix e.g (assessment-1)
     """
     from ggrc.gdrive.file_actions import generate_file_name
-    result = generate_file_name(original_file_name, postfix)
+    result = generate_file_name(original_file_name, postfix, separator='_ggrc')
     self.assertEquals(expected, result)
 
   @mock.patch('ggrc.app.init_views')

@@ -81,7 +81,6 @@ def get_gdrive_file(file_data):
       file_data = drive_service.files().export_media(
           fileId=file_data['id'], mimeType='text/csv').execute()
     csv_data = read_csv_file(StringIO(file_data))
-    return csv_data
   except AttributeError:
     # when file_data has no splitlines() method
     raise BadRequest('Wrong file format.')
@@ -92,6 +91,7 @@ def get_gdrive_file(file_data):
   except Exception as ex:
     logger.error(ex.message)
     raise InternalServerError('Import failed due to internal server error.')
+  return csv_data
 
 
 def copy_file_request(drive_service, file_id, body):
@@ -113,14 +113,15 @@ def rename_file_request(drive_service, file_id, body):
   ).execute()
 
 
-def process_gdrive_file(folder_id, file_id, postfix, is_uploaded=False):
+def process_gdrive_file(folder_id, file_id, postfix, separator,
+                        is_uploaded=False):
   """Process gdrive file to new folder with renaming"""
   http_auth = get_http_auth()
   try:
     drive_service = discovery.build(
         API_SERVICE_NAME, API_VERSION, http=http_auth)
     file_meta = drive_service.files().get(fileId=file_id).execute()
-    new_file_name = generate_file_name(file_meta['name'], postfix)
+    new_file_name = generate_file_name(file_meta['name'], postfix, separator)
     if is_uploaded:
       #  if file was uploaded from a local folder, FE put it into
       #  a gdrive folder, we just need to rename file.
@@ -138,6 +139,7 @@ def process_gdrive_file(folder_id, file_id, postfix, is_uploaded=False):
     logger.error(ex.message)
     raise InternalServerError('Processing of the file failed due to'
                               ' internal server error.')
+  return response
 
 
 def _build_request_body(folder_id, new_file_name):
@@ -148,13 +150,13 @@ def _build_request_body(folder_id, new_file_name):
   return body
 
 
-def generate_file_name(original_name, postfix):
+def generate_file_name(original_name, postfix, separator):
   """Helper for sanitize filename"""
   original_name, extension = path.splitext(original_name)
   # remove an old postfix
-  original_name = original_name.split('_ggrc')[0]
+  original_name = original_name.split(separator)[0]
   new_name = ''.join([original_name, postfix]).strip('_')
-  # sanitaze file name
+  # sanitize file name
   new_name = ''.join([char if char.isalnum() or char in ALLOWED_FILENAME_CHARS
                       else '-' for char in new_name]
                      )

@@ -84,12 +84,12 @@ def auth_gdrive():
   return flask.redirect(auth_uri)
 
 
-@app.route('/authorize')
+@app.route("/authorize")
 def authorize_app():
   """Second step of the OAuth2"""
   if 'code' not in flask.request.args:
     raise Unauthorized('Broken OAuth2 flow, go to /auth_gdrive first')
-  # Cross Site Request Forgery (XRSF) guard.
+  # Cross Site Request Forgery (XSRF) guard.
   if flask.request.args['state'] != flask.session['state']:
     raise Unauthorized('Wrong state.')
 

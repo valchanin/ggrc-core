@@ -21,8 +21,8 @@ from ggrc.models.relationship import Relatable
 from ggrc.utils import referenced_objects
 
 
-class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
-               bfh.BeforeFlushHandleable):
+class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
+               bfh.BeforeFlushHandleable, db.Model):
   """Document model."""
   __tablename__ = 'documents'
 
@@ -71,6 +71,8 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
 
   _allowed_documentables = {'Assessment', 'Control', 'Audit',
                             'Issue', 'RiskAssessment'}
+
+  FILE_NAME_SEPARATOR = '_ggrc'
 
   @orm.validates('document_type')
   def validate_document_type(self, key, document_type):
@@ -162,7 +164,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
   @staticmethod
   def _build_file_name_postfix(documentable_obj):
     """Build postfix for given documentable object"""
-    postfix_parts = ['_ggrc', documentable_obj.slug]
+    postfix_parts = [Document.FILE_NAME_SEPARATOR, documentable_obj.slug]
 
     related_snapshots = documentable_obj.related_objects(_types=['Snapshot'])
     related_snapshots = sorted(related_snapshots, key=lambda it: it.id)
@@ -203,6 +205,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed, db.Model,
       file_id = self.link
       from ggrc.gdrive.file_actions import process_gdrive_file
       response = process_gdrive_file(folder_id, file_id, postfix,
+                                     separator=Document.FILE_NAME_SEPARATOR,
                                      is_uploaded=self.is_uploaded)
       self._update_fields(response)
       self._build_relationship(documentable_obj)
