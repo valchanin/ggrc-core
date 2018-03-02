@@ -120,24 +120,20 @@
   };
 
   $doc.ajaxError(function (event, jqxhr, settings, exception) {
-    let message;
-    let response;
+    let isExpectedError = jqxhr.getResponseHeader('X-Expected-Error');
 
-    if (!jqxhr.hasFailCallback) {
-      // TODO: Import produced 'canceled' ajax flash message that needed handling. Will refactor once better method works.
-      if (settings.url.indexOf('import') === -1 || exception !== 'canceled') {
-        response = jqxhr.responseJSON || JSON.parse(jqxhr.responseText);
+    if (!jqxhr.hasFailCallback && !isExpectedError) {
+      let response = jqxhr.responseJSON || JSON.parse(jqxhr.responseText);
 
-        message = jqxhr.getResponseHeader('X-Flash-Error') ||
-          GGRC.Errors.messages[jqxhr.status] ||
-          (response && response.message) ||
-          exception.message || exception;
+      let message = jqxhr.getResponseHeader('X-Flash-Error') ||
+        GGRC.Errors.messages[jqxhr.status] ||
+        (response && response.message) ||
+        exception.message || exception;
 
-        if (message) {
-          GGRC.Errors.notifier('error', message);
-        } else {
-          GGRC.Errors.notifierXHR('error')(jqxhr);
-        }
+      if (message) {
+        GGRC.Errors.notifier('error', message);
+      } else {
+        GGRC.Errors.notifierXHR('error')(jqxhr);
       }
     }
   });

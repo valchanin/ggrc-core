@@ -95,7 +95,7 @@ can.Component.extend({
 
       backendGdriveClient.withAuth(()=> {
         return exportRequest({data});
-      }).then(function (data, status, jqXHR) {
+      }).then((data, status, jqXHR)=> {
         let link;
 
         if (this.viewModel.attr('export.chosenFormat') === 'gdrive') {
@@ -116,9 +116,14 @@ can.Component.extend({
 
           download(filename, data);
         }
-      }.bind(this)).always(function () {
+      }, (xhr)=> {
+        let message = (xhr.responseJSON && xhr.responseJSON.message) ?
+          xhr.responseJSON.message :
+          xhr.responseText;
+        GGRC.Errors.notifier('error', message);
+      }).always(()=> {
         this.viewModel.attr('export.loading', false);
-      }.bind(this));
+      });
     },
     '#addAnotherObjectType click': function (el, ev) {
       ev.preventDefault();

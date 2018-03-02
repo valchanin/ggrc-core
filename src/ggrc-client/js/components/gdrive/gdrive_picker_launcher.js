@@ -90,14 +90,6 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
               can.trigger(this, 'modal:success', {arr: docs});
               el.trigger('modal:success', {arr: docs});
             })
-            .fail((error)=>{
-              this.dispatch({
-                type: 'resetItems',
-              });
-              if ( error ) {
-                GGRC.Errors.notifier('error', error && error.message);
-              }
-            })
             .always(() => {
               this.attr('isUploading', false);
             });
@@ -135,16 +127,14 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
               .then(function (files) {
                 that.beforeCreateHandler(files);
 
-                that.createDocumentModel(files).then(function (docs) {
-                  can.trigger(that, 'modal:success', {arr: docs});
-                  el.trigger('modal:success', {arr: docs});
-                }, function () {
-                  that.dispatch({
-                    type: 'resetItems',
+                that.createDocumentModel(files)
+                  .then((docs)=> {
+                    can.trigger(that, 'modal:success', {arr: docs});
+                    el.trigger('modal:success', {arr: docs});
+                  })
+                  .always(()=> {
+                    that.attr('isUploading', false);
                   });
-                }).always(function () {
-                  that.attr('isUploading', false);
-                });
               })
               .fail(function () {
                 // This case happens when user have no access to write in audit folder
@@ -196,6 +186,18 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
         return can.when(...dfdDocs).then(()=> {
           this.attr('instance').refresh();
           return can.makeArray(arguments);
+        }, (xhr)=> {
+          let message = (xhr.responseJSON && xhr.responseJSON.message) ?
+            xhr.responseJSON.message :
+            xhr.responseText;
+
+          if (message) {
+            GGRC.Errors.notifier('error', message);
+          }
+
+          this.dispatch({
+            type: 'resetItems',
+          });
         });
       },
     },
