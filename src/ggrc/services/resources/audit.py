@@ -51,29 +51,28 @@ class AuditResource(common.ExtendedResource):
           models.Assessment.status.label("status"),
           models.Assessment.verified.label("verified"),
           models.Relationship.destination_id.label("evidence_id"),
+          models.Evidence.kind.label("kind")
       ).outerjoin(
           models.Relationship,
           sa.and_(
               models.Relationship.source_id == models.Assessment.id,
               models.Relationship.source_type == "Assessment",
-              models.Relationship.destination_type == "Evidence",
           )
       ).outerjoin(
         models.Evidence,
         models.Evidence.id == models.Relationship.destination_id
       ).filter(
           models.Assessment.audit_id == id,
-          models.Evidence.kind != models.Evidence.REFERENCE_URL
       ).union_all(
           db.session.query(
               models.Assessment.id.label("id"),
               models.Assessment.status.label("status"),
               models.Assessment.verified.label("verified"),
-              models.Relationship.source_id.label("evidence_id")
+              models.Relationship.source_id.label("evidence_id"),
+              models.Evidence.kind.label("kind")
           ).outerjoin(
               models.Relationship,
               sa.and_(
-                  models.Relationship.source_type == "Evidence",
                   models.Relationship.destination_id == models.Assessment.id,
                   models.Relationship.destination_type == "Assessment",
               )
@@ -82,18 +81,16 @@ class AuditResource(common.ExtendedResource):
             models.Evidence.id == models.Relationship.source_id
           ).filter(
               models.Assessment.audit_id == id,
-              models.Evidence.kind != models.Evidence.REFERENCE_URL
           )
       )
-
       statuses_data = defaultdict(lambda: defaultdict(set))
       all_assessment_ids = set()
       all_evidence_ids = set()
-      for id_, status, verified, evidence_id in assessment_evidences:
+      for id_, status, verified, evidence_id, kind in assessment_evidences:
         if id_:
           statuses_data[(status, verified)]["assessments"].add(id_)
           all_assessment_ids.add(id_)
-        if evidence_id:
+        if evidence_id and kind != models.Evidence.REFERENCE_URL:
           statuses_data[(status, verified)]["evidences"].add(evidence_id)
           all_evidence_ids.add(evidence_id)
 

@@ -28,7 +28,7 @@ class TestAuditSummary(TestCase):
       assessment = factories.AssessmentFactory(audit=audit)
 
       evidence_url = factories.EvidenceFactory(kind=all_models.Evidence.URL)
-      factories.RelationshipFactory(source=assessment, destination=evidence_url)
+      factories.RelationshipFactory(source=evidence_url, destination=assessment)
 
       evidence_reference_url = factories.EvidenceFactory(kind=all_models.Evidence.REFERENCE_URL)
       factories.RelationshipFactory(source=assessment, destination=evidence_reference_url)
@@ -43,6 +43,23 @@ class TestAuditSummary(TestCase):
     response = self.api.client.get(summary_link)
     self.assert200(response)
     self.assertEqual(response.json['total']['evidences'], 2)
+
+  def test_assessment_no_evidence_filter(self):
+    """Summary should show proper number of assessments.
+
+    When no evidences attached.
+    """
+    with factories.single_commit():
+      audit = factories.AuditFactory()
+      factories.AssessmentFactory(audit=audit)
+      factories.AssessmentFactory(audit=audit)
+
+    summary_link = "/api/{}/{}/summary".format(
+      audit._inflector.table_plural, audit.id
+    )
+    response = self.api.client.get(summary_link)
+    self.assert200(response)
+    self.assertEqual(response.json["total"]["assessments"], 2)
 
   @ddt.data(1, 2)
   def test_audit_summary(self, assessment_count):
