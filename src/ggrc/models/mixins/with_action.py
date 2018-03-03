@@ -201,18 +201,20 @@ class WithAction(object):
       return obj
 
   class EvidenceAction(BaseAction):
-    """Document action"""
+    """Evidence action"""
 
     AddRelated = namedtuple("AddRelated", ["id",
                                            "type",
                                            "kind",
                                            "link",
-                                           "title"])
+                                           "title",
+                                           "source_gdrive_id"])
 
     def _create(self, parent, action):
       obj = Evidence(link=action.link,
                      title=action.title,
                      kind=action.kind,
+                     source_gdrive_id=action.source_gdrive_id,
                      context=parent.context)
       return obj
 

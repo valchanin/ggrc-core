@@ -9,7 +9,7 @@ from sqlalchemy import event
 from sqlalchemy import inspect
 from sqlalchemy.orm import session
 
-from ggrc.models import document
+from ggrc.models import document, evidence
 from ggrc.models import mixins
 from ggrc.models.mixins import statusable
 from ggrc.models import relationship
@@ -70,6 +70,25 @@ class AutoStatusChangeable(object):
                   statusable.Statusable.START_STATE
               },
           },
+      },
+      'Evidence': {
+        'key': lambda x: x.kind,
+        'mappings': {
+            evidence.Evidence.REFERENCE_URL: {
+                statusable.Statusable.DONE_STATE,
+                statusable.Statusable.DONE_STATE,
+            },
+            evidence.Evidence.FILE: {
+                statusable.Statusable.DONE_STATE,
+                statusable.Statusable.FINAL_STATE,
+                statusable.Statusable.START_STATE
+            },
+            evidence.Evidence.URL: {
+                statusable.Statusable.DONE_STATE,
+                statusable.Statusable.FINAL_STATE,
+                statusable.Statusable.START_STATE
+            },
+        },
       },
       'Snapshot': {
           'key': lambda _: 'ALL',
@@ -309,8 +328,10 @@ class AutoStatusChangeable(object):
 
     @signals.Restful.model_put.connect_via(document.Document)
     @signals.Restful.model_deleted.connect_via(document.Document)
-    def handle_document_relationship(sender, obj=None, src=None, service=None):
-      """Handle PUT and DELETE of Document that can change object status.
+    @signals.Restful.model_put.connect_via(evidence.Evidence)
+    @signals.Restful.model_deleted.connect_via(evidence.Evidence)
+    def handle_document_like_relationship(sender, obj=None, src=None, service=None):
+      """Handle PUT and DELETE of Document or Evidence.
 
         See blinker library documentation for other parameters (all necessary).
 
