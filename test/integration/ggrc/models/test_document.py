@@ -181,7 +181,8 @@ class TestDocument(TestCase):
       folder_id = ''
       mocked.assert_called_with(folder_id, 'some link',
                                 '_ggrc_control-{}'.format(control.id),
-                                is_uploaded=True)
+                                is_uploaded=True,
+                                separator='_ggrc')
       self.assertEqual(len(control.documents), 1)
       self.assertEqual(control.document_evidence[0].title, 'new_name')
 
