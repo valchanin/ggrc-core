@@ -66,6 +66,60 @@ def upgrade():
   """
   op.execute(sql)
 
+  sql = """
+    INSERT INTO access_control_roles (
+        name,
+        object_type,
+        access_control_roles.read,
+        access_control_roles.update,
+        access_control_roles.delete,
+        my_work,
+        created_at,
+        updated_at,
+        non_editable,
+        internal
+    )
+    VALUES (
+        'Auditors Evidence Mapped',
+        'Evidence',
+        1, 1, 0, 0,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Verifiers Evidence Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Creators Evidence Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Assignees Evidence Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    )
+  """
+  op.execute(sql)
+  op.execute("""
+      DELETE FROM access_control_roles
+        WHERE name IN (
+            "Auditors Document Mapped",
+            "Verifiers Document Mapped",
+            "Creators Document Mapped",
+            "Assignees Document Mapped"
+        )
+  """)
+
 
 def downgrade():
   """Downgrade database schema and/or data back to the previous revision."""
@@ -74,3 +128,58 @@ def downgrade():
       DELETE FROM access_control_roles
         WHERE object_type = 'Evidence' AND name ='Admin';
   """)
+  op.execute("""
+      DELETE FROM access_control_roles
+        WHERE name IN (
+            "Auditors Evidence Mapped",
+            "Verifiers Evidence Mapped",
+            "Creators Evidence Mapped",
+            "Assignees Evidence Mapped"
+        )
+  """)
+
+  sql = """
+    INSERT INTO access_control_roles (
+        name,
+        object_type,
+        access_control_roles.read,
+        access_control_roles.update,
+        access_control_roles.delete,
+        my_work,
+        created_at,
+        updated_at,
+        non_editable,
+        internal
+    )
+    VALUES (
+        'Auditors Document Mapped',
+        'Evidence',
+        1, 1, 0, 0,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Verifiers Document Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Creators Document Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    ),(
+        'Assignees Document Mapped',
+        'Assessment',
+        1, 1, 1, 1,
+        NOW(),
+        NOW(),
+        1, 1
+    )
+  """
+  op.execute(sql)
+#   TODO: check downgrade
