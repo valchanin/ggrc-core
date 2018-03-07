@@ -27,6 +27,10 @@ _GOOGLE_API_GDRIVE_SCOPE = "https://www.googleapis.com/auth/drive"
 logger = getLogger(__name__)
 
 
+class GdriveUnauthorized(Unauthorized):
+  pass
+
+
 def get_http_auth():
   """Get valid user credentials from storage and create an authorized
   http from it.
@@ -38,7 +42,7 @@ def get_http_auth():
       http instance authorized with the credentials
   """
   if 'credentials' not in flask.session:
-    raise Unauthorized('Unable to get valid credentials')
+    raise GdriveUnauthorized('Unable to get valid credentials')
   try:
     credentials = client.OAuth2Credentials.from_json(
         flask.session['credentials'])
@@ -46,7 +50,7 @@ def get_http_auth():
   except Exception as ex:
     logger.exception(ex.message)
     del flask.session['credentials']
-    raise Unauthorized('Unable to get valid credentials.')
+    raise GdriveUnauthorized('Unable to get valid credentials.')
   flask.session['credentials'] = credentials.to_json()
   return http_auth
 
@@ -54,7 +58,8 @@ def get_http_auth():
 def handle_token_error(message=''):
   """Helper method to clean credentials"""
   del flask.session['credentials']
-  raise Unauthorized('Unable to get valid credentials. {}'.format(message))
+  raise GdriveUnauthorized('Unable to get valid'
+                           ' credentials. {}'.format(message))
 
 
 @app.route("/is_gdrive_authorized")
@@ -67,7 +72,7 @@ def is_gdrive_authorized():
   if 'credentials' in flask.session:
     return 'OK'
   else:
-    raise Unauthorized('')
+    raise GdriveUnauthorized('')
 
 
 @app.route("/auth_gdrive")

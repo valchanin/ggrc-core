@@ -4,6 +4,9 @@
 """Integration tests for Document"""
 from mock import mock
 
+from werkzeug.exceptions import Unauthorized
+
+from ggrc.gdrive import GdriveUnauthorized
 from ggrc.models import all_models
 from ggrc.models import exceptions
 from integration.ggrc import TestCase
@@ -247,3 +250,94 @@ class TestDocument(TestCase):
                      'Expected options are `URL`, `EVIDENCE`, '
                      '`REFERENCE_URL`"',
                      resp.data)
+
+  def test_header_on_expected_error(self):
+    """During authorization flow we have the expected 'Unauthorized'.
+
+    To allow FE ignore the error popup we need to set
+    'X-Expected-Error' header
+    """
+    def side_effect_function(*args, **kwargs):
+      raise GdriveUnauthorized("Unable to get valid credentials")
+
+    with mock.patch("ggrc.gdrive.file_actions.process_gdrive_file") as mocked:
+      mocked.side_effect = side_effect_function
+      control = factories.ControlFactory()
+      response = self.api.post(all_models.Document, [{
+          "document": {
+              "document_type": all_models.Document.ATTACHMENT,
+              "link": "some link",
+              "title": "some title",
+              "context": None,
+              "documentable_obj": {
+                  "id": control.id,
+                  "type": "Control"
+              }
+          }
+      }])
+    self.assertEqual(response.status_code, 401)
+    self.assertIn('X-Expected-Error', response.headers)
+
+  def test_header_on_unexpected_error(self):
+    """During authorization flow we have the expected 'Unauthorized'.
+
+    If error is unexpected we need to make sure that 'X-Expected-Error'
+    header is not set.
+    """
+    def side_effect_function(*args, **kwargs):
+      raise Unauthorized("Unable to get valid credentials")
+
+    with mock.patch("ggrc.gdrive.file_actions.process_gdrive_file") as mocked:
+      mocked.side_effect = side_effect_function
+      control = factories.ControlFactory()
+      response = self.api.post(all_models.Document, [{
+          "document": {
+              "document_type": all_models.Document.ATTACHMENT,
+              "link": "some link",
+              "title": "some title",
+              "context": None,
+              "documentable_obj": {
+                  "id": control.id,
+                  "type": "Control"
+              }
+          }
+      }])
+    self.assertEqual(response.status_code, 401)
+    self.assertNotIn('X-Expected-Error', response.headers)
+
+  def test_header_on_expected_error_batch(self):
+    """During authorization flow we have the expected 'Unauthorized'.
+
+    To allow FE ignore popup we need to set 'X-Expected-Error' header
+    """
+    def side_effect_function(*args, **kwargs):
+      raise GdriveUnauthorized("Unable to get valid credentials")
+
+    with mock.patch("ggrc.gdrive.file_actions.process_gdrive_file") as mocked:
+      mocked.side_effect = side_effect_function
+      control = factories.ControlFactory()
+
+      doc1 = {
+          "document": {
+              "document_type": all_models.Document.ATTACHMENT,
+              "link": "some link",
+              "title": "some title",
+              "context": None,
+              "documentable_obj": {
+                  "id": control.id,
+                  "type": "Control"
+              }
+          }
+      }
+      doc2 = {
+          "document": {
+              "document_type": all_models.Document.URL,
+              "link": "some link",
+              "title": "some title",
+              "context": None,
+          }
+      }
+
+    response = self.api.post(all_models.Document, [doc1, doc2])
+    self.assertEqual(response.status_code, 401)
+    self.assertIn('X-Expected-Error', response.headers)

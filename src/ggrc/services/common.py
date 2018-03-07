@@ -31,6 +31,7 @@ from werkzeug.exceptions import BadRequest, Forbidden
 import ggrc.builder.json
 import ggrc.models
 from ggrc import db, utils
+from ggrc.gdrive import GdriveUnauthorized
 from ggrc.utils import as_json, benchmark
 from ggrc.utils.log_event import log_event
 from ggrc.fulltext import get_indexer
@@ -1270,6 +1271,7 @@ class Resource(ModelView):
           return self.json_success_response([(201, self.object_for_json(obj))])
 
       res = []
+      headers = {"Content-Type": "application/json"}
       with benchmark("collection post > body loop: {}".format(len(body))):
         with benchmark("Build stub query cache"):
           self._build_request_stub_cache(body)
@@ -1278,6 +1280,10 @@ class Resource(ModelView):
         except (IntegrityError, ValidationError, ValueError) as error:
           res.append(self._make_error_from_exception(error))
           db.session.rollback()
+        except GdriveUnauthorized as error:
+          headers["X-Expected-Error"] = True
+          res.append((401, error.message))
+          db.session.rollback()
         except Exception as error:
           res.append((getattr(error, "code", 500), error.message))
           logger.warning("Collection POST commit failed", exc_info=True)
@@ -1285,7 +1291,6 @@ class Resource(ModelView):
         if hasattr(g, "referenced_objects"):
           delattr(g, "referenced_objects")
       with benchmark("collection post > calculate response statuses"):
-        headers = {"Content-Type": "application/json"}
         errors = []
         if wrap:
           status, res = res[0]
