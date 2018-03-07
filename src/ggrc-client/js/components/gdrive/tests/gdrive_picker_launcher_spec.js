@@ -8,17 +8,10 @@ import * as pickerUtils from '../../../plugins/utils/gdrive-picker-utils';
 describe('GGRC.Components.gDrivePickerLauncher', function () {
   'use strict';
 
-  let Component;
-  let events;
   let viewModel;
   let eventStub = {
     preventDefault: function () {},
   };
-
-  beforeAll(function () {
-    Component = GGRC.Components.get('gDrivePickerLauncher');
-    events = Component.prototype.events;
-  });
 
   beforeEach(function () {
     viewModel = GGRC.Components.getViewModel('gDrivePickerLauncher');
@@ -86,34 +79,6 @@ describe('GGRC.Components.gDrivePickerLauncher', function () {
         };
         element.on('blur', blur);
         viewModel.onKeyup(element, event);
-      });
-    });
-  });
-
-  describe('events', function () {
-    describe('"{viewModel} modal:success" handler', function () {
-      let method;
-      let that;
-
-      beforeEach(function () {
-        that = {
-          viewModel: viewModel,
-        };
-        method = events['{viewModel} modal:success'].bind(that);
-      });
-
-      it('calls callback if callback is provided', function () {
-        viewModel.attr('itemsUploadedCallback', jasmine.createSpy('callback'));
-        method();
-        expect(viewModel.itemsUploadedCallback).toHaveBeenCalled();
-      });
-
-      it('refreshes instance if callback is not provided', function () {
-        viewModel.instance = jasmine.createSpyObj('instance',
-          ['reify', 'refresh']);
-        method();
-        expect(viewModel.instance.reify).toHaveBeenCalled();
-        expect(viewModel.instance.refresh).toHaveBeenCalled();
       });
     });
   });

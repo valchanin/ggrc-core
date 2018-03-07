@@ -50,7 +50,7 @@
                 {{#if currentFolder}}
                     <ggrc-gdrive-picker-launcher
                             instance="instance"
-                            {items-uploaded-callback}="@loadDocuments"
+                            (finish)="loadDocuments"
                             click_event="trigger_upload_parent"
                             {tooltip}="tooltip"
                             {^is-uploading}="../isUploading">
@@ -60,7 +60,7 @@
                     {{#if isNoFolderUploadingAllowed}}
                         <ggrc-gdrive-picker-launcher
                                 instance="instance"
-                                {items-uploaded-callback}="@loadDocuments"
+                                (finish)="loadDocuments"
                                 click_event="trigger_upload"
                                 {tooltip}="tooltip"
                                 {^is-uploading}="../isUploading">

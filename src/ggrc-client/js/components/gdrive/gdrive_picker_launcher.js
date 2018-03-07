@@ -28,7 +28,6 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
       instance: {},
       link_class: '@',
       click_event: '@',
-      itemsUploadedCallback: '@',
       confirmationCallback: '@',
       pickerActive: false,
       disabled: false,
@@ -86,12 +85,11 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
           this.createDocumentModel(files)
             .then((docs) => {
-              // Trigger modal:success event on scope
-              can.trigger(this, 'modal:success', {arr: docs});
               el.trigger('modal:success', {arr: docs});
             })
             .always(() => {
               this.attr('isUploading', false);
+              this.dispatch('finish');
             });
         }).fail((err)=>{
           if ( err && err.type === GDRIVE_PICKER_ERR_CANCEL ) {
@@ -129,11 +127,11 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
                 that.createDocumentModel(files)
                   .then((docs)=> {
-                    can.trigger(that, 'modal:success', {arr: docs});
                     el.trigger('modal:success', {arr: docs});
                   })
                   .always(()=> {
                     that.attr('isUploading', false);
+                    that.dispatch('finish');
                   });
               })
               .fail(function () {
@@ -141,16 +139,11 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
                 let error = _.last(arguments);
                 if (error && error.code === 403) {
                   GGRC.Errors.notifier('error', GGRC.Errors.messages[403]);
-
-                  can.trigger(that, 'modal:success');
                   el.trigger('modal:success');
                 } else if ( error && error.type !== GDRIVE_PICKER_ERR_CANCEL ) {
-                  that.dispatch({
-                    type: 'resetItems',
-                  });
-
                   GGRC.Errors.notifier('error', error && error.message);
                 }
+                that.dispatch('finish');
                 that.attr('isUploading', false);
               });
           })
@@ -194,31 +187,7 @@ import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
           if (message) {
             GGRC.Errors.notifier('error', message);
           }
-
-          this.dispatch({
-            type: 'resetItems',
-          });
         });
-      },
-    },
-    events: {
-      '{viewModel} modal:success': function () {
-        let instance = this.viewModel.instance;
-        let itemsUploadedCallback = this.viewModel.itemsUploadedCallback;
-
-        if (can.isFunction(itemsUploadedCallback)) {
-          itemsUploadedCallback();
-        } else {
-          instance.reify();
-          instance.refresh();
-        }
-      },
-      '{viewModel} resetItems': function () {
-        let itemsUploadedCallback = this.viewModel.itemsUploadedCallback;
-
-        if (can.isFunction(itemsUploadedCallback)) {
-          itemsUploadedCallback();
-        }
       },
     },
   });

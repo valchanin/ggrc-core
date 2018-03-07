@@ -52,7 +52,7 @@
                     <ggrc-gdrive-picker-launcher
                       instance="instance"
                       link_text="Attach supporting file"
-                      {items-uploaded-callback}="@loadDocuments"
+                      (finish)="loadDocuments"
                       click_event="trigger_upload">
                       Attach
                     </ggrc-gdrive-picker-launcher>

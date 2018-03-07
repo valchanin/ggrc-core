@@ -15,10 +15,10 @@ describe('GGRC.Components.attachButton', function () {
     viewModel.attr('instance', new CMS.Models.Assessment());
   });
 
-  describe('itemsUploadedCallback() method', function () {
+  describe('refresh() method', function () {
     it('dispatches "refreshInstance" event', function () {
       spyOn(viewModel.instance, 'dispatch');
-      viewModel.itemsUploadedCallback();
+      viewModel.refresh();
 
       expect(viewModel.instance.dispatch)
         .toHaveBeenCalledWith('refreshInstance');
@@ -27,7 +27,7 @@ describe('GGRC.Components.attachButton', function () {
     it('does not throw error if instance is not provided', function () {
       viewModel.removeAttr('instance');
 
-      expect(viewModel.itemsUploadedCallback.bind(viewModel))
+      expect(viewModel.refresh.bind(viewModel))
         .not.toThrowError();
     });
   });

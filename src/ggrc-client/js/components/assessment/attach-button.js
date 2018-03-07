@@ -41,7 +41,7 @@ import {findGDriveItemById} from '../../plugins/utils/gdrive-picker-utils';
         let items = event.items;
         this.dispatch({type: 'beforeCreate', items: items});
       },
-      itemsUploadedCallback: function () {
+      refresh: function () {
         this.dispatch('refreshEvidences');
 
         if (this.attr('instance')) {
