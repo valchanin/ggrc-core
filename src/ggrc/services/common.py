@@ -341,7 +341,8 @@ class ModelView(View):
   def modified_at(self, obj):
     return getattr(obj, self.modified_attr_name)
 
-  def _get_type_where_clause(self, model):
+  @staticmethod
+  def _get_type_where_clause(model):
     mapper = model._sa_class_manager.mapper
     if mapper.polymorphic_on is None:
       return True
@@ -353,7 +354,8 @@ class ModelView(View):
         if m in mappers)
     return mapper.polymorphic_on.in_(polymorphic_on_values)
 
-  def _get_matching_types(self, model):
+  @staticmethod
+  def _get_matching_types(model):
     mapper = model._sa_class_manager.mapper
     if len(list(mapper.self_and_descendants)) == 1:
       return mapper.class_.__name__
@@ -361,7 +363,8 @@ class ModelView(View):
     # FIXME: Actually needs to use 'self_and_descendants'
     return [m.class_.__name__ for m in mapper.self_and_descendants]
 
-  def get_match_columns(self, model):
+  @staticmethod
+  def get_match_columns(model):
     mapper = model._sa_class_manager.mapper
     columns = []
     columns.append(mapper.primary_key[0].label('id'))
@@ -820,9 +823,9 @@ class Resource(ModelView):
           object_for_json, self.modified_at(obj),
           obj_etag=etag(self.modified_at(obj), get_info(obj)))
 
-  def delete(self, id):
+  def delete(self, object_id):
     with benchmark("Query for object"):
-      obj = self.get_object(id)
+      obj = self.get_object(object_id)
     if obj is None:
       return self.not_found_response()
     with benchmark("Query delete permissions"):
@@ -861,7 +864,8 @@ class Resource(ModelView):
       result = self.json_success_response({}, datetime.datetime.now())
     return result
 
-  def has_cache(self):
+  @staticmethod
+  def has_cache():
     return getattr(settings, 'MEMCACHE_MECHANISM', False)
 
   def apply_paging(self, matches_query):
@@ -1441,7 +1445,8 @@ class Resource(ModelView):
       resource.update(extras)
     return resource
 
-  def http_timestamp(self, timestamp):
+  @staticmethod
+  def http_timestamp(timestamp):
     return format_date_time(time.mktime(timestamp.utctimetuple()))
 
   def json_success_response(self, response_object, last_modified=None,
