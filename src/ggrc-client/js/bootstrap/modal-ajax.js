@@ -92,55 +92,6 @@ var handlers = {
     });
   },
 
-  unmapform: function ($target, $trigger, option) {
-    var objectParams = $trigger.attr('data-object-params');
-    var model = CMS.Models[$trigger.attr('data-object-singular')];
-    var instance;
-    if ($trigger.attr('data-object-id') === 'page') {
-      instance = GGRC.page_instance();
-    } else {
-      instance = model.findInCacheById($trigger.attr('data-object-id'));
-    }
-    objectParams = objectParams ?
-      JSON.parse(objectParams.replace(/\\n/g, '\n')) :
-      {};
-
-    $target
-      .modal_form(option, $trigger)
-      .ggrc_controllers_unmap({
-        $trigger: $trigger,
-        new_object_form: false,
-        button_view: GGRC.mustache_path +
-          '/modals/unmap_cancel_buttons.mustache',
-        model: model,
-        instance: instance,
-        object_params: objectParams,
-        modal_title: $trigger.attr('data-modal-title') ||
-          ('Delete ' + $trigger.attr('data-object-singular')),
-        content_view: $trigger.attr('data-content-view') ||
-          (GGRC.mustache_path + '/base_objects/confirm_unmap.mustache')
-      });
-
-    $target.on('modal:success', function () {
-      $trigger.children('.result').each(function (i, resultEl) {
-        var $resultEl = $(resultEl);
-        var result = $resultEl.data('result');
-        var mappings = result && result.get_mappings();
-
-        can.each(mappings, function (mapping) {
-          mapping.refresh().done(function () {
-            if (mapping instanceof CMS.Models.Control) {
-              mapping.removeAttr('directive');
-              mapping.save();
-            } else {
-              mapping.destroy();
-            }
-          });
-        });
-      });
-    });
-  },
-
   form: function ($target, $trigger, option) {
     const needToRefresh = (
       $trigger.data('refresh') ||
@@ -295,12 +246,6 @@ var handlers = {
         instance.restore(true);
       }
     });
-  },
-
-  helpform: function ($target, $trigger, option) {
-    $target
-      .modal_form(option, $trigger)
-      .ggrc_controllers_help({slug: $trigger.attr('data-help-slug')});
   },
 
   archiveform: function ($target, $trigger, option) {
@@ -668,9 +613,7 @@ GGRC.register_modal_hook = function (toggle, launchFn) {
 can.each({
   '': handlers.modal,
   form: handlers.form,
-  helpform: handlers.helpform,
   deleteform: handlers.deleteform,
-  unmapform: handlers.unmapform,
   archiveform: handlers.archiveform
 },
   function (launchFn, toggle) {

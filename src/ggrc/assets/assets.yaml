@@ -6,7 +6,6 @@ dashboard-js-template-files:
   - base_objects/autocomplete_result.mustache
   - base_objects/confirm_archive.mustache
   - base_objects/confirm_delete.mustache
-  - base_objects/confirm_unmap.mustache
   - base_objects/confirm_warning.mustache
   - base_objects/contacts.mustache
   - base_objects/create_objective_dropdown_option.mustache
@@ -97,8 +96,6 @@ dashboard-js-template-files:
   - directives/tree-item-attr.mustache
   - events/object_list.mustache
   - facilities/modal_content.mustache
-  - help/help_modal_content.mustache
-  - help/help_modal_header.mustache
   - help/filters_helper_content.mustache
   - markets/modal_content.mustache
   - modals/archive_cancel_buttons.mustache
@@ -114,7 +111,6 @@ dashboard-js-template-files:
   - modals/modal_compare_header.mustache
   - modals/save_cancel_buttons.mustache
   - modals/save_cancel_delete_buttons.mustache
-  - modals/unmap_cancel_buttons.mustache
   - objectives/info.mustache
   - objectives/modal_content.mustache
   - objectives/tree-item-attr.mustache

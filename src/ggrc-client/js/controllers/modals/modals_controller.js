@@ -46,7 +46,6 @@ export default can.Control({
   pluginName: 'ggrc_controllers_modals',
   defaults: {
     preload_view: GGRC.mustache_path + '/dashboard/modal_preload.mustache',
-    content_view: GGRC.mustache_path + '/help/help_modal_content.mustache',
     header_view: GGRC.mustache_path + '/modals/modal_header.mustache',
     custom_attributes_view:
     GGRC.mustache_path + '/custom_attributes/modal_content.mustache',

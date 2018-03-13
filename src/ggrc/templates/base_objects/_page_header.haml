@@ -65,13 +65,6 @@
             %span
               Export
 
-        -if self.page_help
-          %li
-          %a#page-help{ 'href': "javascript://", 'data-toggle': 'modal-ajax-helpform', 'data-help-slug' : '{{ self.page_help()|trim }}'}
-            %i.fa.fa-question-circle
-              %span
-                Help
-
         %li.notify-wrap
           %span
             %i.fa.fa-clock-o

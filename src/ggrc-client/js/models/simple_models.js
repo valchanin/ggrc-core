@@ -196,16 +196,6 @@ import {getRole} from '../plugins/utils/acl-utils';
     },
   }, {});
 
-  can.Model.Cacheable('CMS.Models.Help', {
-    root_object: 'help',
-    root_collection: 'helps',
-    findAll: 'GET /api/help',
-    findOne: 'GET /api/help/{id}',
-    update: 'PUT /api/help/{id}',
-    destroy: 'DELETE /api/help/{id}',
-    create: 'POST /api/help',
-  }, {});
-
   can.Model.Cacheable('CMS.Models.Label', {
     root_object: 'label',
     root_collection: 'labels',
