@@ -3,7 +3,6 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-import Spinner from 'spin.js';
 import {
   warning,
   BUTTON_VIEW_SAVE_CANCEL_DELETE,
@@ -278,30 +277,6 @@ var handlers = {
     });
   }
 };
-
-function preloadContent() {
-  var template =
-    ['<div class="modal-header">',
-      '<a class="pull-right modal-dismiss" href="#" data-dismiss="modal">',
-      '<i class="fa fa-times black"></i>',
-      '</a>',
-      '<h2>Loading...</h2>',
-      '</div>',
-      '<div class="modal-body" style="padding-top:150px;"></div>',
-      '<div class="modal-footer">',
-      '</div>'
-    ];
-  return $(template.join('\n'))
-    .filter('.modal-body')
-    .html(
-      $(new Spinner().spin().el)
-        .css({
-          width: '100px', height: '100px',
-          left: '50%', top: '50%',
-          zIndex: calculate_spinner_z_index
-        })
-    ).end();
-}
 
 function emitLoaded(responseText, textStatus, xhr) {
   if (xhr.status === 403) {
@@ -591,7 +566,6 @@ GGRC.register_modal_hook = function (toggle, launchFn) {
         });
 
         if (newTarget || $this.data('modal-reset') === 'reset') {
-          $target.html(preloadContent());
           if (
             $this.prop('protocol') === window.location.protocol &&
             loadHref
