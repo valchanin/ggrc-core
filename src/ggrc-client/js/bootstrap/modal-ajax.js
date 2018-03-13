@@ -173,8 +173,6 @@ var handlers = {
 
       if (formTarget === 'nothing') {
         return;
-      } else if (formTarget === 'refresh') {
-        refreshPage();
       } else if (formTarget === 'redirect') {
         if (typeof xhr !== 'undefined' && 'getResponseHeader' in xhr) {
           GGRC.navigate(xhr.getResponseHeader('location'));
@@ -285,10 +283,6 @@ function emitLoaded(responseText, textStatus, xhr) {
     $(this).html(responseText);
   }
   $(this).trigger('loaded');
-}
-
-function refreshPage() {
-  setTimeout(GGRC.navigate.bind(GGRC), 10);
 }
 
 function arrangeBackgroundModals(modals, referenceModal) {
