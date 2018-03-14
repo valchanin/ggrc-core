@@ -126,7 +126,7 @@ function toObject(instance) {
 
   content.isLatestRevision = instance.is_latest_revision;
   content.originalLink = getParentUrl(instance);
-  content.snapshot = new can.Map(instance);
+  content.snapshot = new CMS.Models.Snapshot(instance);
   content.related_sources = [];
   content.related_destinations = [];
   content.viewLink = content.snapshot.viewLink;
