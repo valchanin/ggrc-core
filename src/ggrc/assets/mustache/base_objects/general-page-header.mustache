@@ -33,15 +33,9 @@
         </p>
         {{/if}}
       </div>
-      {{#if snapshot}}
-        {{! We need to use `using` to ensure that snapshot is actually
-            reified by the time is_allowed helper uses it }}
-      {{#using reified_snapshot=snapshot}}
-      {{#canUpdate}}
-
-      {{^if instance.originalObjectDeleted}}
-        {{^isLatestRevision}}
-          {{^if instance.snapshot.archived}}
+      {{#if_helpers '\
+      #if' snapshot '\
+      and #if' canGetLatestRevision}}
           <div class="span12 snapshot">
             <hr class="snapshot">
             <p>
@@ -61,13 +55,7 @@
               </snapshot-comparer-config>
             </p>
           </div>
-          {{/if}}
-        {{/isLatestRevision}}
-      {{/if}}
-
-      {{/canUpdate}}
-      {{/using}}
-      {{/if}}
+      {{/if_helpers}}
     </div>
   </div>
 {{/instance}}

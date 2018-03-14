@@ -124,7 +124,6 @@ function toObject(instance) {
   let content = instance.revision.content;
   let audit;
 
-  content.isLatestRevision = instance.is_latest_revision;
   content.originalLink = getParentUrl(instance);
   content.snapshot = new CMS.Models.Snapshot(instance);
   content.related_sources = [];
@@ -138,10 +137,13 @@ function toObject(instance) {
     type: instance.child_type,
     id: instance.child_id,
   });
-  content.canUpdate = Permission.is_allowed_for('update', {
-    type: instance.child_type,
-    id: instance.child_id,
-  });
+  content.canGetLatestRevision =
+    !instance.is_latest_revision &&
+    Permission.is_allowed_for('update', {
+      type: instance.child_type,
+      id: instance.child_id}) &&
+    !instance.original_object_deleted &&
+    !instance.archived;
 
   if (content.access_control_list === undefined) {
     content.access_control_list = _buildACL(content);

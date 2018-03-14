@@ -5,98 +5,65 @@
 
 {{#instance}}
 {{#canRead}}
-    <div class="details-wrap">
-        <a class="btn btn-3bbps dropdown-toggle" href="#" data-toggle="dropdown">
-            <span class="bubble"></span>
-            <span class="bubble"></span>
-            <span class="bubble"></span>
-        </a>
-        <ul class="dropdown-menu three-dots-list" aria-labelledby="drop1" role="menu">
+<div class="details-wrap">
+    <a class="btn btn-3bbps dropdown-toggle" href="#" data-toggle="dropdown">
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+    </a>
+    <ul class="dropdown-menu three-dots-list" aria-labelledby="drop1" role="menu">
 
-<!--
-TODO: Temporary disabled until snapshot view is added.
-            {{#is_info_pin}}
-                {{#if instance.viewLink}}
-                    {{#is_allowed "view_object_page" instance}}
-                        <li>
-                            <a href="{{instance.viewLink}}">
-                            <i class="fa fa-long-arrow-right"></i>
-                            View {{instance.class.title_singular}}
-                            </a>
-                        </li>
-                    {{/is_allowed}}
-                {{/if}}
-            {{/is_info_pin}}
-
+        {{#if_helpers '\
+        #if' canGetLatestRevision '\
+        and ^if' isMapperDetails}}
             <li>
-                <clipboard-link
-                    data-test-id="dropdown_settings_get_permalink_75e3bf91"
-                    title="Get permalink"
-                    notify="true"
-                    text="{{get_permalink_for_object instance}}" />
-            </li>
--->
-            {{! We need to use `using` to ensure that snapshot is actually
-                reified by the time is_allowed helper uses it }}
-            {{^if isMapperDetails}}
-            {{#using reified_snapshot=snapshot}}
-            {{#canUpdate}}
-            {{^isLatestRevision}}
-
-            {{^if instance.originalObjectDeleted}}
-              {{^if instance.snapshot.archived}}
-              <li>
-                  <snapshot-comparer-config
+                <snapshot-comparer-config
+                  {instance}="instance"
+                  {left-revision-id}="instance.snapshot.revision_id"
+                  {right-revisions}="instance.snapshot.revisions">
+                    <revisions-comparer
+                      {modal-title}="modalTitle"
+                      {modal-confirm}="modalConfirm"
+                      {button-view}="buttonView"
                       {instance}="instance"
-                      {left-revision-id}="instance.snapshot.revision_id"
-                      {right-revisions}="instance.snapshot.revisions">
-                          <revisions-comparer
-                          {modal-title}="modalTitle"
-                          {modal-confirm}="modalConfirm"
-                          {button-view}="buttonView"
-                          {instance}="instance"
-                          {left-revision-id}="leftRevisionId"
-                          {right-revision}="rightRevision">
-                              <a href="javascript://" can-click="compareIt">
-                                  <i class="fa fa-refresh"></i>
-                                  Get the latest version
-                              </a>
-                      </revisions-comparer>
-                  </snapshot-comparer-config>
-              </li>
-              {{/if}}
-            {{/if}}
-            {{/isLatestRevision}}
-            {{/canUpdate}}
-            {{/using}}
-            {{/if}}
-
-            <li>
-                {{#if instance.originalObjectDeleted}}
-                    <a href="#" class="disabled-original disabled">
-                        <i class="fa fa-long-arrow-right"></i>
-                        Original {{instance.class.title_singular}} is deleted
-                    </a>
-                {{else}}
-                    <a href="{{instance.originalLink}}">
-                        <i class="fa fa-long-arrow-right"></i>
-                        View original {{instance.class.title_singular}}
-                    </a>
-                {{/if}}
+                      {left-revision-id}="leftRevisionId"
+                      {right-revision}="rightRevision">
+                        <a href="javascript://" can-click="compareIt">
+                            <i class="fa fa-refresh"></i>
+                            Get the latest version
+                        </a>
+                    </revisions-comparer>
+                </snapshot-comparer-config>
             </li>
-              {{#is_info_pin}}
-                  {{#if_helpers '\
-                    #if_instance_of' page_instance 'Issue' '\
-                    or ^if' instance.snapshot.archived '\
-                    and #if_instance_of' page_instance 'Assessment'}}
-                      {{#is_allowed_to_map page_instance instance.snapshot}}
-                        {{#using instance=instance.snapshot}}
-                            {{> '/static/mustache/base_objects/unmap.mustache'}}
-                        {{/using}}
-                      {{/is_allowed_to_map}}
-                  {{/if_helpers}}
-              {{/is_info_pin}}
-        </ul>
-    </div>
+        {{/if_helpers}}
+
+
+        <li>
+            {{#if instance.originalObjectDeleted}}
+                <a href="#" class="disabled-original disabled">
+                    <i class="fa fa-long-arrow-right"></i>
+                    Original {{instance.class.title_singular}} is deleted
+                </a>
+            {{else}}
+                <a href="{{instance.originalLink}}">
+                    <i class="fa fa-long-arrow-right"></i>
+                    View original {{instance.class.title_singular}}
+                </a>
+            {{/if}}
+        </li>
+        {{#is_info_pin}}
+            {{#if_helpers '\
+            #if_instance_of' page_instance 'Issue' '\
+            or ^if' instance.snapshot.archived '\
+            and #if_instance_of' page_instance 'Assessment'}}
+                {{#is_allowed_to_map page_instance instance.snapshot}}
+                {{#using instance=instance.snapshot}}
+                    {{> '/static/mustache/base_objects/unmap.mustache'}}
+                {{/using}}
+                {{/is_allowed_to_map}}
+            {{/if_helpers}}
+        {{/is_info_pin}}
+    </ul>
+</div>
 {{/canRead}}
 {{/instance}}
