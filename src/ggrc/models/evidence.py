@@ -94,6 +94,7 @@ class Evidence(Roleable, Relatable, mixins.Titled,
   }
 
   _allowed_parents = {'Assessment', 'Audit'}
+  FILE_NAME_SEPARATOR = '_ggrc'
 
   @orm.validates("kind")
   def validate_kind(self, key, kind):
@@ -136,6 +137,18 @@ class Evidence(Roleable, Relatable, mixins.Titled,
     tmp = super(Evidence, self).log_json()
     tmp['type'] = 'Evidence'
     return tmp
+
+  @simple_property
+  def is_uploaded(self):
+    """This flag is used to know if file uploaded from a local user folder.
+
+    In that case we need just rename file, not copy.
+    """
+    return self._is_uploaded if hasattr(self, '_is_uploaded') else False
+
+  @is_uploaded.setter
+  def is_uploaded(self, value):
+    self._is_uploaded = value
 
   @simple_property
   def parent_obj(self):
@@ -209,8 +222,10 @@ class Evidence(Roleable, Relatable, mixins.Titled,
     postfix = self._build_file_name_postfix(parent)
     folder_id = parent.folder
     file_id = self.source_gdrive_id
-    from ggrc.gdrive.file_actions import copy_file
-    response = copy_file(folder_id, file_id, postfix)
+    from ggrc.gdrive.file_actions import process_gdrive_file
+    response = process_gdrive_file(folder_id, file_id, postfix,
+                                   separator=Evidence.FILE_NAME_SEPARATOR,
+                                   is_uploaded=self.is_uploaded)
     self._update_fields(response)
 
   def validate(self):
