@@ -18,7 +18,7 @@ COPIED_TITLE = 'test_name'
 COPIED_LINK = 'http://mega.doc'
 
 
-def dummy_gdrive_response(*args):  # noqa
+def dummy_gdrive_response(*args, **kwargs):  # noqa
   return {'webViewLink': COPIED_LINK,
           'name': COPIED_TITLE}
 
@@ -58,7 +58,7 @@ class TestEvidence(TestCase):
     self.assertEqual(result.description, 'mega description')
     self.assertEqual(result.status, 'Active')
 
-  @mock.patch('ggrc.gdrive.file_actions.copy_file', dummy_gdrive_response)
+  @mock.patch('ggrc.gdrive.file_actions.process_gdrive_file', dummy_gdrive_response)
   def create_evidence_gdrive_type(self):
     with factories.single_commit():
       audit = factories.AuditFactory()
@@ -102,7 +102,7 @@ class TestEvidence(TestCase):
                      '`REFERENCE_URL`"',
                      resp.data)
 
-  @mock.patch('ggrc.gdrive.file_actions.copy_file', dummy_gdrive_response)
+  @mock.patch('ggrc.gdrive.file_actions.process_gdrive_file', dummy_gdrive_response)
   def test_get_parent_obj_audit_type(self):
     """Test parent object audit"""
     audit = factories.AuditFactory()
