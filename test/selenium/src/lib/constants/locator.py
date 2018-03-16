@@ -935,14 +935,12 @@ class CommonDropdownMenu(object):
 
 class CommonDropdown3bbsInfoWidget(CommonDropdownMenu):
   """Locators for common settings 3BBS dropdown on Info widget and Info page.
- """
-  _INFO_3BBS_DROPDOWN_BUTTON_XPATH = (
-      Common.INFO_WIDGET_XPATH + "//*[contains(@class,'dropdown-menu')]")
-  _INFO_3BBS_DROPDOWN_XPATH = (
+  """
+  _INFO_3BBS_DD_XPATH = (
       Common.INFO_WIDGET_XPATH +
-      "//ul[contains(@class,'dropdown-menu three-dots-list')]")
-  INFO_WDG_3BBS_DD_BTN_XPATH = (By.XPATH, _INFO_3BBS_DROPDOWN_BUTTON_XPATH)
-  INFO_WDG_3BBS_DD_XPTAH = (By.XPATH, _INFO_3BBS_DROPDOWN_XPATH)
+      "//*[contains(@class,'three-dots-list') or "  # old style
+      "contains(@class, 'tree-action-list-items')]")  # new style
+  INFO_WDG_3BBS_DD_XPATH = (By.XPATH, _INFO_3BBS_DD_XPATH)
 
 
 class AuditsDropdown3bbsInfoWidget(CommonDropdown3bbsInfoWidget):

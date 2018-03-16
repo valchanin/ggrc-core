@@ -2,7 +2,6 @@
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """Info Page and Info Panel dropdown elements."""
 
-from lib import base
 from lib.constants import locator, element
 from lib.element import elements_list
 from lib.page.modal import (delete_object, edit_object, update_object,
@@ -17,9 +16,7 @@ class CommonInfoDropdownSettings(elements_list.DropdownMenu):
 
   def __init__(self, driver):
     super(CommonInfoDropdownSettings, self).__init__(
-        driver, self._locators.INFO_WDG_3BBS_DD_XPTAH)
-    self.dropdown_button = base.Button(
-        self._driver, self._locators.INFO_WDG_3BBS_DD_BTN_XPATH)
+        driver, self._locators.INFO_WDG_3BBS_DD_XPATH)
 
   def select_open(self):
     """Select open button in 3BBS dropdown modal."""
@@ -75,7 +72,7 @@ class Programs(CommonInfoDropdownSettings):
   """Programs 3BBS button/dropdown settings on Info pages and Info panels."""
 
 
-class Controls(Snapshots):
+class Controls(CommonInfoDropdownSettings):
   """Controls 3BBS button/dropdown settings on Info pages and Info panels."""
 
 
