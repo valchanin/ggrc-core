@@ -53,13 +53,13 @@ class AutoStatusChangeable(object):
 
   RELATED_OBJ_STATUS_MAPPING = {
       'Document': {
-          'key': lambda x: x.document_type,
+          'key': lambda x: x.kind,
           'mappings': {
               document.Document.REFERENCE_URL: {
                   statusable.Statusable.DONE_STATE,
                   statusable.Statusable.FINAL_STATE
               },
-              document.Document.ATTACHMENT: {
+              document.Document.FILE: {
                   statusable.Statusable.DONE_STATE,
                   statusable.Statusable.FINAL_STATE,
                   statusable.Statusable.START_STATE

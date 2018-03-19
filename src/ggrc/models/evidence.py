@@ -60,10 +60,9 @@ class Evidence(Roleable, Relatable, mixins.Titled,
       "status",
       reflection.Attribute("kind", update=False),
       reflection.Attribute("parent_obj", read=False, update=False),
-      reflection.Attribute('archived', create=False, update=False)
+      reflection.Attribute('archived', create=False, update=False),
+      reflection.Attribute('is_uploaded', read=False, update=False),
   )
-
-  # TODO adopt document to fit evidence interface (source_gdrive_id for copy)
 
   # assessment -> get related objects should return evidences
   _fulltext_attrs = [
@@ -182,7 +181,7 @@ class Evidence(Roleable, Relatable, mixins.Titled,
   @staticmethod
   def _build_file_name_postfix(parent_obj):
     """Build postfix for given parent object"""
-    postfix_parts = ['_ggrc', parent_obj.slug]
+    postfix_parts = [Evidence.FILE_NAME_SEPARATOR, parent_obj.slug]
 
     related_snapshots = parent_obj.related_objects(_types=['Snapshot'])
     related_snapshots = sorted(related_snapshots, key=lambda it: it.id)

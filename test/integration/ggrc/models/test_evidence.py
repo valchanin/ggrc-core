@@ -254,7 +254,7 @@ class TestEvidence(TestCase):
       })
     self.assertEquals(archived, evidence.archived)
 
-  def test_evidence_url_type(self):
+  def test_evidence_url_type_with_parent(self):
     """Evidence of URL type should mapped to parent if parent specified"""
     audit = factories.AuditFactory()
     evidence = factories.EvidenceFactory(

@@ -106,7 +106,7 @@ class DocumentLinkHandler(handlers.ColumnHandler):
 class DocumentEvidenceHandler(DocumentLinkHandler):
   """Handler for evidence field on document imports."""
 
-  DOCUMENT_TYPE = models.Document.ATTACHMENT
+  DOCUMENT_TYPE = models.Document.FILE
 
   @staticmethod
   def _parse_line(line):

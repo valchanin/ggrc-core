@@ -133,7 +133,7 @@ class TestDocument(TestCase):
             'type': 'Control'
         })
     self.assertEqual(len(control.documents), 1)
-    self.assertEqual(control.document_evidence[0].title, 'test_name')
+    self.assertEqual(control.documents_file[0].title, 'test_name')
 
   def test_rename_document(self):
     """Test rename document."""
@@ -156,7 +156,7 @@ class TestDocument(TestCase):
                                 is_uploaded=True,
                                 separator='_ggrc')
       self.assertEqual(len(control.documents), 1)
-      self.assertEqual(control.document_evidence[0].title, 'new_name')
+      self.assertEqual(control.documents_file[0].title, 'new_name')
 
   def test_update_title(self):
     """Test update document title."""
@@ -168,15 +168,15 @@ class TestDocument(TestCase):
     self.assertEqual(all_models.Document.query.get(document.id).title,
                      update_title)
 
-  def create_document_by_type(self, doc_type):
+  def create_document_by_type(self, kind):
     """Create document with sent type."""
     data = {
         "title": "test_title",
         "link": "test_link",
     }
-    if doc_type is not None:
-      data["document_type"] = doc_type
-    doc_type = doc_type or all_models.Document.URL
+    if kind is not None:
+      data["kind"] = kind
+    kind = kind or all_models.Document.URL
     resp, doc = self.gen.generate_object(
         all_models.Document,
         data
@@ -184,7 +184,7 @@ class TestDocument(TestCase):
     self.assertTrue(
         all_models.Document.query.filter(
             all_models.Document.id == resp.json["document"]["id"],
-            all_models.Document.document_type == doc_type,
+            all_models.Document.kind == kind,
         ).all()
     )
     return (resp, doc)
@@ -199,12 +199,12 @@ class TestDocument(TestCase):
 
   def test_create_evidence(self):
     """Test create evidence."""
-    self.create_document_by_type(all_models.Document.ATTACHMENT)
+    self.create_document_by_type(all_models.Document.FILE)
 
   def test_create_invalid_type(self):
     """Test validation document_type."""
     data = {
-        "document_type": 3,
+        "kind": 3,
         "title": "test_title",
         "link": "test_link",
         "owners": [self.gen.create_stub(all_models.Person.query.first())],
@@ -215,8 +215,8 @@ class TestDocument(TestCase):
     obj_dict[obj_name].update(data)
     resp = self.api.post(all_models.Document, obj_dict)
     self.assert400(resp)
-    self.assertEqual('"Invalid value for attribute document_type. '
-                     'Expected options are `URL`, `EVIDENCE`, '
+    self.assertEqual('"Invalid value for attribute kind. '
+                     'Expected options are `URL`, `FILE`, '
                      '`REFERENCE_URL`"',
                      resp.data)
 
@@ -235,12 +235,12 @@ class TestDocument(TestCase):
       control = factories.ControlFactory()
       response = self.api.post(all_models.Document, [{
           "document": {
-              "document_type": all_models.Document.ATTACHMENT,
+              "kind": all_models.Document.FILE,
               "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
-              "documentable_obj": {
+              "parent_obj": {
                   "id": control.id,
                   "type": "Control"
               }
@@ -264,12 +264,12 @@ class TestDocument(TestCase):
       control = factories.ControlFactory()
       response = self.api.post(all_models.Document, [{
           "document": {
-              "document_type": all_models.Document.ATTACHMENT,
+              "kind": all_models.Document.FILE,
               "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
-              "documentable_obj": {
+              "parent_obj": {
                   "id": control.id,
                   "type": "Control"
               }
@@ -293,12 +293,12 @@ class TestDocument(TestCase):
 
       doc1 = {
           "document": {
-              "document_type": all_models.Document.ATTACHMENT,
+              "kind": all_models.Document.FILE,
               "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
-              "documentable_obj": {
+              "parent_obj": {
                   "id": control.id,
                   "type": "Control"
               }
@@ -306,7 +306,7 @@ class TestDocument(TestCase):
       }
       doc2 = {
           "document": {
-              "document_type": all_models.Document.URL,
+              "kind": all_models.Document.URL,
               "link": "some link",
               "title": "some title",
               "context": None,
@@ -320,7 +320,7 @@ class TestDocument(TestCase):
   def create_document_by_api(self, kind=all_models.Document.URL):
     document_data = dict(
         title='Simple title',
-        document_type=kind,
+        kind=kind,
         link='some_url.com',
         description='mega description'
     )
@@ -342,7 +342,7 @@ class TestDocument(TestCase):
     control = factories.ControlFactory()
     document = factories.UrlTypeDocumentFactory(
         description='mega description',
-        documentable_obj={
+        parent_obj={
             'id': control.id,
             'type': 'Control'
         }

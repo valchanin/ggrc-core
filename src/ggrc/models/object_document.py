@@ -19,11 +19,11 @@ class Documentable(object):
   _include_links = []
 
   _fulltext_attrs = [
-      MultipleSubpropertyFullTextAttr('document_evidence', 'document_evidence',
+      MultipleSubpropertyFullTextAttr('documents_file', 'documents_file',
                                       ['title', 'link']),
-      MultipleSubpropertyFullTextAttr('document_url', 'document_url',
+      MultipleSubpropertyFullTextAttr('documents_url', 'documents_url',
                                       ['link']),
-      MultipleSubpropertyFullTextAttr('reference_url', 'reference_url',
+      MultipleSubpropertyFullTextAttr('documents_reference_url', 'documents_reference_url',
                                       ['link']),
   ]
 
@@ -85,26 +85,24 @@ class Documentable(object):
         viewonly=True,
     )
 
+  def get_documents_by_kind(self, kind):
+    return [e for e in self.documents
+            if e.kind == kind]
+
   @property
-  def document_url(self):
+  def documents_url(self):
     """List of documents URL type"""
-    # pylint: disable=not-an-iterable
-    return [d for d in self.documents
-            if Document.URL == d.document_type]
+    return self.get_documents_by_kind(Document.URL)
 
   @property
-  def document_evidence(self):
-    """List of documents EVIDENCE type"""
-    # pylint: disable=not-an-iterable
-    return [d for d in self.documents
-            if Document.ATTACHMENT == d.document_type]
+  def documents_file(self):
+    """List of documents FILE type"""
+    return self.get_documents_by_kind(Document.FILE)
 
   @property
-  def reference_url(self):
+  def documents_reference_url(self):
     """List of documents REFERENCE_URL type"""
-    # pylint: disable=not-an-iterable
-    return [d for d in self.documents
-            if Document.REFERENCE_URL == d.document_type]
+    return self.get_documents_by_kind(Document.REFERENCE_URL)
 
   @classmethod
   def eager_query(cls):
@@ -131,9 +129,9 @@ class Documentable(object):
     # they were mapped to an object. Otherwise python uses cached value,
     # which might not contain newly created documents.
     out_json = super(Documentable, self).log_json()
-    out_json["document_url"] = self._log_docs(self.document_url)
-    out_json["document_evidence"] = self._log_docs(self.document_evidence)
-    out_json["reference_url"] = self._log_docs(self.reference_url)
+    out_json["documents_url"] = self._log_docs(self.documents_url)
+    out_json["documents_file"] = self._log_docs(self.documents_file)
+    out_json["documents_reference_url"] = self._log_docs(self.documents_reference_url)
     return out_json
 
   @classmethod

@@ -313,7 +313,7 @@ class UrlTypeDocumentFactory(DocumentFactory):
 
 
 class EvidenceTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.ATTACHMENT
+  document_type = all_models.Document.FILE
 
 
 class ReferenceUrlTypeDocumentFactory(DocumentFactory):

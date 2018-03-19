@@ -120,6 +120,16 @@ def upgrade():
         )
   """)
 
+  op.execute("""
+    ALTER TABLE documents CHANGE document_type kind enum('URL','FILE','REFERENCE_URL', 'EVIDENCE') NOT NULL DEFAULT 'URL';
+  """)
+  op.execute('SET SESSION SQL_SAFE_UPDATES = 0;')
+  op.execute("UPDATE documents SET kind = 'FILE' where kind = 'EVIDENCE';")
+  op.execute("""
+    ALTER TABLE documents MODIFY kind enum('URL','FILE','REFERENCE_URL') NOT NULL DEFAULT 'URL';
+  """)
+  op.execute("ALTER TABLE documents ADD source_gdrive_id varchar(250) DEFAULT NULL")
+
 
 def downgrade():
   """Downgrade database schema and/or data back to the previous revision."""
