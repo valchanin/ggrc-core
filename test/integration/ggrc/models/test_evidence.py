@@ -253,3 +253,20 @@ class TestEvidence(TestCase):
         'type': 'Assessment'
       })
     self.assertEquals(archived, evidence.archived)
+
+  def test_evidence_url_type(self):
+    """Evidence of URL type should mapped to parent if parent specified"""
+    audit = factories.AuditFactory()
+    evidence = factories.EvidenceFactory(
+      title='Simple title',
+      kind=all_models.Evidence.URL,
+      link='some_url.com',
+      description='mega description',
+      parent_obj={
+        'id': audit.id,
+        'type': 'Audit'
+      }
+    )
+    rel_evidences = audit.related_objects(_types=[evidence.type])
+    self.assertEqual(evidence, rel_evidences.pop())
+
