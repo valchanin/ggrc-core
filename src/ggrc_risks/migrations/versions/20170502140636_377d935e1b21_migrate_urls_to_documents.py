@@ -9,8 +9,6 @@ Create Date: 2017-05-02 14:06:36.936410
 # disable Invalid constant name pylint warning for mandatory Alembic variables.
 # pylint: disable=invalid-name
 
-from ggrc.migrations.utils import url_util
-
 
 # revision identifiers, used by Alembic.
 revision = '377d935e1b21'
