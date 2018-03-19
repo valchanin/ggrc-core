@@ -173,9 +173,9 @@ describe('GGRC.Components.relatedAssessments', () => {
         });
       });
 
-      it('builds EVIDENCE model correctly', ()=> {
+      it('builds FILE model correctly', ()=> {
         let evidence = new can.Map({
-          kind: 'EVIDENCE',
+          kind: 'FILE',
           title: 'title',
           source_gdrive_id: 'source_gdrive_id',
         });
@@ -191,7 +191,9 @@ describe('GGRC.Components.relatedAssessments', () => {
             id: 'instanceId',
             type: 'instanceType',
           },
-          kind: 'EVIDENCE',
+          status: 'Active',
+          access_control_list: [],
+          kind: 'FILE',
           title: 'title',
           source_gdrive_id: 'source_gdrive_id',
         });
@@ -215,6 +217,8 @@ describe('GGRC.Components.relatedAssessments', () => {
             id: 'instanceId',
             type: 'instanceType',
           },
+          status: 'Active',
+          access_control_list: [],
           kind: 'URL',
           title: 'title',
           link: 'link',
