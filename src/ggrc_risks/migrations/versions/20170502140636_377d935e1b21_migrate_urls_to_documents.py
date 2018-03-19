@@ -25,9 +25,11 @@ HYPERLINKED_OBJ_TYPES = set(HYPERLINKED_OBJECTS)
 
 def upgrade():
   """Upgrade database schema and/or data, creating a new revision."""
-  url_util.migrate_urls_to_documents(HYPERLINKED_OBJECTS)
+  # Document object is owned by ggrc, thus moved to ggrc migration chain
+  pass
 
 
 def downgrade():
   """Downgrade database schema and/or vdata back to the previous revision."""
-  url_util.delete_reference_urls(HYPERLINKED_OBJ_TYPES)
+  # Document object is owned by ggrc, thus moved to ggrc migration chain
+  pass
