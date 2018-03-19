@@ -20,3 +20,17 @@ def migrate_urls_to_documents(_):
       nullable=False,
       server_default=u'URL'
   )
+
+
+def delete_reference_urls(_):
+  """Delete reference URL documents and their relations to objects.
+
+  NOTE: This function also included a data migration.
+  """
+  op.alter_column(
+    'documents', 'document_type',
+    type_=Enum(u'URL', u'EVIDENCE'),
+    existing_type=Enum(u'URL', u'EVIDENCE', u'REFERENCE_URL'),
+    nullable=False,
+    server_default=u'URL'
+  )
