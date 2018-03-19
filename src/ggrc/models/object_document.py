@@ -143,14 +143,14 @@ class Documentable(object):
 
 class PublicDocumentable(Documentable):
   _aliases = {
-      "document_url": {
-          "display_name": "Evidence URL",
+      "documents_url": {
+          "display_name": "Document URL",
           "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
           "description": "New line separated list of URLs.",
       },
 
-      "document_evidence": {
-          "display_name": "Evidence File",
+      "documents_file": {
+          "display_name": "Document File",
           "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
           "description": (
               "New line separated list of evidence links and "
@@ -158,7 +158,7 @@ class PublicDocumentable(Documentable):
               "Title of the evidence link"
           ),
       },
-      "reference_url": {
+      "documents_reference_url": {
           "display_name": "Reference URL",
           "type": reflection.AttributeInfo.Type.SPECIAL_MAPPING,
           "description": "New line separated list of Reference URLs.",

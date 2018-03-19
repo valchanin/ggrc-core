@@ -35,8 +35,8 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   URL = "URL"
   FILE = "FILE"
   REFERENCE_URL = "REFERENCE_URL"
-  VALID_DOCUMENT_TYPES = [URL, FILE, REFERENCE_URL]
-  kind = deferred(db.Column(db.Enum(*VALID_DOCUMENT_TYPES),
+  VALID_DOCUMENT_KINDS = [URL, FILE, REFERENCE_URL]
+  kind = deferred(db.Column(db.Enum(*VALID_DOCUMENT_KINDS),
                             default=URL,
                             nullable=False),
                   "Document")
@@ -79,7 +79,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
     """Returns correct option, otherwise rises an error"""
     if kind is None:
       kind = self.URL
-    if kind not in self.VALID_DOCUMENT_TYPES:
+    if kind not in self.VALID_DOCUMENT_KINDS:
       raise exceptions.ValidationError(
           "Invalid value for attribute {attr}. "
           "Expected options are `{url}`, `{kind}`, `{reference_url}`".
