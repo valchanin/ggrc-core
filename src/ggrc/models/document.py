@@ -31,6 +31,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   link = deferred(db.Column(db.String, nullable=False), 'Document')
   description = deferred(db.Column(db.Text, nullable=False, default=u""),
                          'Document')
+  source_gdrive_id = deferred(db.Column(db.String), 'Document')
 
   URL = "URL"
   ATTACHMENT = "EVIDENCE"
@@ -53,6 +54,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
       'link',
       'description',
       'document_type',
+      reflection.Attribute("source_gdrive_id", update=False),
       reflection.Attribute('documentable_obj', read=False, update=False),
       reflection.Attribute('is_uploaded', read=False, update=False),
 
@@ -196,20 +198,36 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   def _get_folder(parent_obj):
     return parent_obj.folder if hasattr(parent_obj, 'folder') else ''
 
-  def _execute_file_copy_flow(self):
-    """Execute file copy flow if needed"""
-    if hasattr(self, '_documentable_obj') and self._documentable_obj:
+  def _map_documentable(self):
+    """Maps document to documentable object
+
+    If Document.ATTACHMENT and source_gdrive_id => copy file
+    """
+    if self.is_with_documentable_obj():
       documentable_obj = self._get_documentable_obj()
-      postfix = self._build_file_name_postfix(documentable_obj)
-      folder_id = self._get_folder(documentable_obj)
-      file_id = self.link
-      from ggrc.gdrive.file_actions import process_gdrive_file
-      response = process_gdrive_file(folder_id, file_id, postfix,
-                                     separator=Document.FILE_NAME_SEPARATOR,
-                                     is_uploaded=self.is_uploaded)
-      self._update_fields(response)
+      if self.document_type == Document.ATTACHMENT and self.source_gdrive_id:
+        self.exec_gdrive_file_copy_flow(documentable_obj)
       self._build_relationship(documentable_obj)
       self._documentable_obj = None
 
+  def exec_gdrive_file_copy_flow(self, documentable_obj):
+    """Execute google gdrive file copy flow
+
+    Build file name, destination folder and copy file to that folder.
+    After coping fills document object fields with new gdrive URL
+    """
+    postfix = self._build_file_name_postfix(documentable_obj)
+    folder_id = self._get_folder(documentable_obj)
+    file_id = self.source_gdrive_id
+    from ggrc.gdrive.file_actions import process_gdrive_file
+    response = process_gdrive_file(folder_id, file_id, postfix,
+                                   separator=Document.FILE_NAME_SEPARATOR,
+                                   is_uploaded=self.is_uploaded)
+    self._update_fields(response)
+
+  def is_with_documentable_obj(self):
+    return bool(hasattr(self, '_documentable_obj') and self._documentable_obj)
+
   def handle_before_flush(self):
-    self._execute_file_copy_flow()
+    """Handler that called  before SQLAlchemy flush event"""
+    self._map_documentable()
