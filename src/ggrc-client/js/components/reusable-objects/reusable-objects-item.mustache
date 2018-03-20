@@ -7,13 +7,9 @@
   {{#is_allowed 'update' baseInstance context='for'}}
     {{#is_allowed 'update' instance context='for'}}
       {{^if baseInstance.archived}}
-        {{#if disabled}}
-            <input type="checkbox" checked="checked" disabled/>
-        {{else}}
-            <input type="checkbox"
-                   can-value="isChecked"
-                   {{#if isSaving}}disabled{{/if}}/>
-        {{/if}}
+          <input type="checkbox"
+                  can-value="isChecked"
+                  {{#if disabled}}disabled{{/if}}/>
       {{/if}}
     {{/is_allowed}}
   {{/is_allowed}}

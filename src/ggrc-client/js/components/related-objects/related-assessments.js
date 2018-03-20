@@ -15,16 +15,7 @@ import '../tree_pagination/tree_pagination';
 import Pagination from '../base-objects/pagination';
 import template from './templates/related-assessments.mustache';
 import {prepareCustomAttributes} from '../../plugins/utils/ca-utils';
-
-let mapper = {
-  mapObjects: function (source, destination) {
-    return new CMS.Models.Relationship({
-      context: source.context || {id: null},
-      source: source,
-      destination: destination,
-    });
-  },
-};
+import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
 const defaultOrderBy = [
   {field: 'finished_date', direction: 'desc'},
@@ -36,19 +27,13 @@ export default can.Component.extend({
   template,
   viewModel: {
     define: {
-      baseInstanceDocuments: {
+      unableToReuse: {
         get: function () {
-          return this.attr('urls').concat(this.attr('evidences'));
+          let hasItems = this.attr('selectedEvidences.length');
+          let isSaving = this.attr('isSaving');
+
+          return !hasItems || isSaving;
         },
-      },
-      hasSelected: {
-        get: function () {
-          return this.attr('documentList.length');
-        },
-      },
-      needReuse: {
-        type: 'boolean',
-        value: true,
       },
       relatedObjectType: {
         get: function () {
@@ -59,18 +44,6 @@ export default can.Component.extend({
           // a snapshot.
           return this.attr('instance.assessment_type') ||
                  this.attr('instance.type');
-        },
-      },
-      mappedSnapshots: {
-        type: 'boolean',
-        value: true,
-      },
-      relatedObjectsFilter: {
-        get: function () {
-          return {
-            only: [this.attr('relatedObjectType')],
-            exclude: [],
-          };
         },
       },
       relatedObjectsTitle: {
@@ -87,46 +60,48 @@ export default can.Component.extend({
         },
       },
     },
-    evidences: [],
-    urls: [],
     instance: {},
-    documentList: [],
+    selectedEvidences: [],
     orderBy: {},
     isSaving: false,
     loading: false,
-    needReuse: '@',
-    baseInstanceDocuments: [],
+    needReuse: false,
     relatedAssessments: [],
-    selectedItem: {},
-    objectSelectorEl: '.grid-data__action-column button',
-    noRelatedObjectsMessage: 'No Related Assessments were found',
-    getMapObjects: function (source, list) {
-      return list
-        .filter(function (item, index) {
-          return index === list.indexOf(item);
-        })
-        // Get Array of mapped models
-        .map(function (destination) {
-          return mapper
-            .mapObjects(source, destination)
-            .save();
-        });
+    buildEvidenceModel: function (evidence) {
+      const baseData = {
+        context: {id: this.attr('instance.context.id') || null},
+        documentable_obj: {
+          id: this.attr('instance.id'),
+          type: this.attr('instance.type'),
+        },
+        document_type: evidence.attr('document_type'),
+        title: evidence.attr('title'),
+      };
+      const specificData = evidence.attr('document_type') === 'EVIDENCE' ?
+        {source_gdrive_id: evidence.attr('gdrive_id')} :
+        {link: evidence.attr('link')};
+
+      let data = Object.assign({}, baseData, specificData);
+
+      return new CMS.Models.Document(data);
     },
     reuseSelected: function () {
-      let reusedObjectList =
-        this.getMapObjects(
-          this.attr('instance'),
-          this.attr('documentList'));
+      let reusedObjectList = this.attr('selectedEvidences').map((evidence)=> {
+        let model = this.buildEvidenceModel(evidence);
+
+        return backendGdriveClient.withAuth(()=> {
+          return model.save();
+        });
+      });
+
       this.attr('isSaving', true);
 
-      can.when.apply(can, reusedObjectList)
-        .always(this.restoreDefaults.bind(this));
-    },
-    restoreDefaults: function () {
-      this.attr('documentList').replace([]);
-      this.attr('isSaving', false);
-      this.dispatch('afterObjectReused');
-      this.attr('instance').dispatch('refreshInstance');
+      can.when(...reusedObjectList).always(()=> {
+        this.attr('selectedEvidences').replace([]);
+        this.attr('isSaving', false);
+        this.dispatch('afterObjectReused');
+        this.attr('instance').dispatch('refreshInstance');
+      });
     },
     loadRelatedAssessments() {
       const limits = this.attr('paging.limits');

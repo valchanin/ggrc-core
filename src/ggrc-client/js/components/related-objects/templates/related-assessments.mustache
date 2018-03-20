@@ -8,7 +8,7 @@
   {{#if needReuse}}
     {{#is_allowed 'update' baseInstance context='for'}}
       {{#unless instance.archived}}
-        <button class="btn btn-small btn-green grid-data__toolbar-item" ($click)="reuseSelected()" {{^hasSelected}}disabled{{/hasSelected}}>Reuse</button>
+        <button class="btn btn-small btn-green grid-data__toolbar-item" ($click)="reuseSelected()" {{#if unableToReuse}}disabled{{/if}}>Reuse</button>
       {{/unless}}
     {{/is_allowed}}
   {{/if}}
@@ -49,9 +49,11 @@
 </div>
 <div class="grid-data-body center-empty-message">
     <object-list {(items)}="relatedAssessments"
-                 {(selected-item)}="selectedItem"
                  {is-loading}="loading"
-                 {item-selector}="objectSelectorEl" {empty-message}="noRelatedObjectsMessage" class="object-list__limited-height">
+                 {^selected-item}="selectedItem"
+                 {item-selector}="'.grid-data__action-column button'"
+                 {empty-message}="'No Related Assessments were found'"
+                 class="object-list__limited-height">
         <div class="grid-data-row flex-row flex-box">
           <div class="flex-size-3">
             <a href="{{instance.viewLink}}" class="grid-data-item__title-cell" target="_blank" title="{{instance.title}}">{{instance.title}}</a>
@@ -78,9 +80,8 @@
               {{#if needReuse}}
                 <object-list {items}="instance.documents" show-more="true">
                   <reusable-objects-item {instance}="{.}"
-                                         {is-saving}="isSaving"
-                                         {base-instance-documents}="baseInstanceDocuments"
-                                         {(selected-list)}="documentList">
+                                         {disabled}="isSaving"
+                                         {(selected-list)}="selectedEvidences">
                     <document-object-list-item {instance}="instance"></document-object-list-item>
                   </reusable-objects-item>
                 </object-list>
