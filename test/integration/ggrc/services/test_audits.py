@@ -80,7 +80,7 @@ class TestAuditActions(TestCase, WithQueryApi):
   def test_evidence_create_an_map(self):
     """Test document is created and mapped to audit"""
     audit = factories.AuditFactory(slug="Audit")
-    evidence = factories.EvidenceFactory(
+    evidence = factories.EvidenceTypeDocumentFactory(
         title="evidence",
     )
     factories.RelationshipFactory(

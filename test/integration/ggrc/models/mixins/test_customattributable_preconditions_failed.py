@@ -194,7 +194,7 @@ class TestPreconditionsFailed(TestCase):
         dropdown_parameters=("foo,evidence_required", "0,2"),
         value="evidence_required",
     )
-    evidence = factories.EvidenceFactory(
+    evidence = factories.EvidenceTypeDocumentFactory(
         title="Mandatory evidence",
     )
     factories.RelationshipFactory(
@@ -285,7 +285,7 @@ class TestPreconditionsFailed(TestCase):
         value="evidence_required"
     )
     # only one evidence provided yet
-    evidence = factories.EvidenceFactory(
+    evidence = factories.EvidenceTypeDocumentFactory(
         title="Mandatory evidence",
     )
     factories.RelationshipFactory(
@@ -314,7 +314,7 @@ class TestPreconditionsFailed(TestCase):
         value="evidence_required"
     )
     # only one evidence provided yet
-    evidence = factories.EvidenceFactory(
+    evidence = factories.EvidenceTypeDocumentFactory(
         title="Mandatory evidence",
     )
     factories.RelationshipFactory(
@@ -323,7 +323,7 @@ class TestPreconditionsFailed(TestCase):
     )
 
     # the second evidence
-    evidence = factories.EvidenceFactory(
+    evidence = factories.EvidenceTypeDocumentFactory(
         title="Second mandatory evidence",
     )
     factories.RelationshipFactory(

@@ -52,7 +52,7 @@ class TestRelationship(TestCase):
     url_link = u"www.foo.com"
     with factories.single_commit():
       control = factories.ControlFactory()
-      url = factories.ReferenceUrlFactory(link=url_link)
+      url = factories.ReferenceUrlTypeDocumentFactory(link=url_link)
 
     def get_revisions():
       return all_models.Revision.query.filter(

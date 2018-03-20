@@ -299,15 +299,15 @@ class DocumentFactory(ModelFactory):
   link = "some link"
 
 
-class UrlFactory(DocumentFactory):
+class UrlTypeDocumentFactory(DocumentFactory):
   document_type = all_models.Document.URL
 
 
-class EvidenceFactory(DocumentFactory):
+class EvidenceTypeDocumentFactory(DocumentFactory):
   document_type = all_models.Document.ATTACHMENT
 
 
-class ReferenceUrlFactory(DocumentFactory):
+class ReferenceUrlTypeDocumentFactory(DocumentFactory):
   document_type = all_models.Document.REFERENCE_URL
 
 

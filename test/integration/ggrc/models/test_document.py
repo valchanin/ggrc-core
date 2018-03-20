@@ -15,6 +15,7 @@ from integration.ggrc import generator
 from integration.ggrc.models import factories
 
 
+# pylint: disable=unused-argument
 def dummy_gdrive_response(*args, **kwargs):  # noqa
   return {'webViewLink': 'http://mega.doc',
           'name': 'test_name'}
@@ -30,71 +31,48 @@ class TestDocument(TestCase):
     self.api = Api()
     self.gen = generator.ObjectGenerator()
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
-  def test_get_documentable_obj_assessment_type(self):
-    """Test documentable postfix for assessment with one control."""
-
+  def test_get_documentable_obj_control_type(self):
+    """Test mapping documentable of Control type"""
     control = factories.ControlFactory()
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
+    document = factories.EvidenceTypeDocumentFactory(
         documentable_obj={
             'id': control.id,
             'type': 'Control'
         })
-    # pylint: disable=protected-access
-    self.assertEqual(control, document._get_documentable_obj())
+    expected_control = document.related_objects(_types=[control.type]).pop()
+    self.assertEqual(expected_control, control)
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
-  def test_get_documentable_obj_validation_is_id_presents(self):
-    """Test documentable _get_documentable_obj validation of id."""
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
-        documentable_obj={
-            'type': 'Control'
-        })
-    # pylint: disable=protected-access
+  def test_documentable_obj_validation_is_id_presents(self):
+    """Validation documentable_obj id should present."""
     with self.assertRaises(exceptions.ValidationError):
-      document._get_documentable_obj()
+      factories.EvidenceTypeDocumentFactory(
+          documentable_obj={
+              'type': 'Control'
+          })
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
-  def test_get_documentable_obj_validation_is_type_presents(self):
-    """Test documentable _get_documentable_obj validation of type."""
+  def test_documentable_obj_validation_is_type_presents(self):
+    """Validation documentable_obj type should present."""
     control = factories.ControlFactory()
-
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
-        documentable_obj={
-            'id': control.id
-        })
-    # pylint: disable=protected-access
     with self.assertRaises(exceptions.ValidationError):
-      document._get_documentable_obj()
+      factories.EvidenceTypeDocumentFactory(
+          documentable_obj={
+              'id': control.id
+          })
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
-  def test_get_documentable_obj_validation_wrong_type(self):
-    """Test documentable _get_documentable_obj validation of type."""
+  def test_documentable_obj_validation_wrong_type(self):
+    """Validation documentable_obj type.
+
+    Type should be in 'Assessment', 'Control', 'Audit',
+    'Issue', 'RiskAssessment'.
+    """
     control = factories.ControlFactory()
-
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
-        documentable_obj={
-            'id': control.id,
-            'type': 'Program'
-        })
-    # pylint: disable=protected-access
     with self.assertRaises(exceptions.ValidationError):
-      document._get_documentable_obj()
+      factories.EvidenceTypeDocumentFactory(
+          documentable_obj={
+              'id': control.id,
+              'type': 'Program'
+          })
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
   def test_documentable_postfix_one_control(self):
     """Test documentable postfix for assessment with one control."""
 
@@ -105,9 +83,7 @@ class TestDocument(TestCase):
       assessment = factories.AssessmentFactory(audit=audit)
       factories.RelationshipFactory(source=assessment, destination=snapshot)
 
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
+    document = factories.EvidenceTypeDocumentFactory(
         documentable_obj={
             'id': assessment.id,
             'type': 'Assessment'
@@ -119,8 +95,6 @@ class TestDocument(TestCase):
     result = document._build_file_name_postfix(assessment)
     self.assertEqual(expected, result)
 
-  @mock.patch('ggrc.models.document.Document.handle_before_flush',
-              lambda x: '')
   def test_documentable_postfix_two_controls(self):
     """Test documentable postfix for assessment with two controls."""
 
@@ -135,9 +109,7 @@ class TestDocument(TestCase):
       factories.RelationshipFactory(source=assessment,
                                     destination=snapshots[1])
 
-    document = factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
+    document = factories.EvidenceTypeDocumentFactory(
         documentable_obj={
             'id': assessment.id,
             'type': 'Assessment'
@@ -155,9 +127,8 @@ class TestDocument(TestCase):
   def test_copy_document(self):
     """Test copy document."""
     control = factories.ControlFactory()
-    factories.DocumentFactory(
-        title='Simple title',
-        document_type=all_models.Document.ATTACHMENT,
+    factories.EvidenceTypeDocumentFactory(
+        source_gdrive_id='test_gdrive_id',
         documentable_obj={
             'id': control.id,
             'type': 'Control'
@@ -173,10 +144,9 @@ class TestDocument(TestCase):
           'name': 'new_name'
       }
       control = factories.ControlFactory()
-      factories.DocumentFactory(
-          title='Simple title',
-          document_type=all_models.Document.ATTACHMENT,
+      factories.EvidenceTypeDocumentFactory(
           is_uploaded=True,
+          source_gdrive_id='some link',
           documentable_obj={
               'id': control.id,
               'type': 'Control'
@@ -200,7 +170,7 @@ class TestDocument(TestCase):
                      update_title)
 
   def create_document_by_type(self, doc_type):
-    """Create docuemtn with sent type."""
+    """Create document with sent type."""
     data = {
         "title": "test_title",
         "link": "test_link",
@@ -257,6 +227,7 @@ class TestDocument(TestCase):
     To allow FE ignore the error popup we need to set
     'X-Expected-Error' header
     """
+    # pylint: disable=unused-argument
     def side_effect_function(*args, **kwargs):
       raise GdriveUnauthorized("Unable to get valid credentials")
 
@@ -266,6 +237,7 @@ class TestDocument(TestCase):
       response = self.api.post(all_models.Document, [{
           "document": {
               "document_type": all_models.Document.ATTACHMENT,
+              "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
@@ -284,6 +256,7 @@ class TestDocument(TestCase):
     If error is unexpected we need to make sure that 'X-Expected-Error'
     header is not set.
     """
+    # pylint: disable=unused-argument
     def side_effect_function(*args, **kwargs):
       raise Unauthorized("Unable to get valid credentials")
 
@@ -293,6 +266,7 @@ class TestDocument(TestCase):
       response = self.api.post(all_models.Document, [{
           "document": {
               "document_type": all_models.Document.ATTACHMENT,
+              "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
@@ -310,6 +284,7 @@ class TestDocument(TestCase):
 
     To allow FE ignore popup we need to set 'X-Expected-Error' header
     """
+    # pylint: disable=unused-argument
     def side_effect_function(*args, **kwargs):
       raise GdriveUnauthorized("Unable to get valid credentials")
 
@@ -320,6 +295,7 @@ class TestDocument(TestCase):
       doc1 = {
           "document": {
               "document_type": all_models.Document.ATTACHMENT,
+              "source_gdrive_id": "some link",
               "link": "some link",
               "title": "some title",
               "context": None,
@@ -341,3 +317,36 @@ class TestDocument(TestCase):
     response = self.api.post(all_models.Document, [doc1, doc2])
     self.assertEqual(response.status_code, 401)
     self.assertIn('X-Expected-Error', response.headers)
+
+  def create_document_by_api(self, kind=all_models.Document.URL):
+    document_data = dict(
+        title='Simple title',
+        document_type=kind,
+        link='some_url.com',
+        description='mega description'
+    )
+    _, document = self.gen.generate_object(
+        all_models.Document,
+        document_data
+    )
+
+    result = all_models.Document.query.filter(
+        all_models.Document.id == document.id).one()
+
+    self.assertEqual(result.title, 'Simple title')
+    self.assertEqual(result.kind, kind)
+    self.assertEqual(result.link, 'some_url.com')
+    self.assertEqual(result.description, 'mega description')
+
+  def test_document_url_type_with_parent(self):
+    """Document of URL type should mapped to parent if parent specified"""
+    control = factories.ControlFactory()
+    document = factories.UrlTypeDocumentFactory(
+        description='mega description',
+        documentable_obj={
+            'id': control.id,
+            'type': 'Control'
+        }
+    )
+    rel_evidences = control.related_objects(_types=[document.type])
+    self.assertEqual(document, rel_evidences.pop())

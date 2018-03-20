@@ -26,8 +26,9 @@ class TestDocumentQueries(TestCase):
   def test_filter_document_by_type(self, document_type):
     """Test filter documents by document type."""
     data = {
-        all_models.Document.ATTACHMENT: factories.EvidenceFactory().id,
-        all_models.Document.URL: factories.UrlFactory().id,
+        all_models.Document.ATTACHMENT:
+            factories.EvidenceTypeDocumentFactory().id,
+        all_models.Document.URL: factories.UrlTypeDocumentFactory().id,
     }
     query_request_data = [{
         u'fields': [],
