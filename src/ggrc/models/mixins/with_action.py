@@ -218,6 +218,19 @@ class WithAction(object):
                      context=parent.context)
       return obj
 
+    def remove_related(self, parent, _action):
+      """Remove relationship"""
+      action = self._validate(_action, self.RemoveRelated)
+      deleted = []
+      obj = self._get(action)
+      # pylint: disable=protected-access
+      rel = parent._relationships_map.get((obj.type, obj.id))
+      if rel:
+        db.session.delete(rel)
+        deleted.append(rel)
+        obj.status = Evidence.DEPRECATED
+      return [], deleted
+
   class CommentAction(BaseAction):
     """Comment action"""
 

@@ -256,7 +256,7 @@ def refresh_documents(mapper, connection, target):
 # pylint:disable=unused-argument
 @event.listens_for(all_models.Relationship, "after_insert")
 @event.listens_for(all_models.Relationship, "after_delete")
-def refresh_documents(mapper, connection, target):
+def refresh_evidences(mapper, connection, target):
   """Refreshes related Evidences"""
   if target.source_type == 'Evidence':
     for_refresh = target.destination
@@ -264,4 +264,5 @@ def refresh_documents(mapper, connection, target):
     for_refresh = target.source
   else:
     return
-  db.session.expire(for_refresh, ['evidences'])
+  if hasattr(for_refresh, 'evidences'):
+    db.session.expire(for_refresh, ['evidences'])

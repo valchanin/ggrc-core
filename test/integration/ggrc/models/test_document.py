@@ -30,44 +30,43 @@ class TestDocument(TestCase):
     self.api = Api()
     self.gen = generator.ObjectGenerator()
 
-  def test_get_documentable_obj_control_type(self):
-    """Test mapping documentable of Control type"""
+  def test_get_parent_obj_control_type(self):
+    """Test mapping parent of Control type"""
     control = factories.ControlFactory()
     document = factories.EvidenceTypeDocumentFactory(
-        documentable_obj={
+        parent_obj={
             'id': control.id,
             'type': 'Control'
         })
     expected_control = document.related_objects(_types=[control.type]).pop()
     self.assertEqual(expected_control, control)
 
-  def test_documentable_obj_validation_is_id_presents(self):
-    """Validation documentable_obj id should present."""
+  def test_parent_obj_validation_is_id_presents(self):
+    """Validation parent_obj id should present."""
     with self.assertRaises(exceptions.ValidationError):
       factories.EvidenceTypeDocumentFactory(
-          documentable_obj={
+          parent_obj={
               'type': 'Control'
           })
 
-  def test_documentable_obj_validation_is_type_presents(self):
-    """Validation documentable_obj type should present."""
+  def test_parent_obj_validation_is_type_presents(self):
+    """Validation parent_obj type should present."""
     control = factories.ControlFactory()
     with self.assertRaises(exceptions.ValidationError):
       factories.EvidenceTypeDocumentFactory(
-          documentable_obj={
+          parent_obj={
               'id': control.id
           })
 
-  def test_documentable_obj_validation_wrong_type(self):
-    """Validation documentable_obj type.
+  def test_parent_obj_validation_wrong_type(self):
+    """Validation parent_obj type.
 
-    Type should be in 'Assessment', 'Control', 'Audit',
-    'Issue', 'RiskAssessment'.
+    Type should be in 'Control', 'Issue', 'RiskAssessment'.
     """
     control = factories.ControlFactory()
     with self.assertRaises(exceptions.ValidationError):
       factories.EvidenceTypeDocumentFactory(
-          documentable_obj={
+          parent_obj={
               'id': control.id,
               'type': 'Program'
           })
@@ -75,51 +74,18 @@ class TestDocument(TestCase):
   def test_documentable_postfix_one_control(self):
     """Test documentable postfix for assessment with one control."""
 
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control = factories.ControlFactory()
-      snapshot = self._create_snapshots(audit, [control])[0]
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment, destination=snapshot)
-
+    control = factories.ControlFactory()
     document = factories.EvidenceTypeDocumentFactory(
-        documentable_obj={
-            'id': assessment.id,
-            'type': 'Assessment'
+        parent_obj={
+            'id': control.id,
+            'type': 'Control'
         })
 
-    expected = '_ggrc_assessment-{}_control-{}'.format(assessment.id,
-                                                       control.id)
+    expected = '_ggrc_control-{}'.format(control.id)
     # pylint: disable=protected-access
-    result = document._build_file_name_postfix(assessment)
+    result = document._build_file_name_postfix(control)
     self.assertEqual(expected, result)
 
-  def test_documentable_postfix_two_controls(self):
-    """Test documentable postfix for assessment with two controls."""
-
-    with factories.single_commit():
-      audit = factories.AuditFactory()
-      control1 = factories.ControlFactory()
-      control2 = factories.ControlFactory()
-      snapshots = self._create_snapshots(audit, [control1, control2])
-      assessment = factories.AssessmentFactory(audit=audit)
-      factories.RelationshipFactory(source=assessment,
-                                    destination=snapshots[0])
-      factories.RelationshipFactory(source=assessment,
-                                    destination=snapshots[1])
-
-    document = factories.EvidenceTypeDocumentFactory(
-        documentable_obj={
-            'id': assessment.id,
-            'type': 'Assessment'
-        })
-
-    expec = '_ggrc_assessment-{}_control-{}_control-{}'.format(assessment.id,
-                                                               control1.id,
-                                                               control2.id)
-    # pylint: disable=protected-access
-    result = document._build_file_name_postfix(assessment)
-    self.assertEqual(expec, result)
 
   @mock.patch('ggrc.gdrive.file_actions.process_gdrive_file',
               dummy_gdrive_response)
@@ -128,7 +94,7 @@ class TestDocument(TestCase):
     control = factories.ControlFactory()
     factories.EvidenceTypeDocumentFactory(
         source_gdrive_id='test_gdrive_id',
-        documentable_obj={
+        parent_obj={
             'id': control.id,
             'type': 'Control'
         })
@@ -146,7 +112,7 @@ class TestDocument(TestCase):
       factories.EvidenceTypeDocumentFactory(
           is_uploaded=True,
           source_gdrive_id='some link',
-          documentable_obj={
+          parent_obj={
               'id': control.id,
               'type': 'Control'
           })

@@ -309,15 +309,15 @@ class EvidenceFactory(ModelFactory):
 
 
 class UrlTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.URL
+  kind = all_models.Document.URL
 
 
 class EvidenceTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.FILE
+  kind = all_models.Document.FILE
 
 
 class ReferenceUrlTypeDocumentFactory(DocumentFactory):
-  document_type = all_models.Document.REFERENCE_URL
+  kind = all_models.Document.REFERENCE_URL
 
 
 class ObjectiveFactory(TitledFactory):

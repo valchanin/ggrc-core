@@ -36,6 +36,8 @@ def upgrade():
       sa.Column('last_deprecated_date', sa.Date),
       sa.Column('context_id', sa.Integer(), nullable=True),
       sa.Column('status', sa.String(length=250), nullable=False, server_default='Active'),
+      sa.Column('recipients', sa.String(length=250), nullable=True),
+      sa.Column('send_by_default', sa.Boolean(), nullable=True),
       sa.ForeignKeyConstraint(['context_id'], ['contexts.id']),
       sa.PrimaryKeyConstraint('id'),
   )
@@ -48,6 +50,7 @@ def upgrade():
     INSERT INTO access_control_roles (
         name,
         object_type,
+        access_control_roles.delete,
         created_at,
         updated_at,
         mandatory,
@@ -57,6 +60,7 @@ def upgrade():
     VALUES (
         'Admin',
         'Evidence',
+        0,
         NOW(),
         NOW(),
         1,
@@ -89,21 +93,21 @@ def upgrade():
     ),(
         'Verifiers Evidence Mapped',
         'Assessment',
-        1, 1, 1, 1,
+        1, 1, 0, 1,
         NOW(),
         NOW(),
         1, 1
     ),(
         'Creators Evidence Mapped',
         'Assessment',
-        1, 1, 1, 1,
+        1, 1, 0, 1,
         NOW(),
         NOW(),
         1, 1
     ),(
         'Assignees Evidence Mapped',
         'Assessment',
-        1, 1, 1, 1,
+        1, 1, 0, 1,
         NOW(),
         NOW(),
         1, 1

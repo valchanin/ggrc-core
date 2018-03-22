@@ -16,6 +16,7 @@ from ggrc.models.mixins import Base, Slugged
 from ggrc.models.mixins import WithLastDeprecatedDate
 from ggrc.models.mixins.statusable import Statusable
 from ggrc.models.relationship import Relatable
+from ggrc.models import comment
 from ggrc.models import exceptions
 from ggrc.models import reflection
 from ggrc.models import mixins
@@ -25,7 +26,7 @@ from ggrc.models.mixins import before_flush_handleable as bfh
 
 class Evidence(Roleable, Relatable, mixins.Titled,
                bfh.BeforeFlushHandleable, Slugged, mixin.Indexed, Statusable,
-               WithLastDeprecatedDate, db.Model):
+               WithLastDeprecatedDate, comment.Commentable, db.Model):
   """Evidence (Audit-scope URLs, FILE's) model."""
   __tablename__ = "evidences"
 
@@ -70,6 +71,7 @@ class Evidence(Roleable, Relatable, mixins.Titled,
     "link",
     "description",
     "kind",
+    "status",
     "archived"
   ]
 

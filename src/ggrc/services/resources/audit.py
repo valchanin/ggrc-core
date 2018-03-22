@@ -46,51 +46,71 @@ class AuditResource(common.ExtendedResource):
       if not permissions.is_allowed_read_for(audit):
         raise Forbidden()
     with benchmark("Get audit summary data"):
+      #  evidence_relationship => evidence destination
+      evidence_relationship_ds = db.session.query(
+          models.Relationship.source_id.label("cp_id"),
+          models.Relationship.source_type.label("cp_type"),
+          models.Evidence.id.label("evidence_id"),
+      ).join(
+          models.Evidence,
+          sa.and_(
+            models.Relationship.destination_id == models.Evidence.id,
+            models.Relationship.destination_type == "Evidence",
+            models.Evidence.kind != models.Evidence.REFERENCE_URL
+          )
+      ).subquery()
+      #  evidence_relationship => evidence source
+      evidence_relationship_sd = db.session.query(
+        models.Relationship.destination_id.label("cp_id"),
+        models.Relationship.destination_type.label("cp_type"),
+        models.Evidence.id.label("evidence_id"),
+      ).join(
+        models.Evidence,
+        sa.and_(
+          models.Relationship.source_id == models.Evidence.id,
+          models.Relationship.source_type == "Evidence",
+          models.Evidence.kind != models.Evidence.REFERENCE_URL
+        )
+      ).subquery()
+
       assessment_evidences = db.session.query(
           models.Assessment.id.label("id"),
           models.Assessment.status.label("status"),
           models.Assessment.verified.label("verified"),
-          models.Relationship.destination_id.label("evidence_id"),
-          models.Evidence.kind.label("kind")
+          evidence_relationship_ds.c.evidence_id,
       ).outerjoin(
-          models.Relationship,
+          evidence_relationship_ds,
           sa.and_(
-              models.Relationship.source_id == models.Assessment.id,
-              models.Relationship.source_type == "Assessment",
+              evidence_relationship_ds.c.cp_id == models.Assessment.id,
+              evidence_relationship_ds.c.cp_type == "Assessment",
           )
-      ).outerjoin(
-        models.Evidence,
-        models.Evidence.id == models.Relationship.destination_id
       ).filter(
           models.Assessment.audit_id == id,
       ).union_all(
-          db.session.query(
-              models.Assessment.id.label("id"),
-              models.Assessment.status.label("status"),
-              models.Assessment.verified.label("verified"),
-              models.Relationship.source_id.label("evidence_id"),
-              models.Evidence.kind.label("kind")
-          ).outerjoin(
-              models.Relationship,
-              sa.and_(
-                  models.Relationship.destination_id == models.Assessment.id,
-                  models.Relationship.destination_type == "Assessment",
-              )
-          ).outerjoin(
-            models.Evidence,
-            models.Evidence.id == models.Relationship.source_id
-          ).filter(
-              models.Assessment.audit_id == id,
+        db.session.query(
+            models.Assessment.id.label("id"),
+            models.Assessment.status.label("status"),
+            models.Assessment.verified.label("verified"),
+            evidence_relationship_sd.c.evidence_id,
+        ).outerjoin(
+            evidence_relationship_sd,
+            sa.and_(
+                evidence_relationship_sd.c.cp_id == models.Assessment.id,
+                evidence_relationship_sd.c.cp_type == "Assessment",
+            )
+        ).filter(
+          models.Assessment.audit_id == id,
           )
       )
+
       statuses_data = defaultdict(lambda: defaultdict(set))
       all_assessment_ids = set()
       all_evidence_ids = set()
-      for id_, status, verified, evidence_id, kind in assessment_evidences:
+      for id_, status, verified, evidence_id in assessment_evidences:
         if id_:
           statuses_data[(status, verified)]["assessments"].add(id_)
           all_assessment_ids.add(id_)
-        if evidence_id and kind != models.Evidence.REFERENCE_URL:
+        if evidence_id:
           statuses_data[(status, verified)]["evidences"].add(evidence_id)
           all_evidence_ids.add(evidence_id)
 
