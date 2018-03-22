@@ -15,7 +15,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '207955a2d3c1'
-down_revision = 'd1671a8dac7'
+down_revision = '48a49f384b2e'
 
 
 def upgrade():
@@ -110,25 +110,26 @@ def upgrade():
     )
   """
   op.execute(sql)
-  op.execute("""
-      DELETE FROM access_control_roles
-        WHERE name IN (
-            "Auditors Document Mapped",
-            "Verifiers Document Mapped",
-            "Creators Document Mapped",
-            "Assignees Document Mapped"
-        )
-  """)
+  # op.execute("""
+  #     DELETE FROM access_control_roles
+  #       WHERE name IN (
+  #           "Auditors Document Mapped",
+  #           "Verifiers Document Mapped",
+  #           "Creators Document Mapped",
+  #           "Assignees Document Mapped"
+  #       )
+  # """)
 
   op.execute("""
     ALTER TABLE documents CHANGE document_type kind enum('URL','FILE','REFERENCE_URL', 'EVIDENCE') NOT NULL DEFAULT 'URL';
   """)
   op.execute('SET SESSION SQL_SAFE_UPDATES = 0;')
   op.execute("UPDATE documents SET kind = 'FILE' where kind = 'EVIDENCE';")
+
+  # todo remove URL from enum
   op.execute("""
     ALTER TABLE documents MODIFY kind enum('URL','FILE','REFERENCE_URL') NOT NULL DEFAULT 'URL';
   """)
-  op.execute("ALTER TABLE documents ADD source_gdrive_id varchar(250) DEFAULT NULL")
 
 
 def downgrade():
