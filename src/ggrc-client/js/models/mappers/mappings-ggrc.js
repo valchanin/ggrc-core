@@ -57,18 +57,15 @@ import RefreshQueue from '../refresh_queue';
     Clause: {
       _mixins: ['related_object', 'personable'],
     },
+    Document: {
+      _mixins: ['business_object'],
+    },
     personable: {
       _canonical: {
         people: 'Person',
       },
       people: Proxy(
         'Person', 'person', 'ObjectPerson', 'personable', 'object_people'),
-    },
-    documentable: {
-      _canonical: {
-        documents: 'Document',
-      },
-      documents: TypeFilter('related_objects', 'Document'),
     },
     assignable: {
       urls: TypeFilter('related_objects', 'Document'),
@@ -90,7 +87,7 @@ import RefreshQueue from '../refresh_queue';
           'Product', 'Project', 'System', 'Regulation', 'Policy', 'Contract',
           'Standard', 'Program', 'Issue', 'Control', 'Section', 'Clause',
           'Objective', 'Audit', 'Assessment', 'AssessmentTemplate',
-          'AccessGroup', 'Risk', 'Threat',
+          'AccessGroup', 'Risk', 'Threat', 'Document',
         ],
       },
       related_objects_as_source: Proxy(
@@ -439,7 +436,7 @@ import RefreshQueue from '../refresh_queue';
         evidence: 'Evidence',
       },
       _mixins: [
-        'related_object', 'personable', 'documentable', 'assignable',
+        'related_object', 'personable', 'assignable',
       ],
       evidence: TypeFilter('related_objects', 'Evidence'),
       audits: TypeFilter('related_objects', 'Audit'),
@@ -460,12 +457,12 @@ import RefreshQueue from '../refresh_queue';
     },
     Issue: {
       _mixins: [
-        'related_object', 'personable', 'documentable', 'assignable',
+        'related_object', 'personable', 'assignable',
       ],
       audits: TypeFilter('related_objects', 'Audit'),
     },
     Comment: {
-      _mixins: ['related_object', 'documentable'],
+      _mixins: ['related_object'],
       urls: TypeFilter('related_objects', 'Document'),
       documents_and_urls: Multi(['documents', 'urls']),
     },

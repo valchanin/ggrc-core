@@ -15,7 +15,7 @@ import InfoWidget from '../controllers/info_widget_controller';
     'Program Regulation Policy Standard Contract Clause Section'.split(' '),
     'Request Control Objective OrgGroup Vendor AccessGroup'.split(' '),
     'System Process DataAsset Product Project Facility Market'.split(' '),
-    'Issue Risk Threat'.split(' ')
+    'Issue Risk Threat Document'.split(' ')
   );
 
   let draftOnUpdateMixin;

@@ -266,6 +266,11 @@
   &.color { color: #005580; }
 }
 
+.#{$fa-css-prefix}-document {
+  &:before { content: $fa-var-file-archive-o; }
+  &.color { color: #005580; }
+}
+
 // Turn icons to black
 %black-icons {
   [class^="fa #{$fa-css-prefix}-"] {

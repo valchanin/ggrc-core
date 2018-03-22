@@ -31,6 +31,7 @@ import {
         facility: CMS.Models.Facility,
         product: CMS.Models.Product,
         data_asset: CMS.Models.DataAsset,
+        document: CMS.Models.Document,
         evidence: CMS.Models.Evidence,
         access_group: CMS.Models.AccessGroup,
         market: CMS.Models.Market,
@@ -72,7 +73,6 @@ import {
       let possibleModelType;
       let farModels;
       let extraDescriptorOptions;
-      let overriddenModels;
       let extraContentControllerOptions;
 
       // TODO: Really ugly way to avoid executing IIFE - needs cleanup
@@ -118,6 +118,7 @@ import {
           path + '/assessment_templates/info.mustache',
         issues: path + '/issues/info.mustache',
         evidence: path + '/evidence/info.mustache',
+        documents: path + '/documents/info.mustache',
       };
       widgetList.add_widget(object.constructor.shortName, 'info', {
         widget_id: 'info',
@@ -284,18 +285,6 @@ import {
           },
         },
       };
-      // Prevent widget creation with <model_name>: false
-      // e.g. to prevent ever creating People widget:
-      //     { all : { Person: false }}
-      // or to prevent creating People widget on Objective page:
-      //     { Objective: { Person: false } }
-      overriddenModels = {
-        Program: {
-        },
-        all: {
-          Document: false,
-        },
-      };
 
       extraContentControllerOptions = apply_mixins({
         objectives: {
@@ -359,10 +348,6 @@ import {
           },
           Assessment: {
             mapping: 'related_assessments',
-            draw_children: true,
-          },
-          Document: {
-            mapping: 'documents',
             draw_children: true,
           },
           Person: {
@@ -640,9 +625,6 @@ import {
         System: {
           _mixins: ['governance_objects', 'business_objects', 'issues'],
         },
-        Document: {
-          _mixins: ['governance_objects', 'business_objects', 'issues'],
-        },
         Person: {
           _mixins: ['issues'],
           Program: {
@@ -731,9 +713,6 @@ import {
             mapping: 'extended_related_systems_via_search',
             draw_children: true,
           },
-          Document: {
-            mapping: 'extended_related_documents_via_search',
-          },
           Assessment: {
             mapping: 'extended_related_assessment_via_search',
             draw_children: true,
@@ -767,8 +746,6 @@ import {
         let widgetConfig = getWidgetConfig(model_name);
         model_name = widgetConfig.name;
 
-        if ((overriddenModels.all && overriddenModels.all.hasOwnProperty(model_name) && !overriddenModels[model_name]) || (overriddenModels[object.constructor.shortName] && overriddenModels[object.constructor.shortName].hasOwnProperty(model_name) && !overriddenModels[object.constructor.shortName][model_name]))
-          return;
         let sources = [],
           far_model, descriptor = {},
           widget_id;
@@ -792,12 +769,6 @@ import {
 
         if (extraDescriptorOptions[object.constructor.shortName] && extraDescriptorOptions[object.constructor.shortName][model_name]) {
           $.extend(descriptor, extraDescriptorOptions[object.constructor.shortName][model_name]);
-        }
-
-        if (extraContentControllerOptions.all && extraContentControllerOptions.all[model_name]) {
-          $.extend(true, descriptor, {
-            content_controller_options: extraContentControllerOptions.all[model_name],
-          });
         }
 
         if (extraContentControllerOptions[object.constructor.shortName] && extraContentControllerOptions[object.constructor.shortName][model_name]) {

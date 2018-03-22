@@ -14,6 +14,7 @@
     'Contract',
     'Control',
     'DataAsset',
+    'Document',
     'Facility',
     'Issue',
     'Market',

@@ -34,6 +34,7 @@ import '../../components/datepicker/datepicker';
 import '../../components/external-data-autocomplete/inline-autocomplete-wrapper';
 import '../../components/multi-select-label/multi-select-label';
 import '../../components/proposal/create-proposal';
+import '../../components/file-picker/file-picker';
 import {BUTTON_VIEW_DONE} from '../../plugins/utils/modals'
 import {
   checkPreconditions,
