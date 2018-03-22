@@ -8,6 +8,7 @@ import {
   batchRequests,
 } from '../../plugins/utils/query-api-utils';
 import {initCounts} from '../../plugins/utils/current-page-utils';
+import {REFRESH_MAPPING} from '../../events/eventTypes';
 
 (function (can, $, _, GGRC) {
   'use strict';
@@ -257,6 +258,9 @@ import {initCounts} from '../../plugins/utils/current-page-utils';
     },
     events: {
       '{viewModel.instance} resolvePendingBindings': function () {
+        this.viewModel.refreshRelatedDocuments();
+      },
+      [`{viewModel.instance} ${REFRESH_MAPPING.type}`]() {
         this.viewModel.refreshRelatedDocuments();
       },
     },

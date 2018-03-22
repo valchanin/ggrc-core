@@ -12,7 +12,7 @@
                                         readonly="readonly"
                                         instance="instance"
                                         {(is-revision-folder-loaded)}="isRevisionFolderLoaded"
-                                        {(current_folder)}="currentFolder"
+                                        {^current_folder}="*currentFolder"
                                         {(folder_error)}="folderError"
             ></ggrc-gdrive-folder-picker>
         {{^if_null instance._mandatory_attachment_msg}}
@@ -21,12 +21,6 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
             </div>
         {{/if_null}}
-
-        {{#if subLabel}}
-            <span class="sub-label">
-                {{subLabel}}:
-            </span>
-        {{/if}}
 
         <object-list {items}="documents" {empty-message}="noItemsText">
             <editable-document-object-list-item {document}="{.}">
@@ -45,31 +39,25 @@
         </object-list>
 
     {{#unless readonly}}
-        {{#is_allowed 'update' instance context='for'}}
-            <span class="attachments-list-action">
-                {{#if currentFolder}}
-                    <ggrc-gdrive-picker-launcher
-                            instance="instance"
-                            (finish)="loadDocuments"
-                            click_event="trigger_upload_parent"
-                            {tooltip}="tooltip"
-                            {^is-uploading}="../isUploading">
-                        Attach
-                    </ggrc-gdrive-picker-launcher>
-                {{else}}
-                    {{#if isNoFolderUploadingAllowed}}
-                        <ggrc-gdrive-picker-launcher
-                                instance="instance"
-                                (finish)="loadDocuments"
-                                click_event="trigger_upload"
-                                {tooltip}="tooltip"
-                                {^is-uploading}="../isUploading">
-                                Attach
-                        </ggrc-gdrive-picker-launcher>
-                        {{/if}}
-                    {{/if}}
-                </span>
-            {{/is_allowed}}
-        {{/unless}}
+    {{#is_allowed 'update' instance context='for'}}
+    {{#if *currentFolder}}
+    {{^if folderError}}
+    <span class="attachments-list-action">
+        <button
+            rel="tooltip"
+            data-placement="bottom"
+            data-original-title="{{tooltip}}"
+            class="btn btn-small btn-white"
+            data-toggle="unified-mapper"
+            data-join-object-id="{{instance.id}}"
+            data-join-object-type="{{instance.class.shortName}}"
+            data-join-option-type="Document">
+            Attach
+        </button>
+    </span>
+    {{/if}}
+    {{/if}}
+    {{/is_allowed}}
+    {{/unless}}
     </related-documents>
 </div>
