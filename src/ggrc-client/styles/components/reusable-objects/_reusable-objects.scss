@@ -2,28 +2,29 @@
  * Copyright (C) 2018 Google Inc.
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
+
 reusable-objects-item {
   position: relative;
   box-sizing: border-box;
   display: block;
   padding-right: 40px;
-}
 
-reusable-objets-item-control {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 20px;
-  width: 40px;
-  right: 0;
-  top: 0;
-  box-sizing: border-box;
-  flex: none;
-  text-align: center;
-
-  input[type="checkbox"] {
-    margin: 0;
-    padding: 0;
+  .reusable-objets-item__control {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    width: 40px;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    flex: none;
+    text-align: center;
+  
+    input[type="checkbox"] {
+      margin: 0;
+      padding: 0;
+    }
   }
 }

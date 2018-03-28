@@ -304,5 +304,117 @@ describe('GGRC.Components.relatedAssessments', () => {
         });
       });
     });
+
+    describe('checkReuseAbility() method', ()=> {
+      it('returns true if evidence is not a file', ()=> {
+        let evidence = new can.Map({
+          document_type: 'URL',
+        });
+
+        let result = viewModel.checkReuseAbility(evidence);
+
+        expect(result).toBe(true);
+      });
+
+      it('returns true if evidence is a file with gdrive_id', ()=> {
+        let evidence = new can.Map({
+          document_type: 'EVIDENCE',
+          gdrive_id: 'gdrive_id',
+        });
+
+        let result = viewModel.checkReuseAbility(evidence);
+
+        expect(result).toBe(true);
+      });
+
+      it('returns false if evidence is a file without gdrive_id', ()=> {
+        let evidence = new can.Map({
+          document_type: 'EVIDENCE',
+          gdrive_id: '',
+        });
+
+        let result = viewModel.checkReuseAbility(evidence);
+
+        expect(result).toBe(false);
+      });
+    });
+  });
+
+  describe('helpers', ()=> {
+    let viewModel;
+    beforeEach(()=> {
+      viewModel = getComponentVM(Component);
+    });
+
+    describe('isAllowedToReuse helper', ()=> {
+      let isAllowedToReuse;
+      let evidence;
+      beforeEach(()=> {
+        isAllowedToReuse = Component.prototype.helpers
+          .isAllowedToReuse.bind(viewModel);
+        spyOn(viewModel, 'checkReuseAbility');
+        evidence = jasmine.createSpy();
+      });
+
+      it('calls checkReuseAbility()', ()=>{
+        isAllowedToReuse(evidence);
+
+        expect(viewModel.checkReuseAbility).toHaveBeenCalled();
+      });
+
+      it('returns checkReuseAbility result', ()=> {
+        let abilityResult = {test: true};
+        viewModel.checkReuseAbility.and.returnValue(abilityResult);
+
+        let result = isAllowedToReuse(evidence);
+
+        expect(result).toBe(abilityResult);
+      });
+
+      it('resolves compute argument', ()=> {
+        isAllowedToReuse(evidence);
+
+        expect(evidence).toHaveBeenCalled();
+      });
+    });
+
+    describe('ifAllowedToReuse helper', ()=> {
+      let ifAllowedToReuse;
+      let evidence;
+      let options;
+      beforeEach(()=> {
+        ifAllowedToReuse = Component.prototype.helpers
+          .ifAllowedToReuse.bind(viewModel);
+        spyOn(viewModel, 'checkReuseAbility');
+        evidence = {test: true};
+        options = {
+          fn: jasmine.createSpy(),
+          inverse: jasmine.createSpy(),
+        };
+        spyOn(Mustache, 'resolve');
+      });
+
+      it('resolves compute argument', ()=> {
+        ifAllowedToReuse(evidence, options);
+
+        expect(Mustache.resolve).toHaveBeenCalledWith(evidence);
+      });
+
+      it('calls fn if able to reuse', ()=> {
+        viewModel.checkReuseAbility.and.returnValue(true);
+
+        ifAllowedToReuse(evidence, options);
+
+        expect(options.fn).toHaveBeenCalled();
+      });
+
+      it('calls inverse if not able to reuse', ()=> {
+        viewModel.checkReuseAbility.and.returnValue(false);
+
+        ifAllowedToReuse(evidence, options);
+
+        expect(options.inverse).toHaveBeenCalled();
+      });
+    });
   });
 });

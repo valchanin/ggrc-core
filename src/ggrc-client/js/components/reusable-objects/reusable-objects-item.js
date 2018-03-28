@@ -10,6 +10,7 @@ export default can.Component.extend({
   template: template,
   viewModel: {
     disabled: false,
+    reuseAllowed: true,
     instance: {},
     selectedList: [],
     isChecked: false,

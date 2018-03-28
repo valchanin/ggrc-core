@@ -81,8 +81,15 @@
                 <object-list {items}="instance.documents" show-more="true">
                   <reusable-objects-item {instance}="{.}"
                                          {disabled}="isSaving"
+                                         {reuse-allowed}="{{isAllowedToReuse .}}"
                                          {(selected-list)}="selectedEvidences">
                     <document-object-list-item {instance}="instance"></document-object-list-item>
+
+                    {{^ifAllowedToReuse ../.}}
+                    <div class="reusable-objets-item__control">
+                      <i class="fa fa-exclamation-triangle red attachments-list-alert" rel="tooltip" data-placement="bottom" data-original-title="Evidence can't be re-used, because gDrive file doesn't exist."></i>
+                    <div>
+                    {{/ifAllowedToReuse}}
                   </reusable-objects-item>
                 </object-list>
               {{else}}

@@ -140,6 +140,14 @@ export default can.Component.extend({
           this.attr('loading', false);
         });
     },
+    checkReuseAbility(evidence) {
+      let isFile = evidence.attr('document_type') === 'EVIDENCE';
+      let isGdriveIdProvided = !!evidence.attr('gdrive_id');
+
+      let isAble = !isFile || isGdriveIdProvided;
+
+      return isAble;
+    },
   },
   init() {
     this.viewModel.loadRelatedAssessments();
@@ -153,6 +161,22 @@ export default can.Component.extend({
     },
     '{viewModel.orderBy} changed'() {
       this.viewModel.loadRelatedAssessments();
+    },
+  },
+  helpers: {
+    isAllowedToReuse(evidence) {
+      evidence = Mustache.resolve(evidence);
+
+      let isAllowed = this.checkReuseAbility(evidence);
+
+      return isAllowed;
+    },
+    ifAllowedToReuse(evidence, options) {
+      evidence = Mustache.resolve(evidence);
+
+      let isAllowed = this.checkReuseAbility(evidence);
+
+      return isAllowed ? options.fn(this) : options.inverse(this);
     },
   },
 });
