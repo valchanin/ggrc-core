@@ -34,10 +34,16 @@ export default GGRC.Components('accessControlListRolesHelper', {
       }
 
       autoPopulatedRoles.forEach(function (role) {
-        instance.attr('access_control_list').push({
-          ac_role_id: role.id,
-          person: {type: 'Person', id: GGRC.current_user.id},
-        });
+        let existingRole = _.find(
+          instance.attr('access_control_list'),
+          {ac_role_id: role.id});
+
+        if (!existingRole) {
+          instance.attr('access_control_list').push({
+            ac_role_id: role.id,
+            person: {type: 'Person', id: GGRC.current_user.id},
+          });
+        }
       });
     },
   },
