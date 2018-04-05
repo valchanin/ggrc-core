@@ -47,7 +47,6 @@ can.Model.Cacheable('CMS.Models.Document', {
     status: 'Active',
   },
   tree_view_options: {
-    show_view: GGRC.mustache_path + '/documents/tree.mustache',
     display_attr_names: ['title', 'status', 'updated_at', 'document_type'],
     attr_list: [
       {attr_title: 'Title', attr_name: 'title'},
