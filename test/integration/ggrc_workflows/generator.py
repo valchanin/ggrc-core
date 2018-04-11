@@ -10,6 +10,7 @@ from datetime import date
 from ggrc import db
 from ggrc import builder
 from ggrc.access_control import role
+from ggrc.models import Person
 from ggrc_workflows.models import Cycle
 from ggrc_workflows.models import TaskGroup
 from ggrc_workflows.models import TaskGroupObject
@@ -41,8 +42,9 @@ class WorkflowsGenerator(Generator):
         for (i, n) in role.get_custom_roles_for(Workflow.__name__).iteritems()
     }['Admin']
     if "access_control_list" not in data:
+      wf_admin_id = Person.query.first().id
       data["access_control_list"] = [
-          acl_helper.get_acl_json(wf_admin_role_id, 1)]
+          acl_helper.get_acl_json(wf_admin_role_id, wf_admin_id)]
     obj_dict[obj_name].update(data)
 
     response, workflow = self.generate(Workflow, obj_name, obj_dict)
@@ -65,12 +67,12 @@ class WorkflowsGenerator(Generator):
 
     obj_name = "task_group"
     workflow = self._session_add(workflow)
-
+    wf_admin_id = Person.query.first().id
     task_group = TaskGroup(
         title="tg " + factories.random_str(),
         workflow_id=workflow.id,
         context_id=workflow.context.id,
-        contact_id=1
+        contact_id=wf_admin_id
     )
     obj_dict = self.obj_to_dict(task_group, obj_name)
     obj_dict[obj_name].update(data)
@@ -108,8 +110,9 @@ class WorkflowsGenerator(Generator):
     )
     obj_dict = self.obj_to_dict(tgt, obj_name)
     if "access_control_list" not in data:
+      wf_admin_id = Person.query.first().id
       data["access_control_list"] = [
-          acl_helper.get_acl_json(cycle_task_role_id, 1)]
+          acl_helper.get_acl_json(cycle_task_role_id, wf_admin_id)]
     obj_dict[obj_name].update(data)
     return self.generate(TaskGroupTask, obj_name, obj_dict)
 

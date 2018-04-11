@@ -35,6 +35,7 @@ class TestWorkflowsApiPost(TestCase):
     super(TestWorkflowsApiPost, self).setUp()
     self.api = Api()
     self.generator = wf_generator.WorkflowsGenerator()
+    self.wf_admin_id = all_models.Person.query.first().id
     with factories.single_commit():
       self.people_ids = [factories.PersonFactory().id for _ in xrange(6)]
 
@@ -314,8 +315,9 @@ class TestWorkflowsApiPost(TestCase):
   def test_post_workflow_with_acl(self):
     """Test PUT workflow with ACL."""
     data = self.get_workflow_dict()
+
     exp_res = {
-        1: WF_ROLES['Admin'],
+        self.wf_admin_id: WF_ROLES['Admin'],
         self.people_ids[0]: WF_ROLES['Admin'],
         self.people_ids[1]: WF_ROLES['Workflow Member'],
         self.people_ids[2]: WF_ROLES['Workflow Member'],
@@ -333,7 +335,7 @@ class TestWorkflowsApiPost(TestCase):
     """Test PUT workflow with updated ACL."""
     data = self.get_workflow_dict()
     init_map = {
-        1: WF_ROLES['Admin'],
+        self.wf_admin_id: WF_ROLES['Admin'],
         self.people_ids[0]: WF_ROLES['Workflow Member'],
     }
     data['workflow']['access_control_list'] = acl_helper.get_acl_list(init_map)
@@ -436,16 +438,15 @@ class TestWorkflowsApiPost(TestCase):
         }
     }
 
-  @staticmethod
-  def get_task_group_dict(workflow):
+  def get_task_group_dict(self, workflow):
     return {
         "task_group": {
             "custom_attribute_definitions": [],
             "custom_attributes": {},
             "_transient": {},
             "contact": {
-                "id": 1,
-                "href": "/api/people/1",
+                "id": self.wf_admin_id,
+                "href": "/api/people/{}".format(self.wf_admin_id),
                 "type": "Person"
             },
             "workflow": {
@@ -464,16 +465,15 @@ class TestWorkflowsApiPost(TestCase):
         }
     }
 
-  @staticmethod
-  def get_task_dict(task_group):
+  def get_task_dict(self, task_group):
     return {
         "task_group_task": {
             "start_date": "2017-12-25",
             "end_date": "2017-12-31",
             "custom_attributes": {},
             "contact": {
-                "id": 1,
-                "href": "/api/people/1",
+                "id": self.wf_admin_id,
+                "href": "/api/people/{}".format(self.wf_admin_id),
                 "type": "Person"
             },
             "task_group": {
