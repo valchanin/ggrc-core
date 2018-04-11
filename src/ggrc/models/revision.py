@@ -188,7 +188,7 @@ class Revision(Base, db.Model):
 
       reference_url_list.append({
           "display_name": link,
-          "document_type": "REFERENCE_URL",
+          "kind": "REFERENCE_URL",
           "link": link,
           "title": link,
           "id": None,
@@ -365,7 +365,7 @@ class Revision(Base, db.Model):
           link=evidence.get("link"),
           title=evidence.get("title"),
       ).strip()
-    return {u"document_evidence": document_evidence}
+    return {u"documents_file": document_evidence}
 
   def populate_categoies(self, key_name):
     """Fix revision logger.

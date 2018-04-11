@@ -62,8 +62,8 @@ class SystemOrProcess(track_object_state.HasObjectState,
   ]
   _sanitize_html = ['version']
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
       "network_zone": {
           "display_name": "Network Zone",
       },
@@ -111,8 +111,8 @@ class System(CustomAttributable, Personable, Roleable,
   _table_plural = 'systems'
 
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }
 
   @validates('is_biz_process')
@@ -128,8 +128,8 @@ class Process(CustomAttributable, Personable, Roleable,
   _table_plural = 'processes'
 
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }
 
   @validates('is_biz_process')

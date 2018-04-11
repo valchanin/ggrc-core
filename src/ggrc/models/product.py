@@ -41,8 +41,8 @@ class Product(Roleable, HasObjectState, CustomAttributable, Personable,
   ]
   _sanitize_html = ['version', ]
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
       "kind": {
           "display_name": "Kind/Type",
           "filter_by": "_filter_by_kind",

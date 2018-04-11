@@ -19,8 +19,8 @@ class OrgGroup(Roleable, HasObjectState, CustomAttributable,
                Indexed, db.Model):
   __tablename__ = 'org_groups'
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }
 
   def __str__(self):

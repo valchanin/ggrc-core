@@ -20,6 +20,6 @@ class DataAsset(Roleable, HasObjectState, PublicDocumentable,
   __tablename__ = 'data_assets'
 
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }

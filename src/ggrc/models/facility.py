@@ -19,6 +19,6 @@ class Facility(Roleable, HasObjectState, PublicDocumentable,
                db.Model):
   __tablename__ = 'facilities'
   _aliases = {
-      "document_url": None,
-      "document_evidence": None,
+      "documents_url": None,
+      "documents_file": None,
   }
