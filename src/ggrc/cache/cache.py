@@ -173,15 +173,16 @@ class Cache(object):  # pylint: disable=no-self-use
   def clean(self):
     return False
 
-  def get_key(self, category, resource):
-    cache_key = category + ":" + resource
+  @staticmethod
+  def get_key(category, resource_name):
+    cache_key = category + ":" + resource_name
     return cache_key
 
-  def parse_filter(self, filter):
-    return filter.get('ids'), filter.get('attrs')
+  @staticmethod
+  def parse_filter(filter_obj):
+    return filter_obj.get('ids'), filter_obj.get('attrs')
 
-  def is_caching_supported(self, category, resource):
+  def is_caching_supported(self, category, resource_name):
     if category is 'collection':
-      return resource in self.supported_resources
-    else:
-      return False
+      return resource_name in self.supported_resources
+    return False

@@ -260,11 +260,13 @@ class Assessment(Assignable, statusable.Statusable, AuditRelationship,
 
   @validates("operationally")
   def validate_opperationally(self, key, value):
+    """Validate assessment operationally by validating conclusion"""
     # pylint: disable=unused-argument
     return self.validate_conclusion(value)
 
   @validates("design")
   def validate_design(self, key, value):
+    """Validate assessment design by validating conclusion"""
     # pylint: disable=unused-argument
     return self.validate_conclusion(value)
 

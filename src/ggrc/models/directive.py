@@ -164,6 +164,7 @@ class Policy(Roleable, CustomAttributable, Relatable,
       "documents_file": None,
   }
 
+  # pylint: disable=unused-argument
   @validates('meta_kind')
   def validates_meta_kind(self, key, value):
     return 'Policy'
@@ -185,6 +186,7 @@ class Regulation(Roleable, CustomAttributable, Relatable,
       "documents_file": None,
   }
 
+  # pylint: disable=unused-argument
   @validates('meta_kind')
   def validates_meta_kind(self, key, value):
     return 'Regulation'
@@ -206,6 +208,7 @@ class Standard(Roleable, CustomAttributable, Relatable,
       "documents_file": None,
   }
 
+  # pylint: disable=unused-argument
   @validates('meta_kind')
   def validates_meta_kind(self, key, value):
     return 'Standard'
@@ -227,6 +230,7 @@ class Contract(Roleable, CustomAttributable, Relatable,
       "documents_file": None,
   }
 
+  # pylint: disable=unused-argument
   @validates('meta_kind')
   def validates_meta_kind(self, key, value):
     return 'Contract'

@@ -11,10 +11,8 @@ import unittest
 
 from datetime import datetime
 from operator import itemgetter
-from flask import json
-
 import ddt
-
+from flask import json
 from ggrc import app
 from ggrc import db
 from ggrc import models

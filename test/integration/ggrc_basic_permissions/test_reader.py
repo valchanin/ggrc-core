@@ -89,7 +89,7 @@ class TestReader(TestCase):
         response = self.api.get_collection(model, obj_id)
         collection = response.json.get(
             "{}_collection".format(table_plural)).get(table_plural)
-        if len(collection) == 0:
+        if not collection:
           all_errors.append(
               "{} cannot retrieve object even if owner (collection)".format(
                   model_singular))
