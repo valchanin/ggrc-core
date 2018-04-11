@@ -17,7 +17,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = 'e4403da2933a'
-down_revision = '48a49f384b2e'
+down_revision = '7c9d15c78b0f'
 
 
 def get_audit_docs_ids(connection):
