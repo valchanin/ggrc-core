@@ -2,16 +2,13 @@
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
 """Test audit RBAC"""
-from ggrc import app  # noqa  # pylint: disable=unused-import
+from collections import defaultdict
 import copy
-
 from os.path import abspath
 from os.path import dirname
 from os.path import join
-from collections import defaultdict
-
+from ggrc import app  # noqa  # pylint: disable=unused-import
 from ggrc.models import all_models
-
 from integration.ggrc import TestCase
 from integration.ggrc.access_control import acl_helper
 from integration.ggrc.api_helper import Api
@@ -229,26 +226,29 @@ class TestPermissionsOnAssessmentRelatedAssignables(TestCase):
         person=self.reader
     )
     factories.RelationshipFactory(source=audit, destination=assessment)
-    document = factories.DocumentFactory()
-    document_id = document.id
-    doc_rel = factories.RelationshipFactory(source=assessment,
-                                            destination=document)
-    doc_rel_id = doc_rel.id
+    evidence = factories.EvidenceUrlFactory()
+    evidence_id = evidence.id
+    evid_rel = factories.RelationshipFactory(source=assessment,
+                                             destination=evidence)
+    evid_rel_id = evid_rel.id
 
     self.api.set_user(self.reader)
-    self.document = all_models.Document.query.get(document_id)
-    self.doc_relationship = all_models.Relationship.query.get(doc_rel_id)
+    self.evidence = all_models.Evidence.query.get(evidence_id)
+    self.evid_relationship = all_models.Relationship.query.get(evid_rel_id)
 
   def test_delete_action(self):
-    """Test permissions for delete action on Document"""
-    resp = self.api.delete(self.document)
-    self.assert200(resp)
-    self.assertFalse(all_models.Document.query.filter(
-        all_models.Document.id == self.document.id).all())
+    """Test permissions for delete action on Evidence
+
+    Allow only Global Admin to delete Documents.
+    """
+    resp = self.api.delete(self.evidence)
+    self.assert403(resp)
+    self.assertEquals(len(all_models.Evidence.query.filter(
+        all_models.Evidence.id == self.evidence.id).all()), 1)
 
   def test_unmap_action(self):
-    """Test permissions for unmap action on Document"""
-    resp = self.api.delete(self.doc_relationship)
+    """Test permissions for unmap action on Evidence"""
+    resp = self.api.delete(self.evid_relationship)
     self.assert200(resp)
     self.assertFalse(all_models.Relationship.query.filter(
-        all_models.Relationship.id == self.doc_relationship.id).all())
+        all_models.Relationship.id == self.evid_relationship.id).all())

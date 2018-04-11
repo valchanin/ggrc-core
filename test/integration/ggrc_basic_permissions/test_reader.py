@@ -63,7 +63,7 @@ class TestReader(TestCase):
             table_singular: {
                 "title": model_singular,
                 "context": None,
-                "reference_url": "ref",
+                "documents_reference_url": "ref",
                 "link": "https://example.com",  # ignored except for Document
                 "contact": {
                     "type": "Person",
