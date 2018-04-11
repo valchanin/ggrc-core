@@ -18,49 +18,30 @@ logger = getLogger(__name__)
 class DocumentLinkHandler(handlers.ColumnHandler):
   """Base class for document documents handlers."""
 
-  DOCUMENT_TYPE = None
+  KIND = None
 
   @staticmethod
   def _parse_line(line):
-    raise NotImplemented()
+    raise NotImplementedError()
 
   def _get_old_map(self):
-    raise NotImplemented()
+    raise NotImplementedError()
 
   def get_value(self):
-    raise NotImplemented()
+    raise NotImplementedError()
 
-  @staticmethod
-  def get_gdrive_id_from_url(url):
-    """Extract gdrive_id from URL
+  def build_document(self, link, title, user_id):
+    """Build document object"""
+    document = models.Document(
+        link=link,
+        title=title,
+        modified_by_id=user_id,
+        context=self.row_converter.obj.context,
+        kind=self.KIND,
+    )
+    return document
 
-    based on url slicing:
-                                   |                            |
-    https://drive.google.com/file/d/0B7PUdT4q_eqpeXRLb25tU3VfNzQ/view?usp=drivesdk
-    or                              |                            |
-    https://drive.google.com/open?id=0Bx9jGVp6d-sfN1pOZlZzbHF2QVU/view
-    """
-    result = ''
-    try:
-      if '?id=' in url:
-        result = url.split('?id=')[1].split('&')[0]
-      elif '/d/' in url:
-        result = url.split('/d/')[1].split('/')[0]
-    except IndexError:
-      pass
-    return result
-
-  def get_gdrive_id(self, link):
-    """Handle gdrive_id extraction"""
-    gdrive_id = ''
-    if self.DOCUMENT_TYPE == models.Document.ATTACHMENT:
-      gdrive_id = self.get_gdrive_id_from_url(link)
-      if not gdrive_id:
-        self.add_warning(errors.UNABLE_TO_EXTRACT_GDRIVE_ID,
-                         link=link)
-    return gdrive_id
-
-  def parse_item(self, has_title=False):
+  def parse_item(self):
     """Parse document link lines.
 
     Returns:
@@ -81,14 +62,7 @@ class DocumentLinkHandler(handlers.ColumnHandler):
         duplicate_new_links.add(link)
       else:
         new_links.add(link)
-        documents.append(models.Document(
-            link=link,
-            title=title,
-            modified_by_id=user_id,
-            context=self.row_converter.obj.context,
-            document_type=self.DOCUMENT_TYPE,
-            gdrive_id=self.get_gdrive_id(link)
-        ))
+        documents.append(self.build_document(link, title, user_id))
 
     if duplicate_new_links:
       # NOTE: We rely on the fact that links in duplicate_new_links are all
@@ -134,10 +108,52 @@ class DocumentLinkHandler(handlers.ColumnHandler):
         logger.warning("Invalid relationship state for document URLs.")
 
 
-class DocumentEvidenceHandler(DocumentLinkHandler):
+class DocumentFileHandler(DocumentLinkHandler):
   """Handler for evidence field on document imports."""
 
-  DOCUMENT_TYPE = models.Document.ATTACHMENT
+  KIND = models.Document.FILE
+
+  @staticmethod
+  def get_gdrive_id_from_url(url):
+    """Extract gdrive_id from URL
+
+    based on url slicing:
+                                   |                            |
+    https://drive.google.com/file/d/0B7PUdT4q_eqpeXRLb25tU3VfNzQ/view?usp=drivesdk
+    or                              |                            |
+    https://drive.google.com/open?id=0Bx9jGVp6d-sfN1pOZlZzbHF2QVU/view
+    """
+    result = ''
+    try:
+      if '?id=' in url:
+        result = url.split('?id=')[1].split('&')[0]
+      elif '/d/' in url:
+        result = url.split('/d/')[1].split('/')[0]
+    except IndexError:
+      pass
+    return result
+
+  def get_gdrive_id(self, link):
+    """Handle gdrive_id extraction"""
+    gdrive_id = ''
+    if self.KIND == models.Document.FILE:
+      gdrive_id = self.get_gdrive_id_from_url(link)
+      if not gdrive_id:
+        self.add_warning(errors.UNABLE_TO_EXTRACT_GDRIVE_ID,
+                         link=link)
+    return gdrive_id
+
+  def build_document(self, link, title, user_id):
+    document = models.Document(
+        link=link,
+        title=title,
+        modified_by_id=user_id,
+        context=self.row_converter.obj.context,
+        kind=self.KIND,
+        gdrive_id=self.get_gdrive_id(link),
+        source_gdrive_id=''
+    )
+    return document
 
   @staticmethod
   def _parse_line(line):
@@ -159,16 +175,16 @@ class DocumentEvidenceHandler(DocumentLinkHandler):
       string containing all evidence URLs and titles.
     """
     return u"\n".join(u"{} {}".format(d.link, d.title) for d in
-                      self.row_converter.obj.document_evidence)
+                      self.row_converter.obj.documents_file)
 
   def _get_old_map(self):
-    return {d.link: d for d in self.row_converter.obj.document_evidence}
+    return {d.link: d for d in self.row_converter.obj.documents_file}
 
 
 class DocumentUrlHandler(DocumentLinkHandler):
   """Handler for URL field on document imports."""
 
-  DOCUMENT_TYPE = models.Document.URL
+  KIND = models.Document.URL
 
   @staticmethod
   def _parse_line(line):
@@ -183,7 +199,7 @@ class DocumentUrlHandler(DocumentLinkHandler):
     return [line.strip()] * 2
 
   def _get_old_map(self):
-    return {d.link: d for d in self.row_converter.obj.document_url}
+    return {d.link: d for d in self.row_converter.obj.documents_url}
 
   def get_value(self):
     """Generate a new line separated string for all document links.
@@ -191,13 +207,13 @@ class DocumentUrlHandler(DocumentLinkHandler):
     Returns:
       string containing all URLs
     """
-    return "\n".join(doc.link for doc in self.row_converter.obj.document_url)
+    return "\n".join(doc.link for doc in self.row_converter.obj.documents_url)
 
 
-class ReferenceUrlHandler(DocumentLinkHandler):
+class DocumentReferenceUrlHandler(DocumentLinkHandler):
   """Handler for REFERENCE URL field on document imports."""
 
-  DOCUMENT_TYPE = models.Document.REFERENCE_URL
+  KIND = models.Document.REFERENCE_URL
 
   @staticmethod
   def _parse_line(line):
@@ -212,7 +228,7 @@ class ReferenceUrlHandler(DocumentLinkHandler):
     return [line.strip()] * 2
 
   def _get_old_map(self):
-    return {d.link: d for d in self.row_converter.obj.reference_url}
+    return {d.link: d for d in self.row_converter.obj.documents_reference_url}
 
   def get_value(self):
     """Generate a new line separated string for all document links.
@@ -220,4 +236,5 @@ class ReferenceUrlHandler(DocumentLinkHandler):
     Returns:
       string containing all URLs
     """
-    return "\n".join(doc.link for doc in self.row_converter.obj.reference_url)
+    return "\n".join(doc.link for doc in
+                     self.row_converter.obj.documents_reference_url)

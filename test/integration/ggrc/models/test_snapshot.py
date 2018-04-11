@@ -94,9 +94,9 @@ class TestSnapshot(TestCase):
 
       # revisions require complete data for documents,
       # while api returns only basic data in stubs
-      "document_url",
-      "document_evidence",
-      "reference_url",
+      "documents_url",
+      "documents_file",
+      "documents_reference_url",
 
       # computed attributes are not stored in revisions and should be ignored.
       "attributes",

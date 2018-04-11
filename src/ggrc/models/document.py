@@ -31,6 +31,14 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   link = deferred(db.Column(db.String, nullable=False), 'Document')
   description = deferred(db.Column(db.Text, nullable=False, default=u""),
                          'Document')
+  URL = "URL"
+  FILE = "FILE"
+  REFERENCE_URL = "REFERENCE_URL"
+  VALID_DOCUMENT_KINDS = [URL, FILE, REFERENCE_URL]
+  kind = deferred(db.Column(db.Enum(*VALID_DOCUMENT_KINDS),
+                            default=URL,
+                            nullable=False),
+                  "Document")
   source_gdrive_id = deferred(db.Column(db.String, nullable=False,
                                         default=u""),
                               'Document')
@@ -39,33 +47,23 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
                                  default=u""),
                        'Document')
 
-  URL = "URL"
-  ATTACHMENT = "EVIDENCE"
-  REFERENCE_URL = "REFERENCE_URL"
-  VALID_DOCUMENT_TYPES = [URL, ATTACHMENT, REFERENCE_URL]
-  document_type = deferred(db.Column(db.Enum(*VALID_DOCUMENT_TYPES),
-                                     default=URL,
-                                     nullable=False),
-                           'Document')
+  _api_attrs = reflection.ApiAttributes(
+      'title',
+      'description',
+      reflection.Attribute('link', update=False),
+      reflection.Attribute('kind', update=False),
+      reflection.Attribute('source_gdrive_id', update=False),
+      reflection.Attribute('gdrive_id', create=False, update=False),
+      reflection.Attribute('parent_obj', read=False, update=False),
+      reflection.Attribute('is_uploaded', read=False, update=False),
+  )
 
   _fulltext_attrs = [
       'title',
       'link',
       'description',
-      'document_type',
+      'kind',
   ]
-
-  _api_attrs = reflection.ApiAttributes(
-      'title',
-      'link',
-      'description',
-      'document_type',
-      reflection.Attribute('source_gdrive_id', update=False),
-      reflection.Attribute('gdrive_id', create=False, update=False),
-      reflection.Attribute('documentable_obj', read=False, update=False),
-      reflection.Attribute('is_uploaded', read=False, update=False),
-
-  )
 
   _sanitize_html = [
       'title',
@@ -78,28 +76,27 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
       'description': 'description',
   }
 
-  _allowed_documentables = {'Assessment', 'Control', 'Audit',
-                            'Issue', 'RiskAssessment'}
+  ALLOWED_PARENTS = {'Control', 'Issue', 'RiskAssessment'}
 
   FILE_NAME_SEPARATOR = '_ggrc'
 
-  @orm.validates('document_type')
-  def validate_document_type(self, key, document_type):
+  @orm.validates('kind')
+  def validate_kind(self, key, kind):
     """Returns correct option, otherwise rises an error"""
-    if document_type is None:
-      document_type = self.URL
-    if document_type not in self.VALID_DOCUMENT_TYPES:
+    if kind is None:
+      kind = self.URL
+    if kind not in self.VALID_DOCUMENT_KINDS:
       raise exceptions.ValidationError(
           "Invalid value for attribute {attr}. "
-          "Expected options are `{url}`, `{attachment}`, `{reference_url}`".
+          "Expected options are `{url}`, `{kind}`, `{reference_url}`".
           format(
               attr=key,
               url=self.URL,
-              attachment=self.ATTACHMENT,
+              kind=self.FILE,
               reference_url=self.REFERENCE_URL
           )
       )
-    return document_type
+    return kind
 
   @classmethod
   def indexed_query(cls):
@@ -112,16 +109,22 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   @hybrid_property
   def slug(self):
     """Slug property"""
-    if self.document_type in (self.URL, self.REFERENCE_URL):
+    if self.kind in (self.URL, self.REFERENCE_URL):
       return self.link
     return u"{} {}".format(self.link, self.title)
 
   # pylint: disable=no-self-argument
   @slug.expression
   def slug(cls):
-    return case([(cls.document_type == cls.ATTACHMENT,
-                 func.concat(cls.link, ' ', cls.title))],
+    return case([(cls.kind == cls.FILE,
+                  func.concat(cls.link, ' ', cls.title))],
                 else_=cls.link)
+
+  def _display_name(self):
+    result = self.title
+    if self.kind == Document.FILE:
+      result = self.link + ' ' + self.title
+    return result
 
   def log_json(self):
     tmp = super(Document, self).log_json()
@@ -138,59 +141,60 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
 
   @is_uploaded.setter
   def is_uploaded(self, value):
+    # pylint: disable=attribute-defined-outside-init
     self._is_uploaded = value
 
   @simple_property
-  def documentable_obj(self):
-    return self._documentable_obj
+  def parent_obj(self):
+    return self._parent_obj
 
-  @documentable_obj.setter
-  def documentable_obj(self, value):
-    self._documentable_obj = value
+  @parent_obj.setter
+  def parent_obj(self, value):
+    # pylint: disable=attribute-defined-outside-init
+    self._parent_obj = value
 
-  def _get_documentable_obj(self):
-    """Get documentable object specified"""
-    if 'id' not in self._documentable_obj:
-      raise exceptions.ValidationError('"id" is mandatory'
-                                       ' for documentable_obj')
-    if 'type' not in self._documentable_obj:
+  def _get_parent_obj(self):
+    """Get parent object specified"""
+    if 'id' not in self._parent_obj:
+      raise exceptions.ValidationError('"id" is mandatory for parent_obj')
+    if 'type' not in self._parent_obj:
       raise exceptions.ValidationError(
-          '"type" is mandatory for documentable_obj')
-    if self._documentable_obj['type'] not in self._allowed_documentables:
-      raise exceptions.ValidationError('Allowed types are: {}.'.format(
-          ', '.join(self._allowed_documentables)))
+          '"type" is mandatory for parent_obj')
+    if self._parent_obj['type'] not in self.ALLOWED_PARENTS:
+      raise exceptions.ValidationError(
+          'Allowed types are: {}.'.format(', '.join(self.ALLOWED_PARENTS)))
 
-    doc_type = self._documentable_obj['type']
-    doc_id = self._documentable_obj['id']
-    obj = referenced_objects.get(doc_type, doc_id)
+    parent_type = self._parent_obj['type']
+    parent_id = self._parent_obj['id']
+    obj = referenced_objects.get(parent_type, parent_id)
 
     if not obj:
       raise ValueError(
-          'Documentable object not found: {type} {id}'.format(type=doc_type,
-                                                              id=doc_id))
+          'Parent object not found: {type} {id}'.format(type=parent_type,
+                                                        id=parent_id))
     return obj
 
   @staticmethod
-  def _build_file_name_postfix(documentable_obj):
-    """Build postfix for given documentable object"""
-    postfix_parts = [Document.FILE_NAME_SEPARATOR, documentable_obj.slug]
+  def _build_file_name_postfix(parent_obj):
+    """Build postfix for given parent object"""
+    postfix_parts = [Document.FILE_NAME_SEPARATOR, parent_obj.slug]
 
-    related_snapshots = documentable_obj.related_objects(_types=['Snapshot'])
+    related_snapshots = parent_obj.related_objects(_types=['Snapshot'])
     related_snapshots = sorted(related_snapshots, key=lambda it: it.id)
 
     slugs = (sn.revision.content['slug'] for sn in related_snapshots if
-             sn.child_type == documentable_obj.assessment_type)
+             sn.child_type == parent_obj.assessment_type)
 
     postfix_parts.extend(slugs)
     postfix_sting = '_'.join(postfix_parts).lower()
 
     return postfix_sting
 
-  def _build_relationship(self, documentable_obj):
+  def _build_relationship(self, parent_obj):
     """Build relationship between document and documentable object"""
     from ggrc.models import relationship
     rel = relationship.Relationship(
-        source=documentable_obj,
+        source=parent_obj,
         destination=self
     )
     db.session.add(rel)
@@ -200,23 +204,23 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
     self.gdrive_id = response['id']
     self.link = response['webViewLink']
     self.title = response['name']
-    self.document_type = Document.ATTACHMENT
+    self.kind = Document.FILE
 
   @staticmethod
-  def _get_folder(parent_obj):
-    return parent_obj.folder if hasattr(parent_obj, "folder") else ""
+  def _get_folder(parent):
+    return parent.folder if hasattr(parent, 'folder') else ''
 
-  def _map_documentable(self):
+  def _map_parent(self):
     """Maps document to documentable object
 
-    If Document.ATTACHMENT and source_gdrive_id => copy file
+    If Document.FILE and source_gdrive_id => copy file
     """
-    if self.is_with_documentable_obj():
-      documentable_obj = self._get_documentable_obj()
-      if self.document_type == Document.ATTACHMENT and self.source_gdrive_id:
-        self.exec_gdrive_file_copy_flow(documentable_obj)
-      self._build_relationship(documentable_obj)
-      self._documentable_obj = None
+    if self.is_with_parent_obj():
+      parent = self._get_parent_obj()
+      if self.kind == Document.FILE and self.source_gdrive_id:
+        self.exec_gdrive_file_copy_flow(parent)
+      self._build_relationship(parent)
+      self._parent_obj = None
 
   def exec_gdrive_file_copy_flow(self, documentable_obj):
     """Execute google gdrive file copy flow
@@ -233,9 +237,9 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
                                    is_uploaded=self.is_uploaded)
     self._update_fields(response)
 
-  def is_with_documentable_obj(self):
-    return bool(hasattr(self, "_documentable_obj") and self._documentable_obj)
+  def is_with_parent_obj(self):
+    return bool(hasattr(self, '_parent_obj') and self._parent_obj)
 
   def handle_before_flush(self):
     """Handler that called  before SQLAlchemy flush event"""
-    self._map_documentable()
+    self._map_parent()

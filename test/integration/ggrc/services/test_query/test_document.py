@@ -22,21 +22,20 @@ class TestDocumentQueries(TestCase):
     super(TestDocumentQueries, self).setUp()
     self.api = Api()
 
-  @ddt.data(all_models.Document.ATTACHMENT, all_models.Document.URL)
-  def test_filter_document_by_type(self, document_type):
+  @ddt.data(all_models.Document.FILE, all_models.Document.URL)
+  def test_filter_document_by_type(self, kind):
     """Test filter documents by document type."""
     data = {
-        all_models.Document.ATTACHMENT:
-            factories.EvidenceTypeDocumentFactory().id,
-        all_models.Document.URL: factories.UrlTypeDocumentFactory().id,
+        all_models.Document.FILE: factories.DocumentFileFactory().id,
+        all_models.Document.URL: factories.DocumentUrlFactory().id,
     }
     query_request_data = [{
         u'fields': [],
         u'filters': {
             u'expression': {
-                u'left': u'document_type',
+                u'left': u'kind',
                 u'op': {u'name': u'='},
-                u'right': document_type,
+                u'right': kind,
             }
         },
         u'limit': [0, 5],
@@ -48,5 +47,5 @@ class TestDocumentQueries(TestCase):
                                  data=query_request_data,
                                  api_link="/query")
     self.assertEqual(1, resp.json[0]["Document"]["count"])
-    self.assertEqual(data[document_type],
+    self.assertEqual(data[kind],
                      resp.json[0]["Document"]["values"][0]["id"])

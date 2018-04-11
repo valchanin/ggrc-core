@@ -135,14 +135,14 @@ class TestCheckPopulatedContent(unittest.TestCase):
       expected_updated_at = "2018-11-12T13:14:15"
 
     expected = [{'display_name': 'www.url-foo.com',
-                 'document_type': 'REFERENCE_URL',
+                 'kind': 'REFERENCE_URL',
                  'id': None,
                  'link': 'www.url-foo.com',
                  'title': 'www.url-foo.com',
                  'created_at': expected_created_at,
                  'updated_at': expected_updated_at, },
                 {'display_name': 'www.refurl-bar.com',
-                 'document_type': 'REFERENCE_URL',
+                 'kind': 'REFERENCE_URL',
                  'id': None,
                  'link': 'www.refurl-bar.com',
                  'title': 'www.refurl-bar.com',
@@ -209,12 +209,12 @@ class TestCheckPopulatedContent(unittest.TestCase):
 
   @ddt.data(
       ({}, {}),
-      ({"document_evidence": []}, {"document_evidence": []}),
+      ({"document_evidence": []}, {"documents_file": []}),
       (
           {"document_evidence": [
               {"link": u"aa", "title": u"bb", "display_name": u"bb"},
           ]},
-          {"document_evidence": [
+          {"documents_file": [
               {"link": u"aa", "title": u"bb", "display_name": u"aa bb"},
           ]}
       ),
@@ -223,7 +223,7 @@ class TestCheckPopulatedContent(unittest.TestCase):
               {"link": u"aa", "title": u"bb", "display_name": u"bb"},
               {"link": u"aa\u5555", "title": u"", "display_name": u""},
           ]},
-          {"document_evidence": [
+          {"documents_file": [
               {"link": u"aa", "title": u"bb", "display_name": u"aa bb"},
               {"link": u"aa\u5555", "title": u"", "display_name": u"aa\u5555"},
           ]}
@@ -235,6 +235,7 @@ class TestCheckPopulatedContent(unittest.TestCase):
 
     The display name should contain link and title, like we used to have in
     slugs.
+    Document epic: 'document_evidence' renamed to 'documents_file'
     """
     obj = mock.Mock()
     obj.id = self.object_id
