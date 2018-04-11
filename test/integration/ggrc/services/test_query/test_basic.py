@@ -1157,7 +1157,7 @@ class TestQueryAssessmentByEvidenceURL(TestCase, WithQueryApi):
     assessments_by_url = self._get_first_result_set(
         self._make_query_dict(
             "Assessment",
-            expression=["Reference URL", "~", "i.imgur.com"],
+            expression=["Evidence URL", "~", "i.imgur.com"],
         ),
         "Assessment", "values",
     )
