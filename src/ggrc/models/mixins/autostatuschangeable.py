@@ -9,7 +9,7 @@ from sqlalchemy import event
 from sqlalchemy import inspect
 from sqlalchemy.orm import session
 
-from ggrc.models import document
+from ggrc.models import evidence
 from ggrc.models import mixins
 from ggrc.models.mixins import statusable
 from ggrc.models import relationship
@@ -52,19 +52,10 @@ class AutoStatusChangeable(object):
   }
 
   RELATED_OBJ_STATUS_MAPPING = {
-      'Document': {
-          'key': lambda x: x.document_type,
+      'Evidence': {
+          'key': lambda _: 'ALL',
           'mappings': {
-              document.Document.REFERENCE_URL: {
-                  statusable.Statusable.DONE_STATE,
-                  statusable.Statusable.FINAL_STATE
-              },
-              document.Document.ATTACHMENT: {
-                  statusable.Statusable.DONE_STATE,
-                  statusable.Statusable.FINAL_STATE,
-                  statusable.Statusable.START_STATE
-              },
-              document.Document.URL: {
+              'ALL': {
                   statusable.Statusable.DONE_STATE,
                   statusable.Statusable.FINAL_STATE,
                   statusable.Statusable.START_STATE
@@ -103,6 +94,10 @@ class AutoStatusChangeable(object):
   }
 
   _need_status_reset = False
+
+  def move_to_in_progress(self):
+    if self.status != self.PROGRESS_STATE:
+      self.status = self.PROGRESS_STATE
 
   @staticmethod
   def _date_has_changes(attr):
@@ -214,16 +209,17 @@ class AutoStatusChangeable(object):
       obj._need_status_reset = True
 
   @classmethod
-  def adjust_status_before_flush(cls, session, flush_context, instances):
+  def adjust_status_before_flush(cls, alchemy_session,
+                                 flush_context, instances):
     """Reset status of AutoStatusChangeable objects with _need_status_reset.
 
     Is registered to listen for 'before_flush' events on a later stage.
     """
 
     # pylint: disable=unused-argument,protected-access
-    for obj in session.identity_map.values():
+    for obj in alchemy_session.identity_map.values():
       if isinstance(obj, AutoStatusChangeable) and obj._need_status_reset:
-        obj.status = obj.PROGRESS_STATE
+        obj.move_to_in_progress()
         obj._need_status_reset = False
 
   @staticmethod
@@ -307,10 +303,10 @@ class AutoStatusChangeable(object):
       if target_object.status in monitor_states:
         target_object._need_status_reset = True
 
-    @signals.Restful.model_put.connect_via(document.Document)
-    @signals.Restful.model_deleted.connect_via(document.Document)
-    def handle_document_relationship(sender, obj=None, src=None, service=None):
-      """Handle PUT and DELETE of Document that can change object status.
+    @signals.Restful.model_put.connect_via(evidence.Evidence)
+    @signals.Restful.model_deleted.connect_via(evidence.Evidence)
+    def handle_evidence_relationship(sender, obj=None, src=None, service=None):
+      """Handle PUT and DELETE of Evidence.
 
         See blinker library documentation for other parameters (all necessary).
 
@@ -327,7 +323,7 @@ class AutoStatusChangeable(object):
       monitor_states = related_settings['mappings'].get(key, set())
       for auto_changeable in auto_changeables:
         if auto_changeable.status in monitor_states:
-          auto_changeable.status = auto_changeable.PROGRESS_STATE
+          auto_changeable.move_to_in_progress()
 
 
 # pylint: disable=fixme
