@@ -34,7 +34,7 @@ class TestControlsImport(TestCase):
     evidence = models.Document.query.filter_by(title="Some title 3").all()
     self.assertEqual(len(evidence), 1)
     control = models.Control.query.filter_by(slug="control-3").first()
-    self.assertEqual(control.document_evidence[0].title, "Some title 3")
+    self.assertEqual(control.documents_file[0].title, "Some title 3")
 
   def test_import_control_end_date(self):
     """End date on control should be non editable."""

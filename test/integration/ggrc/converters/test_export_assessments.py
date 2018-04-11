@@ -5,11 +5,21 @@
 """Tests for task group task specific export."""
 import datetime
 from ddt import data, ddt, unpack
+from mock import mock
 
 from ggrc import db
 from ggrc.models import all_models
 from integration.ggrc.models import factories
 from integration.ggrc import TestCase
+
+COPIED_TITLE = 'test_name'
+COPIED_LINK = 'http://mega.doc'
+
+
+def dummy_gdrive_response(*args, **kwargs):  # noqa
+  return {'webViewLink': COPIED_LINK,
+          'name': COPIED_TITLE,
+          'id': '12345'}
 
 
 @ddt
@@ -227,3 +237,51 @@ class TestExport(TestCase):
     db.session.commit()
     with self.custom_headers(user_headers):
       self.assert_slugs("verified_date", filter_value, [self.assessment.slug])
+
+  @mock.patch('ggrc.gdrive.file_actions.process_gdrive_file',
+              dummy_gdrive_response)
+  def test_evidense_export(self):
+    """Test evidence fields of the assessments"""
+    with factories.single_commit():
+      evid_file = factories.EvidenceFactory(
+          title="Simple title",
+          kind=all_models.Evidence.FILE,
+          link="https://d.go.com/d/18YJavJlv8YvIoCy/edit",
+          description="mega description",
+          parent_obj={
+              "id": self.assessment.id,
+              "type": "Assessment"
+          }
+      )
+      evid_file_link = evid_file.link
+      evid_file_title = evid_file.title
+
+      evid_url = factories.EvidenceFactory(
+          title="Simple title",
+          kind=all_models.Evidence.URL,
+          link="google.com",
+          description="mega description",
+          parent_obj={
+              "id": self.assessment.id,
+              "type": "Assessment"
+          }
+      )
+      evid_url_link = evid_url.link
+
+    search_request = [{
+        "object_name": "Assessment",
+        "fields": "all",
+        "filters": {
+            "expression": {
+                "left": "id",
+                "op": {"name": "="},
+                "right": self.assessment.id
+            }
+        }
+    }]
+
+    resp = self.export_parsed_csv(search_request)["Assessment"][0]
+    expected_evid_file_string = evid_file_link + " " + evid_file_title
+
+    self.assertEquals(expected_evid_file_string, resp["Evidence File"])
+    self.assertEquals(evid_url_link, resp["Evidence URL"])
