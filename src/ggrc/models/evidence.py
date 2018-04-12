@@ -245,7 +245,7 @@ class Evidence(Roleable, Relatable, mixins.Titled,
     folder_id = self._get_folder(parent)
     file_id = self.source_gdrive_id
     from ggrc.gdrive.file_actions import process_gdrive_file
-    response = process_gdrive_file(folder_id, file_id, postfix,
+    response = process_gdrive_file(file_id, folder_id, postfix,
                                    separator=Evidence.FILE_NAME_SEPARATOR,
                                    is_uploaded=self.is_uploaded)
     self._update_fields(response)

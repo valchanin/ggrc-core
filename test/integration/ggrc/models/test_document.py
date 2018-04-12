@@ -22,6 +22,10 @@ def dummy_gdrive_response(*args, **kwargs):  # noqa
           'id': '1234567'}
 
 
+def dummy_gdrive_response_link(*args, **kwargs):  # noqa
+  return 'http://mega.doc'
+
+
 class TestDocument(TestCase):
   """Document test cases"""
   # pylint: disable=invalid-name
@@ -307,6 +311,47 @@ class TestDocument(TestCase):
     self.assertEqual(result.kind, kind)
     self.assertEqual(result.link, 'some_url.com')
     self.assertEqual(result.description, 'mega description')
+
+  @mock.patch('ggrc.gdrive.file_actions.get_gdrive_file_link',
+              dummy_gdrive_response_link)
+  def test_create_document_file_by_api(self, kind=all_models.Document.FILE):
+    """Test crete document.FILE via POST"""
+    document_data = dict(
+      title='Simple title',
+      kind=kind,
+      source_gdrive_id='1234',
+      description='mega description'
+    )
+    _, document = self.gen.generate_object(
+      all_models.Document,
+      document_data
+    )
+
+    result = all_models.Document.query.filter(
+      all_models.Document.id == document.id).one()
+
+    self.assertEqual(result.slug, 'DOCUMENT-{}'.format(result.id))
+    self.assertEqual(result.title, 'Simple title')
+    self.assertEqual(result.kind, kind)
+    self.assertEqual(result.link, 'http://mega.doc')
+    self.assertEqual(result.description, 'mega description')
+    self.assertEqual(result.status, all_models.Document.START_STATE)
+
+  def test_create_document_file_with_parent(self):
+    control = factories.ControlFactory(folder='123')
+    response = self.api.post(all_models.Document, [{
+      "document": {
+        "kind": all_models.Document.FILE,
+        "source_gdrive_id": "some link",
+        "link": "some link",
+        "title": "some title",
+        "context": None,
+        "parent_obj": {
+          "id": control.id,
+          "type": "Control"
+        }
+      }
+    }])
 
   def test_document_url_type_with_parent(self):
     """Document of URL type should mapped to parent if parent specified"""

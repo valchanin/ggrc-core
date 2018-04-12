@@ -16,13 +16,17 @@ from ggrc.models.deferred import deferred
 from ggrc.models.mixins import before_flush_handleable as bfh
 from ggrc.models.mixins.base import Identifiable
 from ggrc.models.mixins.statusable import Statusable
+from ggrc.models.mixins.with_relationship_handler import WithRelationshipHandler
 from ggrc.models.relationship import Relatable
+from ggrc.models.relationship import Relationship
+from ggrc.services import signals
 from ggrc.utils import referenced_objects
 
 
 class Document(Roleable, Relatable, mixins.Titled,
                bfh.BeforeFlushHandleable, mixins.Slugged, Indexed, Statusable,
                mixins.WithLastDeprecatedDate, comment.Commentable,
+               WithRelationshipHandler,
                Identifiable, db.Model):
   """Document model."""
   __tablename__ = 'documents'
@@ -195,47 +199,60 @@ class Document(Roleable, Relatable, mixins.Titled,
     )
     db.session.add(rel)
 
-  def _update_fields(self, response):
+  def _update_fields(self, link):
     """Update fields of document with values of the copied file"""
-    self.gdrive_id = response['id']
-    self.link = response['webViewLink']
-    self.title = response['name']
+    self.gdrive_id = self.source_gdrive_id
+    self.link = link
     self.kind = Document.FILE
 
   @staticmethod
   def _get_folder(parent):
     return parent.folder if hasattr(parent, 'folder') else ''
 
-  def _map_parent(self):
-    """Maps document to documentable object
+  def _process_gdrive_business_logic(self):
+    """Handles gdrive business logic
 
-    If Document.FILE and source_gdrive_id => copy file
+    If parent_obj specified => add file to parent folder
+    If parent_obj not specified => get file link
     """
     if self.is_with_parent_obj():
       parent = self._get_parent_obj()
       if self.kind == Document.FILE and self.source_gdrive_id:
-        self.exec_gdrive_file_copy_flow(parent)
+        self.add_gdrive_file_folder(parent)
       self._build_relationship(parent)
       self._parent_obj = None
+    elif self.kind == Document.FILE and self.source_gdrive_id and not self.link:
+      self.gdrive_id = self.source_gdrive_id
+      from ggrc.gdrive.file_actions import get_gdrive_file_link
+      self.link = get_gdrive_file_link(self.source_gdrive_id)
 
-  def exec_gdrive_file_copy_flow(self, documentable_obj):
-    """Execute google gdrive file copy flow
+  def add_gdrive_file_folder(self, documentable_obj):
+    """Add file to parent folder if exists"""
 
-    Build file name, destination folder and copy file to that folder.
-    After coping fills document object fields with new gdrive URL
-    """
-    postfix = self._build_file_name_postfix(documentable_obj)
     folder_id = self._get_folder(documentable_obj)
     file_id = self.source_gdrive_id
-    from ggrc.gdrive.file_actions import process_gdrive_file
-    response = process_gdrive_file(folder_id, file_id, postfix,
-                                   separator=Document.FILE_NAME_SEPARATOR,
-                                   is_uploaded=self.is_uploaded)
-    self._update_fields(response)
+    from ggrc.gdrive import file_actions
+    if folder_id:
+      file_link = file_actions.add_gdrive_file_folder(folder_id, file_id)
+    else:
+      file_link = file_actions.get_gdrive_file_link(file_id)
+    self._update_fields(file_link)
 
   def is_with_parent_obj(self):
     return bool(hasattr(self, '_parent_obj') and self._parent_obj)
 
   def handle_before_flush(self):
     """Handler that called  before SQLAlchemy flush event"""
-    self._map_parent()
+    self._process_gdrive_business_logic()
+
+  def handle_relationship_created(self, target):
+    if (self.kind == Document.FILE and
+            target and hasattr(target, 'folder') and target.folder):
+      from ggrc.gdrive import file_actions
+      file_actions.add_gdrive_file_folder(self.gdrive_id, target.folder)
+
+  def handle_relationship_deleted(self, target):
+    if (self.kind == Document.FILE and
+            target and hasattr(target, 'folder') and target.folder):
+      from ggrc.gdrive import file_actions
+      file_actions.remove_gdrive_file_folder(self.gdrive_id, target.folder)

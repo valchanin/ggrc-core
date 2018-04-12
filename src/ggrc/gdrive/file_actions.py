@@ -121,6 +121,24 @@ def rename_file_request(drive_service, file_id, body):
   ).execute()
 
 
+def add_folder_request(drive_service, file_id, folder_id):
+  """Send add folder request to gdrive"""
+  return drive_service.files().update(
+    fileId=file_id,
+    addParents=folder_id,
+    fields='webViewLink'
+  ).execute()
+
+
+def remove_folder_request(drive_service, file_id, folder_id):
+  """Send add folder request to gdrive"""
+  return drive_service.files().update(
+    fileId=file_id,
+    removeParents=folder_id,
+    fields='webViewLink'
+  ).execute()
+
+
 def validate_response(response):
   missed_keys = []
   if 'id' not in response:
@@ -136,7 +154,7 @@ def validate_response(response):
                               ' response: missed keys {}'.format(keys))
 
 
-def process_gdrive_file(folder_id, file_id, postfix, separator,
+def process_gdrive_file(file_id, folder_id, postfix, separator,
                         is_uploaded=False):
   """Process gdrive file to new folder with renaming"""
   http_auth = get_http_auth()
@@ -150,11 +168,12 @@ def process_gdrive_file(folder_id, file_id, postfix, separator,
       #  a gdrive folder, we just need to rename file.
       response = rename_file_request(drive_service, file_id,
                                      body={'name': new_file_name})
+    #   TODO return object like named tuple
+
     else:
       body = _build_request_body(folder_id, new_file_name)
       response = copy_file_request(drive_service, file_id, body)
     validate_response(response)
-    return response
   except HttpAccessTokenRefreshError:
     handle_token_error()
   except HttpError as ex:
@@ -164,6 +183,61 @@ def process_gdrive_file(folder_id, file_id, postfix, separator,
     raise InternalServerError('Processing of the file failed due to'
                               ' internal server error.')
   return response
+
+
+def get_gdrive_file_link(file_id):
+  """Returns file link"""
+  http_auth = get_http_auth()
+  try:
+    drive_service = discovery.build(
+      API_SERVICE_NAME, API_VERSION, http=http_auth)
+    file_meta = drive_service.files().get(fileId=file_id,
+                                          fields='webViewLink').execute()
+  except HttpAccessTokenRefreshError:
+    handle_token_error()
+  except HttpError as ex:
+    hande_http_error(ex)
+  except Exception as ex:
+    logger.error(ex.message)
+    raise InternalServerError('Processing of the file failed due to'
+                              ' internal server error.')
+  return file_meta['webViewLink']
+
+
+def add_gdrive_file_folder(file_id, folder_id):
+  """Add folder to gdrive file"""
+  http_auth = get_http_auth()
+  try:
+    drive_service = discovery.build(
+      API_SERVICE_NAME, API_VERSION, http=http_auth)
+    response = add_folder_request(drive_service, file_id, folder_id)
+  except HttpAccessTokenRefreshError:
+    handle_token_error()
+  except HttpError as ex:
+    hande_http_error(ex)
+  except Exception as ex:
+    logger.error(ex.message)
+    raise InternalServerError('Processing of the file failed due to'
+                              ' internal server error.')
+  return response['webViewLink']
+
+
+def remove_gdrive_file_folder(file_id, folder_id):
+  """Add folder to gdrive file"""
+  http_auth = get_http_auth()
+  try:
+    drive_service = discovery.build(
+      API_SERVICE_NAME, API_VERSION, http=http_auth)
+    response = remove_folder_request(drive_service, file_id, folder_id)
+  except HttpAccessTokenRefreshError:
+    handle_token_error()
+  except HttpError as ex:
+    hande_http_error(ex)
+  except Exception as ex:
+    logger.error(ex.message)
+    raise InternalServerError('Processing of the file failed due to'
+                              ' internal server error.')
+  return response['webViewLink']
 
 
 def _build_request_body(folder_id, new_file_name):
