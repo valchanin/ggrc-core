@@ -4,25 +4,26 @@
 """Module containing Document model."""
 
 from sqlalchemy import orm
-from sqlalchemy import func, case
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from ggrc import db
 from ggrc.access_control.roleable import Roleable
 from ggrc.builder import simple_property
 from ggrc.fulltext.mixin import Indexed
-from ggrc.models import exceptions
+from ggrc.models import exceptions, comment
 from ggrc.models import reflection
 from ggrc.models import mixins
 from ggrc.models.deferred import deferred
-from ggrc.models.mixins import Base
 from ggrc.models.mixins import before_flush_handleable as bfh
+from ggrc.models.mixins.base import Identifiable
+from ggrc.models.mixins.statusable import Statusable
 from ggrc.models.relationship import Relatable
 from ggrc.utils import referenced_objects
 
 
-class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
-               bfh.BeforeFlushHandleable, db.Model):
+class Document(Roleable, Relatable, mixins.Titled,
+               bfh.BeforeFlushHandleable, mixins.Slugged, Indexed, Statusable,
+               mixins.WithLastDeprecatedDate, comment.Commentable,
+               Identifiable, db.Model):
   """Document model."""
   __tablename__ = 'documents'
 
@@ -35,6 +36,12 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   FILE = "FILE"
   REFERENCE_URL = "REFERENCE_URL"
   VALID_DOCUMENT_KINDS = [URL, FILE, REFERENCE_URL]
+
+  START_STATE = 'Active'
+  DEPRECATED = 'Deprecated'
+
+  VALID_STATES = (START_STATE, DEPRECATED, )
+
   kind = deferred(db.Column(db.Enum(*VALID_DOCUMENT_KINDS),
                             default=URL,
                             nullable=False),
@@ -50,6 +57,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
   _api_attrs = reflection.ApiAttributes(
       'title',
       'description',
+      'status',
       reflection.Attribute('link', update=False),
       reflection.Attribute('kind', update=False),
       reflection.Attribute('source_gdrive_id', update=False),
@@ -63,6 +71,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
       'link',
       'description',
       'kind',
+      'status'
   ]
 
   _sanitize_html = [
@@ -74,6 +83,7 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
       'title': 'Title',
       'link': 'Link',
       'description': 'description',
+      'kind': 'type',
   }
 
   ALLOWED_PARENTS = {'Control', 'Issue', 'RiskAssessment'}
@@ -105,20 +115,6 @@ class Document(Roleable, Relatable, Base, mixins.Titled, Indexed,
             "Document_complete",
         ),
     )
-
-  @hybrid_property
-  def slug(self):
-    """Slug property"""
-    if self.kind in (self.URL, self.REFERENCE_URL):
-      return self.link
-    return u"{} {}".format(self.link, self.title)
-
-  # pylint: disable=no-self-argument
-  @slug.expression
-  def slug(cls):
-    return case([(cls.kind == cls.FILE,
-                  func.concat(cls.link, ' ', cls.title))],
-                else_=cls.link)
 
   def _display_name(self):
     result = self.title

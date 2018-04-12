@@ -253,7 +253,8 @@ def refresh_documents(mapper, connection, target):
     for_refresh = target.source
   else:
     return
-  db.session.expire(for_refresh, ['documents'])
+  if hasattr(for_refresh, 'documents'):
+    db.session.expire(for_refresh, ['documents'])
 
 
 # pylint:disable=unused-argument
