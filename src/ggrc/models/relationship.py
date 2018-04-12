@@ -210,7 +210,7 @@ class Relatable(object):
     related = source_objs + dest_objs
 
     if _types:
-      return {obj for obj in related if obj.type in _types}
+      return {obj for obj in related if obj and obj.type in _types}
     return set(related)
 
   _include_links = []
