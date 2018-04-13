@@ -4,6 +4,7 @@
 */
 
 import {getRole} from '../plugins/utils/acl-utils';
+import {backendGdriveClient} from '../plugins/ggrc-gapi-client';
 
 const getAccessControlList = ()=> {
   let adminRole = getRole('Document', 'Admin');
@@ -66,5 +67,11 @@ can.Model.Cacheable('CMS.Models.Document', {
     let value = this.attr('kind');
     let title = _.findWhere(this.class.kinds, {value}).title;
     return title;
+  },
+  save() {
+    let baseSave = this._super;
+    return backendGdriveClient.withAuth(()=> {
+      return baseSave.call(this);
+    });
   },
 });
