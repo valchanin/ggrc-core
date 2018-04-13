@@ -25,6 +25,7 @@ import {
   REFRESH_MAPPING,
   REFRESH_SUB_TREE,
 } from '../../events/eventTypes';
+import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 
 (function (can, $) {
   'use strict';
@@ -284,7 +285,9 @@ import {
             };
             data[mapping.option_attr] = destination;
             modelInstance = new Model(data);
-            defer.push(modelInstance.save());
+            defer.push(backendGdriveClient.withAuth(()=> {
+              return modelInstance.save();
+            }));
           }.bind(this));
 
           $.when.apply($, defer)
