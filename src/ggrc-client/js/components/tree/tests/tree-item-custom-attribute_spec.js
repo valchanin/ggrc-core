@@ -3,6 +3,7 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../../../models/cacheable';
 import {helpers} from './../tree-item-custom-attribute';
 import {makeFakeInstance} from '../../../../js_specs/spec_helpers';
 import * as Utils from '../../../plugins/ggrc_utils';
@@ -75,7 +76,7 @@ describe('helpers.getCustomAttrValue', () => {
       id: 10,
     }];
     fakeInstance = makeFakeInstance({
-      model: can.Model.Cacheable,
+      model: Cacheable,
       staticProps: {
         is_custom_attributable: true,
       },

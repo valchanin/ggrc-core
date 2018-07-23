@@ -420,7 +420,7 @@ function getPlainText(originalText) {
  * A function that returns the highest role in an array of strings of roles
  * or a comma-separated string of roles.
  *
- * @param {CMS.Models.Cacheable} obj - Assignable object with defined
+ * @param {Cacheable} obj - Assignable object with defined
  *   assignable_list class property holding assignable roles ordered in
  *   increasing importance.
  * Return highest assignee role from a list of roles

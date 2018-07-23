@@ -31,6 +31,7 @@ import {
 import {getRolesForType} from './acl-utils';
 import {getMappableTypes} from '../ggrc_utils';
 import {caDefTypeName} from './custom-attribute/custom-attribute-config';
+import Cacheable from '../../models/cacheable';
 
 /**
 * TreeView-specific utils.
@@ -148,7 +149,6 @@ function skipUnusable(modelName, attrList) {
  * @return {Object} Table columns configuration.
  */
 function getColumnsForModel(modelType, displayPrefs, modelName) {
-  let Cacheable = can.Model.Cacheable;
   let Model = CMS.Models[modelType];
   let modelDefinition = Model.root_object;
   let mandatoryAttrNames =

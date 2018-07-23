@@ -3,13 +3,14 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../cacheable';
 import {prepareCustomAttributes} from '../../plugins/utils/ca-utils';
 import {getRole} from '../../plugins/utils/acl-utils';
 import {sortByName} from '../../plugins/utils/label-utils';
 import tracker from '../../tracker';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
 
-export default can.Model.Cacheable('CMS.Models.Assessment', {
+export default Cacheable('CMS.Models.Assessment', {
   root_object: 'assessment',
   root_collection: 'assessments',
   category: 'governance',

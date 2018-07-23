@@ -3,9 +3,10 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import TaskGroup from './task-group';
 
-export default can.Model.Cacheable('CMS.Models.Workflow', {
+export default Cacheable('CMS.Models.Workflow', {
   root_object: 'workflow',
   root_collection: 'workflows',
   category: 'workflow',

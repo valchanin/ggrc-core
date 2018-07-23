@@ -3,7 +3,9 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-export default can.Model.Cacheable('CMS.Models.Risk', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.Risk', {
   root_object: 'risk',
   root_collection: 'risks',
   category: 'risk',
@@ -30,7 +32,7 @@ export default can.Model.Cacheable('CMS.Models.Risk', {
     add_item_view:
       GGRC.mustache_path + '/base_objects/tree_add_item.mustache',
     attr_view: GGRC.mustache_path + '/base_objects/tree-item-attr.mustache',
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {attr_title: 'Reference URL', attr_name: 'reference_url'},
       {attr_title: 'Last Deprecated Date', attr_name: 'end_date'},
       {

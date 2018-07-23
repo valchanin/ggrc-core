@@ -3,6 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../../../../models/cacheable';
 import Component from '../task-list';
 import {getComponentVM} from '../../../../../js_specs/spec_helpers';
 import Permission from '../../../../permission';
@@ -162,7 +163,7 @@ describe('task-list component', () => {
           beforeEach(function () {
             origRelatedItemsType = staticVmProps.relatedItemsType;
             staticVmProps.relatedItemsType = 'TestType';
-            can.Model.Cacheable.extend(
+            Cacheable.extend(
               `CMS.Models.${staticVmProps.relatedItemsType}`, {}
             );
             instance = new CMS.Models[staticVmProps.relatedItemsType];
@@ -206,7 +207,7 @@ describe('task-list component', () => {
 
           beforeEach(function () {
             staticVmProps.relatedItemsType = 'TestType';
-            can.Model.Cacheable.extend(
+            Cacheable.extend(
               `CMS.Models.${staticVmProps.relatedItemsType}`, {}
             );
             instance = new CMS.Models[staticVmProps.relatedItemsType];

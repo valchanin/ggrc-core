@@ -4,6 +4,7 @@
 */
 
 import RefreshQueue from '../../js/models/refresh_queue';
+import Cacheable from '../../js/models/cacheable';
 
 describe('mappers', function () {
 
@@ -11,7 +12,7 @@ describe('mappers', function () {
   beforeEach(function () {
     LL = GGRC.ListLoaders;
     if(!GGRC.Jasmine || !GGRC.Jasmine.MockModel) {
-      can.Model.Cacheable('GGRC.Jasmine.MockModel', {}, {});
+      Cacheable('GGRC.Jasmine.MockModel', {}, {});
     }
   });
 

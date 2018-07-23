@@ -8,6 +8,7 @@ import RecentlyViewedObject from '../models/local-storage/recently-viewed-object
 import tracker from '../tracker';
 import RefreshQueue from '../models/refresh_queue';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
+import Cacheable from '../models/cacheable'
 
 can.Control('CMS.Controllers.LHN', {
   defaults: {}
@@ -442,7 +443,7 @@ can.Control('CMS.Controllers.LHN_Search', {
     this.init_object_lists();
     this.init_list_views();
 
-    can.Model.Cacheable.bind('created', function (ev, instance) {
+    Cacheable.bind('created', function (ev, instance) {
       var modelNames;
       var modelName;
 

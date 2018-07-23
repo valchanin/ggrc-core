@@ -3,10 +3,11 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../../models/cacheable';
 import {BUTTON_VIEW_SAVE_CANCEL} from '../../plugins/utils/modals';
 import {refreshTGRelatedItems} from '../../plugins/utils/workflow-utils';
 
-let CloneTaskGroup = can.Model.Cacheable({
+let CloneTaskGroup = Cacheable({
   defaults: {
     clone_objects: true,
     clone_tasks: true,

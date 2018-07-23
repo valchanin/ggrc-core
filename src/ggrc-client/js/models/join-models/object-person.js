@@ -5,6 +5,7 @@
 
 import Join from './join';
 import Person from '../business-models/person';
+import Cacheable from '../cacheable';
 
 export default Join('CMS.Models.ObjectPerson', {
   root_object: 'object_person',
@@ -14,7 +15,7 @@ export default Join('CMS.Models.ObjectPerson', {
   update: 'PUT /api/object_people/{id}',
   destroy: 'DELETE /api/object_people/{id}',
   join_keys: {
-    personable: can.Model.Cacheable,
+    personable: Cacheable,
     person: Person,
   },
   attributes: {

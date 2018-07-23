@@ -3,9 +3,10 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import {hasQuestions} from '../../plugins/utils/ggrcq-utils';
 
-export default can.Model.Cacheable('CMS.Models.Product', {
+export default Cacheable('CMS.Models.Product', {
   root_object: 'product',
   root_collection: 'products',
   category: 'business',
@@ -35,7 +36,7 @@ export default can.Model.Cacheable('CMS.Models.Product', {
   },
   tree_view_options: {
     attr_view: GGRC.mustache_path + '/base_objects/tree-item-attr.mustache',
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {attr_title: 'Kind/Type', attr_name: 'type', attr_sort_field: 'kind'},
       {attr_title: 'Reference URL', attr_name: 'reference_url'},
       {attr_title: 'Last Deprecated Date', attr_name: 'end_date'},

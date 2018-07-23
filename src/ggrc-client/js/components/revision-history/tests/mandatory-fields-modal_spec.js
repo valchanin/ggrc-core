@@ -3,6 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../../../models/cacheable';
 import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import Component from '../mandatory-fields-modal';
 
@@ -40,7 +41,7 @@ describe('mandatory-fields-modal component', () => {
     });
 
     it('filters invalid mandatory CAs', () => {
-      let instance = new can.Model.Cacheable({});
+      let instance = new Cacheable({});
       spyOn(instance, 'customAttr').and.returnValue([
         {
           id: 1,
@@ -60,7 +61,7 @@ describe('mandatory-fields-modal component', () => {
       let result = method();
       expect(result.length).toBe(1);
       expect(result[0].id).toBe(2);
-      delete can.Model.Cacheable.cache;
+      delete Cacheable.cache;
     });
   });
 });

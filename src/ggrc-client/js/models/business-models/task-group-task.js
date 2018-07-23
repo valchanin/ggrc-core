@@ -3,6 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../cacheable';
 import {getRole} from '../../plugins/utils/acl-utils';
 import {
   getClosestWeekday,
@@ -10,7 +11,7 @@ import {
 } from '../../plugins/utils/date-util';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
 
-export default can.Model.Cacheable('CMS.Models.TaskGroupTask', {
+export default Cacheable('CMS.Models.TaskGroupTask', {
   root_object: 'task_group_task',
   root_collection: 'task_group_tasks',
   findAll: 'GET /api/task_group_tasks',

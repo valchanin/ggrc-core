@@ -3,6 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../../../models/cacheable';
 import Component from '../inline-autocomplete-wrapper';
 import {makeFakeInstance} from '../../../../js_specs/spec_helpers';
 
@@ -11,7 +12,7 @@ describe('inline-autocomplete-wrapper component', ()=> {
   let instance;
   let path;
   beforeEach(()=> {
-    instance = makeFakeInstance({model: can.Model.Cacheable})({id: 25});
+    instance = makeFakeInstance({model: Cacheable})({id: 25});
     path = 'testPath';
 
     viewModel = new (can.Map.extend(Component.prototype.viewModel))({

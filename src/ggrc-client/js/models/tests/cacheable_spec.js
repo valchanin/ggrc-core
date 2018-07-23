@@ -3,9 +3,10 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import {makeFakeInstance} from '../../../js_specs/spec_helpers';
 
-describe('CMS.Models.Cacheable', function () {
+describe('Cacheable model', function () {
   describe('mark_for_addition() method', function () {
     let instance;
     let obj;
@@ -14,7 +15,7 @@ describe('CMS.Models.Cacheable', function () {
     let joinAttr;
 
     beforeEach(function () {
-      instance = makeFakeInstance({model: can.Model.Cacheable})({
+      instance = makeFakeInstance({model: Cacheable})({
         related_sources: new can.Map(),
       });
       spyOn(instance, 'remove_duplicate_pending_joins');
@@ -25,7 +26,7 @@ describe('CMS.Models.Cacheable', function () {
     });
 
     afterEach(function () {
-      delete can.Model.Cacheable.cache;
+      delete Cacheable.cache;
     });
 
     it('calls remove_duplicate_pending_joins() method', function () {
@@ -53,7 +54,7 @@ describe('CMS.Models.Cacheable', function () {
     let extraAttrs;
 
     beforeEach(function () {
-      instance = new can.Model.Cacheable({
+      instance = new Cacheable({
         related_sources: new can.Map(),
       });
       obj = new can.Map({});
@@ -61,7 +62,7 @@ describe('CMS.Models.Cacheable', function () {
     });
 
     afterEach(function () {
-      delete can.Model.Cacheable.cache;
+      delete Cacheable.cache;
     });
 
     it('sets empty array to _pending_joins if it is undefined', function () {

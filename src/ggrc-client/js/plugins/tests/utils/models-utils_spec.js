@@ -5,6 +5,7 @@
 
 import {resolveDeferredBindings} from '../../utils/models-utils';
 import {makeFakeModel} from '../../../../js_specs/spec_helpers';
+import Cacheable from '../../../models/cacheable';
 
 describe('models-utils module', () => {
   describe('resolveDeferredBindings() util', function () {
@@ -22,8 +23,8 @@ describe('models-utils module', () => {
     });
 
     beforeEach(function () {
-      CMS.Models.DummyModel = makeFakeModel({model: can.Model.Cacheable});
-      CMS.Models.DummyJoin = makeFakeModel({model: can.Model.Cacheable});
+      CMS.Models.DummyModel = makeFakeModel({model: Cacheable});
+      CMS.Models.DummyJoin = makeFakeModel({model: Cacheable});
     });
 
     it('iterates _pending_joins, calling refresh_stubs on each binding',

@@ -5,13 +5,14 @@
 
 import Join from './join';
 import TaskGroup from '../business-models/task-group';
+import Cacheable from '../cacheable';
 
 export default Join('CMS.Models.TaskGroupObject', {
   root_object: 'task_group_object',
   root_collection: 'task_group_objects',
   join_keys: {
     task_group: TaskGroup,
-    object: can.Model.Cacheable,
+    object: Cacheable,
   },
   attributes: {
     context: 'CMS.Models.Context.stub',

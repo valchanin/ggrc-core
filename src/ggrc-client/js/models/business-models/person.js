@@ -3,9 +3,10 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../cacheable';
 import tracker from '../../tracker';
 
-export default can.Model.Cacheable('CMS.Models.Person', {
+export default Cacheable('CMS.Models.Person', {
   root_object: 'person',
   root_collection: 'people',
   category: 'entities',

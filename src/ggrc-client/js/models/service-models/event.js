@@ -3,7 +3,9 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-export default can.Model.Cacheable('CMS.Models.Event', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.Event', {
   root_object: 'event',
   root_collection: 'events',
   findAll: 'GET /api/events',

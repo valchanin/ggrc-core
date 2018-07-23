@@ -3,6 +3,7 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../cacheable';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
 
 /**
@@ -12,7 +13,7 @@ import {getPageInstance} from '../../plugins/utils/current-page-utils';
  * AssessmentTemplate helps avoiding repeatedly defining the same set of
  * Assessment object properties for each new instance.
  */
-export default can.Model.Cacheable('CMS.Models.AssessmentTemplate', {
+export default Cacheable('CMS.Models.AssessmentTemplate', {
   root_object: 'assessment_template',
   root_collection: 'assessment_templates',
   model_singular: 'AssessmentTemplate',

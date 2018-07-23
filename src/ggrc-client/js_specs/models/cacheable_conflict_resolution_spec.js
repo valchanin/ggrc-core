@@ -3,13 +3,14 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../../js/models/cacheable';
 import {failAll} from '../spec_helpers';
 
-describe('can.Model.Cacheable conflict resolution', function () {
+describe('Cacheable conflict resolution', function () {
   let DummyModel;
 
   beforeAll(function () {
-    DummyModel = can.Model.Cacheable.extend({
+    DummyModel = Cacheable.extend({
       update: 'PUT /api/dummy_models/{id}',
     }, {});
   });

@@ -3,6 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import tracker from '../../tracker';
 import Permission from '../../permission';
 
@@ -18,7 +19,7 @@ function refreshAttr(instance, attr) {
   return result;
 }
 
-export default can.Model.Cacheable('CMS.Models.CycleTaskEntry', {
+export default Cacheable('CMS.Models.CycleTaskEntry', {
   root_object: 'cycle_task_entry',
   root_collection: 'cycle_task_entries',
   category: 'workflow',

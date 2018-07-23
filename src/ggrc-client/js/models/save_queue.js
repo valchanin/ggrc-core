@@ -9,7 +9,7 @@ import {resolveDeferredBindings} from '../plugins/utils/models-utils';
 (function (can, $) {
   /*  GGRC.SaveQueue
    *
-   *  SaveQueue is used by CMS.Models.Cacheable to prevent firing
+   *  SaveQueue is used by Cacheable to prevent firing
    *  multiple requests to the server at once. It makes sure the requests
    *  are grouped together (inside _queue) and then resolved in batches.
    *
@@ -19,7 +19,7 @@ import {resolveDeferredBindings} from '../plugins/utils/models-utils';
    *  bucket) that enqueues as a regular request but then greedily dispatches
    *  requests that arrived while it was in the queue.
    *
-   *  enqueue(obj: CMS.Models.Cacheable, save_args) -> null
+   *  enqueue(obj: Cacheable, save_args) -> null
    */
   can.Construct('GGRC.SaveQueue', {
 

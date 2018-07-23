@@ -3,6 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
+
 /**
  * A "mixin" denoting a model type that can be assigned custom roles.
  *
@@ -14,7 +16,7 @@
  *
  * @class
  */
-export default can.Model.Cacheable('CMS.Models.Roleable', {
+export default Cacheable('CMS.Models.Roleable', {
   findAll: function () {
     // We do not query the backend, this implementation is used to diplay
     // a list of objects in the Custom Roles widget.

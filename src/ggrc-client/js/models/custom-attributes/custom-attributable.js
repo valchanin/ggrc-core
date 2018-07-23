@@ -3,6 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
+
 /* class CustomAttributable
   *
   * CustomAttributable does not query the backend, it is used to display a
@@ -11,7 +13,7 @@
   * CustomAttributeDefinitions as children
   *
   */
-export default can.Model.Cacheable('CMS.Models.CustomAttributable', {
+export default Cacheable('CMS.Models.CustomAttributable', {
   findAll: function () {
     let types = _.sortByOrder(GGRC.custom_attributable_types,
       'category', false);

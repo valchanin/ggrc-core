@@ -3,7 +3,9 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-export default can.Model.Cacheable('CMS.Models.Issue', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.Issue', {
   root_object: 'issue',
   root_collection: 'issues',
   category: 'governance',
@@ -27,7 +29,7 @@ export default can.Model.Cacheable('CMS.Models.Issue', {
     context: 'CMS.Models.Context.stub',
   },
   tree_view_options: {
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {attr_title: 'Reference URL', attr_name: 'reference_url'},
       {attr_title: 'Last Deprecated Date', attr_name: 'end_date'},
       {

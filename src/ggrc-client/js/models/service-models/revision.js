@@ -3,6 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
+
 /**
  * A model holding data and metadata describing a particular revision of
  * some business object at a particular point, i.e. the business object's
@@ -10,7 +12,7 @@
  *
  * This is useful for e.g. reconstruction of an object's change history.
  */
-export default can.Model.Cacheable('CMS.Models.Revision', {
+export default Cacheable('CMS.Models.Revision', {
   root_object: 'revision',
   root_collection: 'revisions',
 

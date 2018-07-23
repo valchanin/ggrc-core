@@ -3,7 +3,9 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-export default can.Model.Cacheable('CMS.Models.ControlCategory', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.ControlCategory', {
   root_object: 'control_category',
   root_collection: 'control_categories',
   findAll: 'GET /api/control_categories',

@@ -3,6 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
+
 (function (GGRC, can) {
   /*  SearchListLoader
    *  - handles search relationships
@@ -20,7 +22,7 @@
       this.query_function = queryFunction;
     },
     init_listeners: function (binding) {
-      let model = can.Model.Cacheable;
+      let model = Cacheable;
       let that = this;
 
       model.bind('created', function (ev, mapping) {

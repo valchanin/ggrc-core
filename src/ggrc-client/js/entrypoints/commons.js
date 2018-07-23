@@ -6,6 +6,7 @@
 import '../ggrc_base';
 import '../apps/base_widgets';
 import '../tracker';
+import '../plugins/canjs_extensions';
 import '../bootstrap/modal-ajax';
 import '../bootstrap/modal-form';
 import '../plugins/lodash_helpers';
@@ -15,7 +16,6 @@ import '../plugins/datepicker';
 import '../plugins/can_control';
 import '../plugins/autocomplete';
 import '../plugins/ajax_extensions';
-import '../plugins/canjs_extensions';
 import '../plugins/component_registry';
 import '../plugins/openclose';
 import '../plugins/tooltip';

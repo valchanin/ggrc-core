@@ -3,6 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import CycleTaskGroup from './cycle-task-group';
 import {getRole} from '../../plugins/utils/acl-utils';
 import {REFRESH_SUB_TREE} from '../../events/eventTypes';
@@ -58,7 +59,7 @@ function populateFromWorkflow(form, workflow) {
   });
 }
 
-export default can.Model.Cacheable('CMS.Models.CycleTaskGroupObjectTask', {
+export default Cacheable('CMS.Models.CycleTaskGroupObjectTask', {
   root_object: 'cycle_task_group_object_task',
   root_collection: 'cycle_task_group_object_tasks',
   mixins: ['timeboxed', 'isOverdue', 'accessControlList', 'ca_update'],
@@ -89,12 +90,12 @@ export default can.Model.Cacheable('CMS.Models.CycleTaskGroupObjectTask', {
   },
   info_pane_options: {
     mapped_objects: {
-      model: can.Model.Cacheable,
+      model: Cacheable,
       mapping: 'info_related_objects',
       show_view: GGRC.mustache_path + '/base_templates/subtree.mustache',
     },
     comments: {
-      model: can.Model.Cacheable,
+      model: Cacheable,
       mapping: 'cycle_task_entries',
       show_view: GGRC.mustache_path + '/cycle_task_entries/tree.mustache',
     },

@@ -5,6 +5,7 @@
 
 import Join from './join';
 import Revision from '../service-models/revision';
+import Cacheable from '../cacheable';
 
 export default Join('CMS.Models.Snapshot', {
   root_object: 'snapshot',
@@ -12,10 +13,10 @@ export default Join('CMS.Models.Snapshot', {
   attributes: {
     context: 'CMS.Models.Context.stub',
     modified_by: 'CMS.Models.Person.stub',
-    parent: 'CMS.Models.Cacheable.stub',
+    parent: 'Cacheable.stub',
   },
   join_keys: {
-    parent: can.Model.Cacheable,
+    parent: Cacheable,
     revision: can.Model.Revision,
   },
   defaults: {

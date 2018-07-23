@@ -3,7 +3,9 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-export default can.Model.Cacheable('CMS.Models.DataAsset', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.DataAsset', {
   root_object: 'data_asset',
   root_collection: 'data_assets',
   category: 'business',
@@ -32,7 +34,7 @@ export default can.Model.Cacheable('CMS.Models.DataAsset', {
   },
   tree_view_options: {
     attr_view: GGRC.mustache_path + '/base_objects/tree-item-attr.mustache',
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {attr_title: 'Reference URL', attr_name: 'reference_url'},
       {attr_title: 'Effective Date', attr_name: 'start_date'},
       {attr_title: 'Last Deprecated Date', attr_name: 'end_date'},

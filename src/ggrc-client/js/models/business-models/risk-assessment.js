@@ -3,9 +3,11 @@
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Cacheable from '../cacheable';
+
 const path = GGRC.mustache_path + '/risk_assessments';
 
-export default can.Model.Cacheable('CMS.Models.RiskAssessment', {
+export default Cacheable('CMS.Models.RiskAssessment', {
   root_object: 'risk_assessment',
   root_collection: 'risk_assessments',
   category: 'risk_assessment',

@@ -4,10 +4,12 @@
  */
 
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
+import Cacheable from '../cacheable';
+
 /**
  * A model describing a comment to Assessment or Request objects.
  */
-export default can.Model.Cacheable('CMS.Models.Comment', {
+export default Cacheable('CMS.Models.Comment', {
   root_object: 'comment',
   root_collection: 'comments',
   findOne: 'GET /api/comments/{id}',

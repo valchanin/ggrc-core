@@ -3,7 +3,9 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-export default can.Model.Cacheable('CMS.Models.Objective', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.Objective', {
   root_object: 'objective',
   root_collection: 'objectives',
   category: 'objectives',
@@ -33,7 +35,7 @@ export default can.Model.Cacheable('CMS.Models.Objective', {
   },
   tree_view_options: {
     attr_view: GGRC.mustache_path + '/objectives/tree-item-attr.mustache',
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {
         attr_title: 'Last Assessment Date',
         attr_name: 'last_assessment_date',

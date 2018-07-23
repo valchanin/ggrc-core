@@ -3,6 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../cacheable';
 import Directive from './directive';
 
 export default Directive('CMS.Models.Policy', {
@@ -44,7 +45,7 @@ export default Directive('CMS.Models.Policy', {
   init: function () {
     can.extend(this.attributes, Directive.attributes);
     can.extend(this.tree_view_options, Directive.tree_view_options);
-    this.tree_view_options.attr_list = can.Model.Cacheable.attr_list.concat([
+    this.tree_view_options.attr_list = Cacheable.attr_list.concat([
       {
         attr_title: 'Kind/Type',
         attr_name: 'kind',

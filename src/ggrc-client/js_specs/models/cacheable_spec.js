@@ -3,6 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Cacheable from '../../js/models/cacheable';
 import {
   failAll,
   makeFakeModel,
@@ -10,7 +11,7 @@ import {
 import CustomAttributeObject from '../../js/plugins/utils/custom-attribute/custom-attribute-object';
 import * as modelUtils from '../../js/plugins/utils/models-utils';
 
-describe('can.Model.Cacheable', function () {
+describe('Cacheable model', function () {
   let origGcaDefs;
   let DummyModel;
 
@@ -20,12 +21,12 @@ describe('can.Model.Cacheable', function () {
     spyOn(CMS.Models.Mixins.dummyable, 'add_to');
 
     DummyModel = makeFakeModel({
-      model: can.Model.Cacheable,
+      model: Cacheable,
       staticProps: {
         root_object: 'dummy_model',
         root_collection: 'dummy_models',
         // The string update key has to be here to make the update conflict tests work.
-        //  See can.Model.Cacheable.init for details on how the software
+        //  See Cacheable.init for details on how the software
         //  under test is broken. --BM
         findOne: 'GET /api/dummy_models/{id}',
         findAll: 'GET /api/dummy_models/',
@@ -43,7 +44,7 @@ describe('can.Model.Cacheable', function () {
 
   describe('::setup', function () {
     it('prefers pre-set static names over root object & collection', function () {
-      let Model = can.Model.Cacheable.extend('CMS.Models.Dummy', {
+      let Model = Cacheable.extend('CMS.Models.Dummy', {
         root_object: 'wrong_name',
         root_collection: 'wrong_names',
         model_singular: 'RightName',
@@ -83,7 +84,7 @@ describe('can.Model.Cacheable', function () {
 
     it('sets findAll to default based on root_collection if not set', function () {
       spyOn(can.Model, 'setup');
-      let DummyFind = can.Model.Cacheable.extend({root_collection: 'foos'}, {});
+      let DummyFind = Cacheable.extend({root_collection: 'foos'}, {});
       expect(DummyFind.findAll).toBe('GET /api/foos');
     });
 
@@ -147,7 +148,7 @@ describe('can.Model.Cacheable', function () {
 
   describe('::findAll', function () {
     it('throws errors when called directly on Cacheable instead of a subclass', function () {
-      expect(can.Model.Cacheable.findAll)
+      expect(Cacheable.findAll)
         .toThrow(
           new Error('No default findAll() exists for subclasses of Cacheable')
         );
@@ -231,7 +232,7 @@ describe('can.Model.Cacheable', function () {
 
   describe('::findPage', function () {
     it('throws errors when called directly on Cacheable instead of a subclass', function () {
-      expect(can.Model.Cacheable.findPage)
+      expect(Cacheable.findPage)
         .toThrow(
           new Error('No default findPage() exists for subclasses of Cacheable')
         );

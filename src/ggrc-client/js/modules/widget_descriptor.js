@@ -21,7 +21,7 @@ import {getWidgetConfig} from '../plugins/utils/object-versions-utils';
     /*
       make an info widget descriptor for a GGRC object
       You must provide:
-      instance - an instance that is a subclass of can.Model.Cacheable
+      instance - an instance that is a subclass of Cacheable
       widgetView [optional] - a template for rendering the info.
     */
     make_info_widget: function (instance, widgetView) {
@@ -50,7 +50,7 @@ import {getWidgetConfig} from '../plugins/utils/object-versions-utils';
     /*
       make an summary widget descriptor for a GGRC object
       You must provide:
-      instance - an instance that is a subclass of can.Model.Cacheable
+      instance - an instance that is a subclass of Cacheable
       widgetView [optional] - a template for rendering the info.
     */
     make_summary_widget: function (instance, widgetView) {
@@ -99,8 +99,8 @@ import {getWidgetConfig} from '../plugins/utils/object-versions-utils';
     /*
       make a tree view widget descriptor with mostly default-for-GGRC settings.
       You must provide:
-      instance - an instance that is a subclass of can.Model.Cacheable
-      farModel - a can.Model.Cacheable class
+      instance - an instance that is a subclass of Cacheable
+      farModel - a Cacheable class
       extenders [optional] - an array of objects that will extend the default widget config.
     */
     make_tree_view: function (instance, farModel, extenders, id) {

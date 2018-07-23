@@ -54,7 +54,7 @@ const getRoleById = (id) => {
 /**
  * Compute a list of people that have `roleName` granted on `instance`.
  *
- * @param {CMS.Models.Cacheable} instance - a model instance
+ * @param {Cacheable} instance - a model instance
  * @param {String} roleName - the name of the custom role
  *
  * @return {Array} - list of people
@@ -85,7 +85,7 @@ function peopleWithRoleName(instance, roleName) {
 /**
  * Compute a list of people that have `roleId` granted on `instance`.
  *
- * @param {CMS.Models.Cacheable} instance - a model instance
+ * @param {Cacheable} instance - a model instance
  * @param {String} roleId - the id of the custom role
  *
  * @return {Array} - list of people
@@ -107,8 +107,8 @@ function peopleWithRoleId(instance, roleId) {
 /**
  * Checks whether user is auditor in audit
  *
- * @param {CMS.Models.Cacheable} audit - an audit instance
- * @param {CMS.Models.Cacheable} user - a user instance
+ * @param {Cacheable} audit - an audit instance
+ * @param {Cacheable} user - a user instance
  *
  * @return {boolean}
  */

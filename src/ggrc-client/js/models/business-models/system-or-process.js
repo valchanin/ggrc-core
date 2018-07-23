@@ -3,7 +3,9 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
-export default can.Model.Cacheable('CMS.Models.SystemOrProcess', {
+import Cacheable from '../cacheable';
+
+export default Cacheable('CMS.Models.SystemOrProcess', {
   root_object: 'system_or_process',
   root_collection: 'systems_or_processes',
   title_plural: 'Systems/Processes',
@@ -46,7 +48,7 @@ export default can.Model.Cacheable('CMS.Models.SystemOrProcess', {
   },
   tree_view_options: {
     attr_view: GGRC.mustache_path + '/base_objects/tree-item-attr.mustache',
-    attr_list: can.Model.Cacheable.attr_list.concat([
+    attr_list: Cacheable.attr_list.concat([
       {
         attr_title: 'Network Zone',
         attr_name: 'network_zone',

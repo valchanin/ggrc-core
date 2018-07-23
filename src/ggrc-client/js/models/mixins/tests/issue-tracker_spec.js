@@ -5,6 +5,7 @@
 
 import * as issueTrackerUtils from '../../../plugins/utils/issue-tracker-utils';
 import {makeFakeInstance} from '../../../../js_specs/spec_helpers';
+import Cacheable from '../../cacheable';
 
 describe('can.Model.Mixin.issueTracker', () => {
   let Mixin;
@@ -25,7 +26,7 @@ describe('can.Model.Mixin.issueTracker', () => {
     it('should show issue tracker if globally enabled and' +
        ' turn off by default', () => {
       GGRC.ISSUE_TRACKER_ENABLED = true;
-      const stub = makeFakeInstance({model: can.Model.Cacheable})();
+      const stub = makeFakeInstance({model: Cacheable})();
 
       spyOn(issueTrackerUtils, 'initIssueTrackerObject');
       method.apply(stub);
@@ -47,7 +48,7 @@ describe('can.Model.Mixin.issueTracker', () => {
       };
 
       const stub = makeFakeInstance({
-        model: can.Model.Cacheable,
+        model: Cacheable,
         staticProps: {
           buildIssueTrackerConfig() {
             return config;
@@ -70,7 +71,7 @@ describe('can.Model.Mixin.issueTracker', () => {
     it('should hide issue tracker if globally disabled and' +
        ' turn off by default', () => {
       GGRC.ISSUE_TRACKER_ENABLED = false;
-      const stub = makeFakeInstance({model: can.Model.Cacheable})();
+      const stub = makeFakeInstance({model: Cacheable})();
 
       spyOn(issueTrackerUtils, 'initIssueTrackerObject');
       method.apply(stub);

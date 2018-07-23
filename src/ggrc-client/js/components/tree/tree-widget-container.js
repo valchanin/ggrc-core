@@ -48,6 +48,7 @@ import Pagination from '../base-objects/pagination';
 import tracker from '../../tracker';
 import router from '../../router';
 import Permission from '../../permission';
+import Cacheable from '../../models/cacheable';
 
 let viewModel;
 
@@ -488,13 +489,13 @@ viewModel = can.Map.extend({
       self = this;
       if (needDestroy) {
         // Remove listeners for inactive tabs
-        can.Model.Cacheable.unbind('created', onCreated);
-        can.Model.Cacheable.unbind('destroyed', onDestroyed);
+        Cacheable.unbind('created', onCreated);
+        Cacheable.unbind('destroyed', onDestroyed);
       } else {
         // Add listeners on creations instance or mappings objects for current tab
         // and refresh page after that.
-        can.Model.Cacheable.bind('created', onCreated);
-        can.Model.Cacheable.bind('destroyed', onDestroyed);
+        Cacheable.bind('created', onCreated);
+        Cacheable.bind('destroyed', onDestroyed);
       }
     };
   })(),

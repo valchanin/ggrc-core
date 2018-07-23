@@ -4,8 +4,9 @@
 */
 
 import RefreshQueue from '../refresh_queue';
+import Cacheable from '../cacheable';
 
-export default can.Model.Cacheable('can.Model.Join', {
+export default Cacheable('can.Model.Join', {
   join_keys: null,
   setup: function () {
     this._super(...arguments);
@@ -91,7 +92,7 @@ export default can.Model.Cacheable('can.Model.Join', {
     let that = this;
 
     can.each(this.constructor.join_keys, function (model, attr) {
-      if (model === can.Model.Cacheable) {
+      if (model === Cacheable) {
         that.init_join_object_with_type(attr);
       } else {
         that.init_join_object(attr, model.shortName);

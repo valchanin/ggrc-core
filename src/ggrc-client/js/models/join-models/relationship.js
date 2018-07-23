@@ -4,6 +4,7 @@
 */
 
 import Join from './join';
+import Cacheable from '../cacheable';
 
 export default Join('CMS.Models.Relationship', {
   root_object: 'relationship',
@@ -15,8 +16,8 @@ export default Join('CMS.Models.Relationship', {
     destination: 'CMS.Models.get_stub',
   },
   join_keys: {
-    source: can.Model.Cacheable,
-    destination: can.Model.Cacheable,
+    source: Cacheable,
+    destination: Cacheable,
   },
   defaults: {
     source: null,
