@@ -13,6 +13,7 @@ import {
   formatDate,
   getHighestAssigneeRole,
 } from '../../plugins/ggrc_utils';
+import Revision from '../../models/service-models/revision';
 
 (function (GGRC, can) {
   'use strict';
@@ -114,7 +115,7 @@ import {
           let query = {__sort: 'updated_at'};
           query[attr + '_type'] = this.attr('instance.type');
           query[attr + '_id'] = this.attr('instance.id');
-          return CMS.Models.Revision.findAll(query);
+          return Revision.findAll(query);
         }.bind(this);
 
         return can.when(
@@ -191,7 +192,7 @@ import {
 
         function fetchRevisions(obj) {
           return [
-            CMS.Models.Revision.findAll({
+            Revision.findAll({
               source_type: obj.type,
               source_id: obj.id,
               __sort: 'updated_at',
@@ -212,7 +213,7 @@ import {
                 return revision;
               });
             }),
-            CMS.Models.Revision.findAll({
+            Revision.findAll({
               destination_type: obj.type,
               destination_id: obj.id,
               __sort: 'updated_at',
@@ -361,8 +362,8 @@ import {
       /**
        * A helper function for computing the difference between the two Revisions
        * of an access_control_list.
-       * @param {CMS.Models.Revision} rev1 - the older of the two revisions
-       * @param {CMS.Models.Revision} rev2 - the newer of the two revisions
+       * @param {Revision} rev1 - the older of the two revisions
+       * @param {Revision} rev2 - the newer of the two revisions
        *
        * @return {Array} - A list of objects describing the modified attributes of the
        * instance's access_control_list, with each object having the following attributes:
@@ -421,8 +422,8 @@ import {
        * considered 'internal', and are thus not included in the resulting diff
        * objects, because they are not meant to be shown to the end user.
        *
-       * @param {CMS.Models.Revision} rev1 - the older of the two revisions
-       * @param {CMS.Models.Revision} rev2 - the newer of the two revisions
+       * @param {Revision} rev1 - the older of the two revisions
+       * @param {Revision} rev2 - the newer of the two revisions
        *
        * @return {Object} - A 'diff' object describing the changes between the
        *   revisions. The object has the following attributes:
@@ -602,7 +603,7 @@ import {
        * A helper function for extracting the mapping change information from a
        * Revision object.
        *
-       * @param {CMS.Models.Revision} revision - a Revision object describing a
+       * @param {Revision} revision - a Revision object describing a
        *   mapping between the object instance the component is handling, and an
        *   external object
        *
@@ -687,7 +688,7 @@ import {
        * If user has no role and was not or is not an assignee, we just add a
        * single role change ("no role").
        *
-       * @param {CMS.Models.Revision} revisions - a Revision object describing a
+       * @param {Revision} revisions - a Revision object describing a
        *   mapping between the object instance the component is handling, and an
        *   external object
        *

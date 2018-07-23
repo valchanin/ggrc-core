@@ -5,6 +5,7 @@
 
 import tracker from '../tracker';
 import {resolveDeferredBindings} from '../plugins/utils/models-utils';
+import BackgroundTask from '../models/service-models/background-task';
 
 (function (can, $) {
   /*  GGRC.SaveQueue
@@ -63,7 +64,7 @@ import {resolveDeferredBindings} from '../plugins/utils/models-utils';
           }
           if ('background_task' in data) {
             stopFn(true);
-            return CMS.Models.BackgroundTask.findOne({
+            return BackgroundTask.findOne({
               id: data.background_task.id,
             }).then(function (task) {
               // Resolve all the dfds with the task

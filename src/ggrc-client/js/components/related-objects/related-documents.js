@@ -16,6 +16,7 @@ import {
   DESTINATION_UNMAPPED,
 } from '../../events/eventTypes';
 import pubsub from '../../pub-sub';
+import Context from '../../models/service-models/context';
 
 (function (can, $, _, GGRC) {
   'use strict';
@@ -132,7 +133,7 @@ import pubsub from '../../pub-sub';
           link: data,
           title: data,
           created_at: date.toISOString(),
-          context: this.instance.context || new CMS.Models.Context({
+          context: this.instance.context || new Context({
             id: null,
           }),
           kind: this.kind,
@@ -147,7 +148,7 @@ import pubsub from '../../pub-sub';
           source: this.instance,
           destination: document,
           context: this.instance.context ||
-            new CMS.Models.Context({id: null}),
+            new Context({id: null}),
         });
         return relationship.save();
       },

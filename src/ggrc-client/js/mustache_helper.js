@@ -29,6 +29,8 @@ import {
   allowedToMap,
   getHooks,
 } from './plugins/ggrc_utils';
+import Option from './models/service-models/option';
+import Search from './models/service-models/search';
 
 // Chrome likes to cache AJAX requests for Mustaches.
 let mustacheUrls = {};
@@ -461,7 +463,7 @@ Mustache.registerHelper('option_select',
   function (object, attrName, role, options) {
     let selectedOption = object.attr(attrName);
     let selectedId = selectedOption ? selectedOption.id : null;
-    let optionsDfd = CMS.Models.Option.for_role(role);
+    let optionsDfd = Option.for_role(role);
     let tabindex = options.hash && options.hash.tabindex;
     let tagPrefix = 'select class="span12"';
 
@@ -1095,7 +1097,7 @@ Mustache.registerHelper('default_audit_title', function (instance, options) {
   new RefreshQueue().enqueue(program).trigger().then(function () {
     title = (new Date()).getFullYear() + ': ' + program.title + ' - Audit';
 
-    GGRC.Models.Search.counts_for_types(title, ['Audit'])
+    Search.counts_for_types(title, ['Audit'])
       .then(function (result) {
         // Next audit index should be bigger by one than previous, we have unique name policy
         index = result.getCountFor('Audit') + 1;

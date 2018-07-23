@@ -8,6 +8,7 @@ import RefreshQueue from '../../models/refresh_queue';
 import {peopleWithRoleName} from '../../plugins/utils/acl-utils.js';
 import {COMMENT_CREATED} from '../../events/eventTypes';
 import {formatDate} from '../../plugins/ggrc_utils';
+import Comment from '../../models/service-models/comment';
 
 export default can.Component.extend({
   tag: 'last-comment',
@@ -16,7 +17,7 @@ export default can.Component.extend({
     define: {
       instance: {
         set(instance) {
-          const comment = new CMS.Models.Comment({
+          const comment = new Comment({
             id: instance.last_comment_id,
             description: instance.last_comment,
           });

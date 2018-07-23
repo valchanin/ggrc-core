@@ -3,6 +3,8 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Context from '../../../models/service-models/context';
+
 (function (GGRC, CMS, can) {
   'use strict';
 
@@ -25,7 +27,7 @@
         attrs = {
           link: value,
           title: value,
-          context: this.attr('context') || new CMS.Models.Context({id: null}),
+          context: this.attr('context') || new Context({id: null}),
           kind: 'URL',
           created_at: new Date(),
           isDraft: true,

@@ -16,6 +16,7 @@ import {
   Cross,
 } from '../mappers/mapper-helpers';
 import Mappings from './mappings';
+import SearchModel from '../service-models/search';
 
 (function (GGRC, can) {
   new Mappings('ggrc_core', {
@@ -343,12 +344,12 @@ import Mappings from './mappings';
 
         // checkfor window.location
         if (/^\/objectBrowser\/?$/.test(window.location.pathname)) {
-          return GGRC.Models.Search.search_for_types('', types, {})
+          return SearchModel.search_for_types('', types, {})
             .pipe(function (mappings) {
               return mappings.entries;
             });
         }
-        return GGRC.Models.Search.search_for_types('', types, {
+        return SearchModel.search_for_types('', types, {
           contact_id: binding.instance.id,
         }).pipe(function (mappings) {
           return mappings.entries;

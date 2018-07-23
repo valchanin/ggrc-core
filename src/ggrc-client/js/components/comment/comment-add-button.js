@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import Comment from '../../models/service-models/comment';
+
 const tag = 'comment-add-button';
 const template = `<button class="btn btn-small btn-gray"
       ($click)="createComment()">
@@ -39,7 +41,7 @@ export default can.Component.extend({
         return;
       }
 
-      comment = new CMS.Models.Comment({
+      comment = new Comment({
         description: description,
         created_at: new Date(),
         modified_by: {type: 'Person', id: GGRC.current_user.id},

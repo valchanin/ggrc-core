@@ -9,6 +9,8 @@ import {
 import '../../controllers/dashboard_controller';
 import {RouterConfig} from '../../router';
 import routes from './routes';
+import Event from '../../models/service-models/event';
+import Role from '../../models/service-models/role';
 
 const path = GGRC.mustache_path || '/static/mustache';
 const HEADER_VIEW = `${path}/base_objects/page_header.mustache`;
@@ -38,7 +40,7 @@ const adminListDescriptors = {
     roles: new can.List(),
     init: function () {
       let self = this;
-      CMS.Models.Role
+      Role
         .findAll({scope__in: 'System,Admin'})
         .done(function (roles) {
           self.roles.replace(sortByNameEmail(roles));
@@ -54,7 +56,7 @@ const adminListDescriptors = {
     fetch_post_process: sortByNameEmail,
   },
   roles: {
-    model: CMS.Models.Role,
+    model: Role,
     extra_params: {scope__in: 'System,Admin,Private Program,Workflow'},
     object_category: 'governance',
     object_display: 'Roles',
@@ -62,7 +64,7 @@ const adminListDescriptors = {
     fetch_post_process: sortByNameEmail,
   },
   events: {
-    model: CMS.Models.Event,
+    model: Event,
     object_category: 'governance',
     object_display: 'Events',
     list_view: '/static/mustache/events/object_list.mustache',
@@ -130,7 +132,7 @@ new GGRC.WidgetList('ggrc_admin', {
       },
     },
     roles: {
-      model: CMS.Models.Role,
+      model: Role,
       content_controller: GGRC.Controllers.ListView,
       content_controller_options: adminListDescriptors.roles,
       widget_id: 'roles_list',
@@ -144,7 +146,7 @@ new GGRC.WidgetList('ggrc_admin', {
       },
     },
     events: {
-      model: CMS.Models.Event,
+      model: Event,
       content_controller: GGRC.Controllers.ListView,
       content_controller_options: adminListDescriptors.events,
       widget_id: 'events_list',

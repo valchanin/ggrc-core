@@ -5,6 +5,7 @@
 
 import * as aclUtils from '../../../plugins/utils/acl-utils';
 import {makeFakeInstance} from '../../../../js_specs/spec_helpers';
+import Context from '../../service-models/context';
 
 describe('CMS.Models.Assessment', function () {
   'use strict';
@@ -18,7 +19,7 @@ describe('CMS.Models.Assessment', function () {
 
     beforeEach(function () {
       assessment = makeFakeInstance({model: CMS.Models.Assessment})();
-      context = makeFakeInstance({model: CMS.Models.Context})({id: 42});
+      context = makeFakeInstance({model: Context})({id: 42});
       program = makeFakeInstance({model: CMS.Models.Program})({id: 54});
       const fakeAuditCreator = makeFakeInstance({model: CMS.Models.Audit});
       audit = fakeAuditCreator({context, program});

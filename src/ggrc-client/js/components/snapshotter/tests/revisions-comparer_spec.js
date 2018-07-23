@@ -6,6 +6,7 @@
 import * as caUtils from '../../../plugins/utils/ca-utils';
 import Component from '../revisions-comparer';
 import RefreshQueue from '../../../models/refresh_queue';
+import Revision from '../../../models//service-models/revision';
 
 describe('GGRC.Components.revisionsComparer', function () {
   let viewModel;
@@ -126,11 +127,9 @@ describe('GGRC.Components.revisionsComparer', function () {
 
   describe('getRevisions() method', function () {
     let method;
-    let Revision;
 
     beforeEach(function () {
       method = viewModel.getRevisions;
-      Revision = CMS.Models.Revision;
     });
 
     it('when cache is empty doing ajax call for all revisions',

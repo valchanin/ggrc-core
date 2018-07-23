@@ -5,6 +5,7 @@
 
 import Component from '../related-revisions';
 import {getComponentVM} from '../../../../../js_specs/spec_helpers';
+import Revision from '../../../../models/service-models/revision';
 
 describe('RelatedRevisions component', () => {
   let viewModel;
@@ -145,13 +146,13 @@ describe('RelatedRevisions component', () => {
   });
 
   describe('buildRevisionRequest() method', () => {
-    it('calls CMS.Models.Revision.findAll() method with correct query', () => {
+    it('calls Revision.findAll() method with correct query', () => {
       const query = {
         __sort: '-updated_at',
         resource_type: 'type',
         resource_id: 'id',
       };
-      spyOn(CMS.Models.Revision, 'findAll');
+      spyOn(Revision, 'findAll');
       viewModel.attr('instance', {
         type: 'type',
         id: 'id',
@@ -159,7 +160,7 @@ describe('RelatedRevisions component', () => {
 
       viewModel.buildRevisionRequest('resource');
 
-      expect(CMS.Models.Revision.findAll.calls.mostRecent().args)
+      expect(Revision.findAll.calls.mostRecent().args)
         .toEqual([query]);
     });
   });

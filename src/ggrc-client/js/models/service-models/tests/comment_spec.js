@@ -4,8 +4,9 @@
 */
 
 import {makeFakeInstance} from '../../../../js_specs/spec_helpers';
+import Comment from '../comment';
 
-describe('CMS.Models.Comment', function () {
+describe('Comment model', function () {
   'use strict';
 
   describe('updateDescription() method', function () {
@@ -18,7 +19,7 @@ describe('CMS.Models.Comment', function () {
 
     beforeEach(function () {
       $element = $('<div />');
-      comment = makeFakeInstance({model: CMS.Models.Comment})();
+      comment = makeFakeInstance({model: Comment})();
       method = comment.updateDescription.bind(comment);
 
       trigger = spyOn($.prototype, 'trigger');
@@ -77,7 +78,7 @@ describe('CMS.Models.Comment', function () {
 
     beforeEach(function () {
       fakeComment = new can.Map({});
-      method = CMS.Models.Comment.prototype.display_name.bind(fakeComment);
+      method = Comment.prototype.display_name.bind(fakeComment);
     });
 
     it('returns an empty string if comment does not have a description set',

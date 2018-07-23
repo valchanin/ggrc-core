@@ -13,7 +13,6 @@ import InfoWidget from '../controllers/info_widget_controller';
 import {
   Proxy,
   Direct,
-  Search,
   Multi,
   TypeFilter,
   CustomFilter,
@@ -21,6 +20,7 @@ import {
   Cross,
 } from '../models/mappers/mapper-helpers';
 import Mappings from '../models/mappers/mappings';
+import CycleTaskEntry from '../models/service-models/cycle-task-entry';
 
 (function ($, CMS, GGRC) {
   let WorkflowExtension = {};
@@ -63,7 +63,7 @@ import Mappings from '../models/mappers/mappings';
   WorkflowExtension.object_type_decision_tree = function () {
     return {
       cycle: CMS.Models.Cycle,
-      cycle_task_entry: CMS.Models.CycleTaskEntry,
+      cycle_task_entry: CycleTaskEntry,
       cycle_task_group: CMS.Models.CycleTaskGroup,
       cycle_task_group_object_task: CMS.Models.CycleTaskGroupObjectTask,
       task_group: CMS.Models.TaskGroup,

@@ -9,6 +9,7 @@ import tracker from '../tracker';
 import RefreshQueue from '../models/refresh_queue';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
 import Cacheable from '../models/cacheable'
+import Search from '../models/service-models/search';
 
 can.Control('CMS.Controllers.LHN', {
   defaults: {}
@@ -819,7 +820,7 @@ can.Control('CMS.Controllers.LHN_Search', {
 
     this.options._hasPendingRefresh = false;
     // Retrieve and display counts
-    return GGRC.Models.Search.counts_for_types(
+    return Search.counts_for_types(
         this.current_term, models, this.current_params, extraModels
       ).then(function () {
         if (this.search_id === search_id) {
@@ -850,7 +851,7 @@ can.Control('CMS.Controllers.LHN_Search', {
         self.options.loaded_lists.push(model_name);
       });
 
-      return GGRC.Models.Search.search_for_types(
+      return Search.search_for_types(
           this.current_term, models, this.current_params
         ).then(function () {
           if (self.search_id === search_id) {

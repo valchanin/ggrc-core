@@ -6,6 +6,7 @@
 import Pagination from '../../base-objects/pagination';
 import template from './templates/related-revisions.mustache';
 import './related-revisions-item';
+import Revision from '../../../models/service-models/revision.js';
 const tag = 'related-revisions';
 
 export default can.Component.extend({
@@ -62,7 +63,7 @@ export default can.Component.extend({
       const query = {__sort: '-updated_at'};
       query[attr + '_type'] = this.attr('instance.type');
       query[attr + '_id'] = this.attr('instance.id');
-      return CMS.Models.Revision.findAll(query);
+      return Revision.findAll(query);
     },
   },
   events: {

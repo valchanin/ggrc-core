@@ -4,6 +4,7 @@
 */
 
 import Spinner from 'spin.js';
+import Search from '../models/service-models/search';
 
 export default can.Control({
   defaults: {
@@ -23,7 +24,7 @@ export default can.Control({
     let that = this;
     let spinner;
     let searchDfds = str ?
-      [GGRC.Models.Search.search(str, extraParams)] : [$.when(null)];
+      [Search.search(str, extraParams)] : [$.when(null)];
 
     dfd && searchDfds.push(dfd);
 

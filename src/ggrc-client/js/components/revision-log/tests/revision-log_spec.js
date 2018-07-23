@@ -3,6 +3,8 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import Revision from '../../../models/service-models/revision';
+
 describe('GGRC.Components.revisionLog', function () {
   'use strict';
 
@@ -470,8 +472,6 @@ describe('GGRC.Components.revisionLog', function () {
   });
 
   describe('_fetchRevisionsData() method', function () {
-    let Revision;  // the Revision object constructor
-
     // fake Deferred objects to return from the mocked Revision.findAll()
     let dfdResource;
     let dfdSource;
@@ -494,9 +494,6 @@ describe('GGRC.Components.revisionLog', function () {
     });
 
     beforeEach(function () {
-      // mock the Revision model's findAll() method
-      Revision = CMS.Models.Revision;
-
       dfdResource = new can.Deferred();
       dfdSource = new can.Deferred();
       dfdDestination = new can.Deferred();

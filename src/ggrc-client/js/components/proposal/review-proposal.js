@@ -8,6 +8,7 @@ import {
   buildModifiedListField,
   buildModifiedAttValues,
 } from '../../plugins/utils/object-history-utils';
+import Revision from '../../models/service-models/revision';
 
 import template from './templates/review-proposal.mustache';
 const tag = 'review-proposal';
@@ -59,7 +60,7 @@ export default can.Component.extend({
       };
 
       // get last revision
-      CMS.Models.Revision.findAll(query).then((data) => {
+      Revision.findAll(query).then((data) => {
         const originalRevision = data[0];
         this.attr('leftRevisionId', originalRevision.id);
         this.buildModifiedRevision(originalRevision);

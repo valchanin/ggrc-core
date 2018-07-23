@@ -13,6 +13,7 @@ import {
 import Mappings from '../models/mappers/mappings';
 import {inferObjectType} from '../plugins/utils/models-utils';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
+import Role from '../models//service-models/role';
 
 (function (can, $) {
   let CoreExtension = {};
@@ -58,7 +59,7 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
         clause: CMS.Models.Clause,
         person: CMS.Models.Person,
         product_group: CMS.Models.ProductGroup,
-        role: CMS.Models.Role,
+        role: Role,
         technology_environment: CMS.Models.TechnologyEnvironment,
         threat: CMS.Models.Threat,
         risk: CMS.Models.Risk,

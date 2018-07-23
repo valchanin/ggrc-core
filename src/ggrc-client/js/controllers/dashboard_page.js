@@ -5,6 +5,7 @@
 
 import RefreshQueue from '../models/refresh_queue';
 import '../components/inline/people-with-role-inline-field';
+import Search from '../models/service-models/search';
 
 export default can.Component.extend({
   tag: 'dashboard-widgets',
@@ -59,7 +60,7 @@ export default can.Component.extend({
       return;
     }
 
-    GGRC.Models.Search
+    Search
       .search_for_types('', ['Workflow'], {
         contact_id: GGRC.current_user.id,
         extra_params: 'Workflow:status=Active',

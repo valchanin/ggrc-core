@@ -9,6 +9,7 @@ import {
 } from './utils/query-api-utils';
 import RefreshQueue from '../models/refresh_queue';
 import Mappings from '../models/mappers/mappings';
+import Search from '../models/service-models/search';
 
 (function ($) {
   'use strict';
@@ -114,7 +115,7 @@ import Mappings from '../models/mappers/mappings';
           return this.options.searchlist;
         }
 
-        return GGRC.Models.Search.search_for_types(
+        return Search.search_for_types(
           request.term || '',
           this.options.searchtypes,
           this.options.search_params

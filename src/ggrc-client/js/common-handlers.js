@@ -4,6 +4,7 @@
 */
 
 import Spinner from 'spin.js';
+import NotificationConfig from './models/service-models/notification-config';
 
 let $body = $('body');
 let $window = $(window);
@@ -123,7 +124,7 @@ jQuery(function ($) {
     });
   }
   function updateNotifications() {
-    CMS.Models.NotificationConfig.findActive().then(checkActive);
+    NotificationConfig.findActive().then(checkActive);
     $body.off('click', '.user-dropdown > .dropdown-toggle', updateNotifications);
   }
 
@@ -156,7 +157,7 @@ jQuery(function ($) {
         return input.value;
       }
     });
-    CMS.Models.NotificationConfig.setActive(active).always(function (response) {
+    NotificationConfig.setActive(active).always(function (response) {
       emailDigest.prop('disabled', false);
       if (emailDigest[0].checked) {
         emailNow.prop('disabled', false);

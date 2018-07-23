@@ -6,6 +6,7 @@
 import template from './templates/apply-decline-proposal.mustache';
 import {REFRESH_TAB_CONTENT} from '../../events/eventTypes';
 import {formatDate} from '../../plugins/ggrc_utils';
+import Proposal from '../../models/service-models/proposal';
 const tag = 'apply-decline-proposal';
 
 export default can.Component.extend({
@@ -55,7 +56,7 @@ export default can.Component.extend({
     prepareDataAndSave(isApply) {
       const comment = this.attr('actionComment');
       // create new model. No need to 'PUT' full object data
-      const proposalModel = new CMS.Models.Proposal();
+      const proposalModel = new Proposal();
 
       if (isApply) {
         proposalModel.attr('apply_reason', comment);

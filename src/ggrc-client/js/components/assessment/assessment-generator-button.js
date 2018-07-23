@@ -7,6 +7,7 @@ import tracker from '../../tracker';
 import RefreshQueue from '../../models/refresh_queue';
 import template from './templates/generate_assessments_button.mustache';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
+import BackgroundTask from '../../models/service-models/background-task';
 
 export default can.Component.extend({
   tag: 'assessment-generator-button',
@@ -68,7 +69,7 @@ export default can.Component.extend({
       if (count >= wait.length) {
         count = wait.length - 1;
       }
-      CMS.Models.BackgroundTask.findAll({
+      BackgroundTask.findAll({
         id__in: ids.join(','),
       }).then(function (tasks) {
         let statuses = _.countBy(tasks, function (task) {
