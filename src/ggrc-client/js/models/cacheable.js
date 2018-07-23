@@ -20,7 +20,6 @@ import tracker from '../tracker';
 import Mappings from './mappers/mappings';
 import {delayLeavingPageUntil} from '../plugins/utils/current-page-utils';
 
-let _oldAttr;
 function makeFindRelated(thistype, othertype) {
   return function (params) {
     if (!params[thistype + '_type']) {
@@ -124,7 +123,7 @@ function makeDateSerializer(type, key) {
   };
 }
 
-can.Model('can.Model.Cacheable', {
+export default can.Model('can.Model.Cacheable', {
   root_object: '',
   attr_list: [
     {
@@ -1170,8 +1169,9 @@ can.Model('can.Model.Cacheable', {
     return [type, this.id].join('/');
   },
 });
+
 /* TODO: hack on can.Observe should be removed or at least placed outside of Cacheable Model Class */
-_oldAttr = can.Observe.prototype.attr;
+let _oldAttr = can.Observe.prototype.attr;
 can.Observe.prototype.attr = function (key, val) {
   if (key instanceof can.Observe) {
     if (arguments[0] === this) {
