@@ -10,6 +10,7 @@ import RefreshQueue from '../models/refresh_queue';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
 import Cacheable from '../models/cacheable'
 import Search from '../models/service-models/search';
+import DisplayPrefs from '../models/local-storage/display-prefs';
 
 can.Control('CMS.Controllers.LHN', {
   defaults: {}
@@ -145,7 +146,7 @@ can.Control('CMS.Controllers.LHN', {
   },
 
   init_lhn: function () {
-    CMS.Models.DisplayPrefs.getSingleton().done(function (prefs) {
+    DisplayPrefs.getSingleton().done(function (prefs) {
       var $lhs = $('#lhs'),
         lhn_search_dfd,
         my_work_tab = false;
@@ -383,7 +384,7 @@ can.Control('CMS.Controllers.LHN_Search', {
       prefs_dfd,
       template_path = GGRC.mustache_path + this.element.data('template');
 
-    prefs_dfd = CMS.Models.DisplayPrefs.getSingleton();
+    prefs_dfd = DisplayPrefs.getSingleton();
 
       // 2-way binding is set up in the view using can-value, directly connecting the
       //  search box and the display prefs to save the search value between page loads.

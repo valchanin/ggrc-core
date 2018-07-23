@@ -8,6 +8,7 @@ import {
   getCounts,
 } from '../plugins/utils/current-page-utils';
 import {inferObjectType} from '../plugins/utils/models-utils';
+import DisplayPrefs from '../models/local-storage/display-prefs';
 
 export default Filterable({
   pluginName: 'dashboard_widgets',
@@ -68,7 +69,7 @@ export default Filterable({
 
     this._prepare_deferred = $.when(
       can.view(this.options.widget_view, $.when(this.options))
-      , CMS.Models.DisplayPrefs.getSingleton()
+      , DisplayPrefs.getSingleton()
     ).then(this.proxy('draw_widget'));
 
     return this._prepare_deferred;

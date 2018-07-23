@@ -42,6 +42,7 @@ import {
   becameDeprecated,
 } from '../../plugins/utils/controllers';
 import {REFRESH_MAPPING} from '../../events/eventTypes';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 
 export default can.Control({
@@ -117,7 +118,7 @@ export default can.Control({
     if (content) {
       this.element.html(content);
     }
-    CMS.Models.DisplayPrefs.getSingleton().then((displayPrefs) => {
+    DisplayPrefs.getSingleton().then((displayPrefs) => {
       if (this.wasDestroyed()) {
         return;
       }

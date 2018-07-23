@@ -4,11 +4,11 @@
  */
 
 import * as StateUtils from '../../plugins/utils/state-utils';
-import * as TreeViewUtils from '../../plugins/utils/tree-view-utils';
 import {
   getCounts,
 } from '../../plugins/utils/current-page-utils';
 import Permission from '../../permission';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 (function (can, $) {
   CMS.Controllers.TreeLoader.extend('CMS.Controllers.TreeView', {
@@ -106,7 +106,7 @@ import Permission from '../../permission';
         .on('widget_hidden', this.widget_hidden.bind(this));
       this.element.closest('.widget')
         .on('widget_shown', this.widget_shown.bind(this));
-      CMS.Models.DisplayPrefs.getSingleton().then(function (displayPrefs) {
+      DisplayPrefs.getSingleton().then(function (displayPrefs) {
         let allowed;
 
         this.display_prefs = displayPrefs;

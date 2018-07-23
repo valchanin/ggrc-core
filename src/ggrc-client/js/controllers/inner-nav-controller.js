@@ -13,6 +13,7 @@ import router, {buildUrl} from '../router';
 import '../components/add-tab-button/add-tab-button';
 import pubSub from '../pub-sub';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
+import DisplayPrefs from '../models/local-storage/display-prefs';
 
 export default can.Control({
   defaults: {
@@ -39,7 +40,7 @@ export default can.Control({
   },
 }, {
   init: function (options) {
-    CMS.Models.DisplayPrefs.getSingleton().then(function (prefs) {
+    DisplayPrefs.getSingleton().then(function (prefs) {
       const instance = getPageInstance();
       this.display_prefs = prefs;
       this.options = new can.Map(this.options);

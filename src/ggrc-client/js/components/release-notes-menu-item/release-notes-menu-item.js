@@ -6,6 +6,7 @@
 import '../release-notes-modal/release-notes-modal';
 
 import template from './release-notes-menu-item.mustache';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 const viewModel = can.Map.extend({
   define: {
@@ -25,7 +26,7 @@ const viewModel = can.Map.extend({
 
 const events = {
   async inserted(el) {
-    const displayPrefs = await CMS.Models.DisplayPrefs.getSingleton();
+    const displayPrefs = await DisplayPrefs.getSingleton();
 
     const savedVersion = displayPrefs.getReleaseNotesDate();
 

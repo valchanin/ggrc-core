@@ -7,6 +7,7 @@ import '../tree/tree-header-selector';
 import '../tree/tree-visible-column-checkbox';
 import tmpl from './templates/mapper-results-columns-configuration.mustache';
 import * as TreeViewUtils from '../../plugins/utils/tree-view-utils';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 export default can.Component.extend({
   tag: 'mapper-results-columns-configuration',
@@ -33,7 +34,7 @@ export default can.Component.extend({
     displayPrefs: null,
     init() {
       this.initializeColumns();
-      CMS.Models.DisplayPrefs.getSingleton().then((displayPrefs) => {
+      DisplayPrefs.getSingleton().then((displayPrefs) => {
         this.attr('displayPrefs', displayPrefs);
       });
     },

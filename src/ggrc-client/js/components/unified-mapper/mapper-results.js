@@ -24,6 +24,7 @@ import {
 import * as AdvancedSearch from '../../plugins/utils/advanced-search-utils';
 import Pagination from '../base-objects/pagination';
 import tracker from '../../tracker';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -78,7 +79,7 @@ export default can.Component.extend({
     init: function () {
       let self = this;
       this.attr('submitCbs').add(this.onSearch.bind(this, true));
-      CMS.Models.DisplayPrefs.getSingleton().then(function (displayPrefs) {
+      DisplayPrefs.getSingleton().then(function (displayPrefs) {
         self.attr('displayPrefs', displayPrefs);
       });
     },

@@ -49,6 +49,7 @@ import tracker from '../../tracker';
 import router from '../../router';
 import Permission from '../../permission';
 import Cacheable from '../../models/cacheable';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 let viewModel;
 
@@ -620,7 +621,7 @@ export default can.Component.extend({
         (admin || !isAccepted) && (allowMapping || allowCreating));
     }
 
-    CMS.Models.DisplayPrefs.getSingleton().then(function (displayPrefs) {
+    DisplayPrefs.getSingleton().then(function (displayPrefs) {
       viewModel.attr('displayPrefs', displayPrefs);
 
       if (parentInstance && 'status' in parentInstance) {

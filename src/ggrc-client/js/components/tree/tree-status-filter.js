@@ -5,6 +5,7 @@
 
 import * as StateUtils from '../../plugins/utils/state-utils';
 import router from '../../router';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 let viewModel = can.Map.extend({
   disabled: false,
@@ -104,7 +105,7 @@ export default can.Component.extend({
       });
       vm.attr('filterStates', filterStates);
 
-      CMS.Models.DisplayPrefs.getSingleton().then((displayPrefs) => {
+      DisplayPrefs.getSingleton().then((displayPrefs) => {
         vm.attr('displayPrefs', displayPrefs);
 
         let defaultStates = vm.getDefaultStates();

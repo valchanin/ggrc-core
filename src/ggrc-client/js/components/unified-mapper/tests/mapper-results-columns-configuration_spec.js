@@ -6,6 +6,7 @@
 import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import * as TreeViewUtils from '../../../plugins/utils/tree-view-utils';
 import Component from '../mapper-results-columns-configuration';
+import DisplayPrefs from '../../../models/local-storage/display-prefs';
 
 describe('mapper-results-columns-configuration component', function () {
   'use strict';
@@ -54,7 +55,7 @@ describe('mapper-results-columns-configuration component', function () {
 
     beforeEach(function () {
       spyOn(viewModel, 'initializeColumns');
-      spyOn(CMS.Models.DisplayPrefs, 'getSingleton')
+      spyOn(DisplayPrefs, 'getSingleton')
         .and.returnValue($.Deferred().resolve(displayPrefs));
     });
 

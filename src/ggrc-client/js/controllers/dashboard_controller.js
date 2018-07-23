@@ -9,6 +9,7 @@ import InfoPin from './info_pin_controller';
 import {
   isAdmin,
 } from '../plugins/utils/current-page-utils';
+import DisplayPrefs from '../models/local-storage/display-prefs';
 
 const Dashboard = can.Control({
   pluginName: 'cms_controllers_dashboard',
@@ -17,7 +18,7 @@ const Dashboard = can.Control({
   },
 }, {
   init: function (el, options) {
-    CMS.Models.DisplayPrefs.getSingleton().then(function (prefs) {
+    DisplayPrefs.getSingleton().then(function (prefs) {
       this.display_prefs = prefs;
 
       this.init_tree_view_settings();

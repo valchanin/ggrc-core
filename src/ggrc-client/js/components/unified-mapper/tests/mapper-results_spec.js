@@ -10,6 +10,7 @@ import * as QueryAPI from '../../../plugins/utils/query-api-utils';
 import Pagination from '../../base-objects/pagination';
 import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import Component from '../mapper-results';
+import DisplayPrefs from '../../../models/local-storage/display-prefs';
 
 describe('mapper-results component', function () {
   'use strict';
@@ -34,7 +35,7 @@ describe('mapper-results component', function () {
     let displayPrefs = 'displayPrefs';
 
     beforeEach(function () {
-      spyOn(CMS.Models.DisplayPrefs, 'getSingleton')
+      spyOn(DisplayPrefs, 'getSingleton')
         .and.returnValue(can.Deferred().resolve(displayPrefs));
     });
 

@@ -5,6 +5,7 @@
 
 import '../tree/tree-loader';
 import '../tree/tree-view';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 describe('CMS.Controllers.TreeView', function () {
   'use strict';
@@ -37,7 +38,7 @@ describe('CMS.Controllers.TreeView', function () {
 
       dfdSingleton = new can.Deferred();
       spyOn(
-        CMS.Models.DisplayPrefs, 'getSingleton'
+        DisplayPrefs, 'getSingleton'
       ).and.returnValue(dfdSingleton);
     });
 

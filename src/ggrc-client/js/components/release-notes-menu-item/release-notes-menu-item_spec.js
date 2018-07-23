@@ -5,6 +5,7 @@
 
 import Component from './release-notes-menu-item';
 import {getComponentVM} from '../../../js_specs/spec_helpers';
+import DisplayPrefs from '../../models/local-storage/display-prefs';
 
 describe('"release-notes-menu-item" component', () => {
   let vm;
@@ -40,7 +41,7 @@ describe('"release-notes-menu-item" component', () => {
           getReleaseNotesDate: jasmine.createSpy(),
           setReleaseNotesDate: jasmine.createSpy(),
         };
-        spyOn(CMS.Models.DisplayPrefs, 'getSingleton')
+        spyOn(DisplayPrefs, 'getSingleton')
           .and.returnValue(displayPrefs);
         spyOn(vm, 'open');
       });
