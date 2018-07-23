@@ -10,6 +10,7 @@ import {
   isAdmin,
 } from '../plugins/utils/current-page-utils';
 import DisplayPrefs from '../models/local-storage/display-prefs';
+import LocalStorage from '../models/local-storage/local-storage';
 
 const Dashboard = can.Control({
   pluginName: 'cms_controllers_dashboard',
@@ -99,7 +100,7 @@ const Dashboard = can.Control({
   },
 
   '.nav-logout click': function (el, ev) {
-    can.Model.LocalStorage.clearAll();
+    LocalStorage.clearAll();
   },
 
   init_widget_descriptors: function () {

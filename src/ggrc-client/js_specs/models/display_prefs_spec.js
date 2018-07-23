@@ -8,6 +8,7 @@ import {
   makeFakeInstance,
 } from '../spec_helpers';
 import DisplayPrefs from '../../js/models/local-storage/display-prefs';
+import LocalStorage from '../../js/models/local-storage/local-storage';
 
 describe('display prefs model', function () {
 
@@ -243,7 +244,7 @@ describe('display prefs model', function () {
       dp2_outdated = instanceCreator({version: 1});
       dp3_current = instanceCreator({version: DisplayPrefs.version});
 
-      spyOn(can.Model.LocalStorage, 'findAll').and.returnValue(new $.Deferred().resolve([dp_noversion, dp2_outdated, dp3_current]));
+      spyOn(LocalStorage, 'findAll').and.returnValue(new $.Deferred().resolve([dp_noversion, dp2_outdated, dp3_current]));
       spyOn(dp_noversion, 'destroy');
       spyOn(dp2_outdated, 'destroy');
       spyOn(dp3_current, 'destroy');
@@ -280,7 +281,7 @@ describe('display prefs model', function () {
       dp3_current = new DisplayPrefs({ version: DisplayPrefs.version });
     });
     it('404s if the display pref does not have a version set', function (done) {
-      spyOn(can.Model.LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp_noversion));
+      spyOn(LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp_noversion));
       spyOn(dp_noversion, 'destroy');
       let dfd = DisplayPrefs.findOne().done(function (dps) {
         fail('Should not have resolved findOne for the unversioned display pref');
@@ -293,7 +294,7 @@ describe('display prefs model', function () {
       }, done);
     });
     it('404s if the display pref has an out of date version', function () {
-      spyOn(can.Model.LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp2_outdated));
+      spyOn(LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp2_outdated));
       spyOn(dp2_outdated, 'destroy');
       DisplayPrefs.findOne().done(function (dps) {
         fail('Should not have resolved findOne for the outdated display pref');
@@ -303,7 +304,7 @@ describe('display prefs model', function () {
       });
     });
     it('retains any prefs that do not have a version set', function () {
-      spyOn(can.Model.LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp3_current));
+      spyOn(LocalStorage, 'findOne').and.returnValue(new $.Deferred().resolve(dp3_current));
       spyOn(dp3_current, 'destroy');
       DisplayPrefs.findOne().done(function (dps) {
         expect(dp3_current.destroy).not.toHaveBeenCalled();

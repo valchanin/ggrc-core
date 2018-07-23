@@ -4,12 +4,13 @@
 */
 
 import {waitsFor} from '../spec_helpers';
+import LocalStorage from '../../js/models/local-storage/local-storage';
 
-describe('can.Model.LocalStorage', function () {
+describe('LocalStorage model', function () {
 
   //run-once setup
   beforeAll(function () {
-    can.Model.LocalStorage('SpecModel');
+    LocalStorage('SpecModel');
   });
 
   let model1 = { 'id': 1, 'foo': 'bar' };
