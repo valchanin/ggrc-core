@@ -13,6 +13,8 @@ import Event from '../../models/service-models/event';
 import Role from '../../models/service-models/role';
 import CustomAttributable from '../../models/custom-attributes/custom-attributable';
 import CustomAttributeDefinition from '../../models/custom-attributes/custom-attribute-definition';
+import AccessControlRole from '../../models/custom-roles/access-control-role';
+import Roleable from '../../models/custom-roles/roleable';
 
 const path = GGRC.mustache_path || '/static/mustache';
 const HEADER_VIEW = `${path}/base_objects/page_header.mustache`;
@@ -95,19 +97,19 @@ const adminListDescriptors = {
     }],
   },
   custom_roles: {
-    parent_instance: CMS.Models.Roleable,
-    model: CMS.Models.Roleable,
+    parent_instance: Roleable,
+    model: Roleable,
     header_view:
     GGRC.mustache_path + '/access_control_roles/tree_header.mustache',
     show_view:
     GGRC.mustache_path + '/access_control_roles/tree.mustache',
     sortable: false,
     list_loader: function () {
-      return CMS.Models.Roleable.findAll();
+      return Roleable.findAll();
     },
     draw_children: true,
     child_options: [{
-      model: CMS.Models.AccessControlRole,
+      model: AccessControlRole,
       mapping: 'access_control_roles',
       show_view:
       GGRC.mustache_path + '/access_control_roles/subtree.mustache',
@@ -181,7 +183,7 @@ new GGRC.WidgetList('ggrc_admin', {
       content_controller: CMS.Controllers.TreeView,
       content_controller_selector: 'ul',
       content_controller_options: adminListDescriptors.custom_roles,
-      model: CMS.Models.Roleable,
+      model: Roleable,
       widget_initial_content: [
         '<ul',
         '  class="tree-structure new-tree colored-list"',

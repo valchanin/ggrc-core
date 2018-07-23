@@ -18,6 +18,7 @@ import {
 import Mappings from './mappings';
 import SearchModel from '../service-models/search';
 import CustomAttributeDefinition from '../custom-attributes/custom-attribute-definition';
+import AccessControlRole from '../custom-roles/access-control-role';
 
 (function (GGRC, can) {
   new Mappings('ggrc_core', {
@@ -522,7 +523,7 @@ import CustomAttributeDefinition from '../custom-attributes/custom-attribute-def
     // used by the Custom Roles admin panel tab
     Roleable: {
       access_control_roles: Search(function (binding) {
-        return CMS.Models.AccessControlRole.findAll({
+        return AccessControlRole.findAll({
           object_type: binding.instance.model_singular,
           internal: false,
         });
