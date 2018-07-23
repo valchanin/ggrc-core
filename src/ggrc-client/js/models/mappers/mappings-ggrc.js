@@ -17,6 +17,7 @@ import {
 } from '../mappers/mapper-helpers';
 import Mappings from './mappings';
 import SearchModel from '../service-models/search';
+import CustomAttributeDefinition from '../custom-attributes/custom-attribute-definition';
 
 (function (GGRC, can) {
   new Mappings('ggrc_core', {
@@ -512,7 +513,7 @@ import SearchModel from '../service-models/search';
     // Used by Custom Attributes widget
     CustomAttributable: {
       custom_attribute_definitions: Search(function (binding) {
-        return CMS.Models.CustomAttributeDefinition.findAll({
+        return CustomAttributeDefinition.findAll({
           definition_type: binding.instance.root_object,
           definition_id: null,
         });

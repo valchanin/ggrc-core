@@ -3,13 +3,15 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
-describe('CMS.Models.CustomAttributeDefinition', function () {
+import CustomAttributeDefinition from '../custom-attribute-definition';
+
+describe('CustomAttributeDefinition model', function () {
   'use strict';
 
   let Model;
 
   beforeAll(function () {
-    Model = CMS.Models.CustomAttributeDefinition;
+    Model = CustomAttributeDefinition;
   });
 
   describe('multiChoiceOptions custom validator', function () {

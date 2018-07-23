@@ -45,7 +45,7 @@ export default can.Component.extend({
      * It removes the corresponding CA definition object from the list to
      * keep it in sync with the definitions listed in DOM.
      *
-     * @param {CMS.Models.CustomAttributeDefinition} instance -
+     * @param {CustomAttributeDefinition} instance -
      *   the definition that was removed
      * @param {jQuery.Element} $el - the source of the event `ev`
      * @param {jQuery.Event} ev - the onRemove event object

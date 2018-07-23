@@ -11,6 +11,8 @@ import {RouterConfig} from '../../router';
 import routes from './routes';
 import Event from '../../models/service-models/event';
 import Role from '../../models/service-models/role';
+import CustomAttributable from '../../models/custom-attributes/custom-attributable';
+import CustomAttributeDefinition from '../../models/custom-attributes/custom-attribute-definition';
 
 const path = GGRC.mustache_path || '/static/mustache';
 const HEADER_VIEW = `${path}/base_objects/page_header.mustache`;
@@ -70,8 +72,8 @@ const adminListDescriptors = {
     list_view: '/static/mustache/events/object_list.mustache',
   },
   custom_attributes: {
-    parent_instance: CMS.Models.CustomAttributable,
-    model: CMS.Models.CustomAttributable,
+    parent_instance: CustomAttributable,
+    model: CustomAttributable,
     header_view:
     GGRC.mustache_path +
     '/custom_attribute_definitions/tree_header.mustache',
@@ -79,11 +81,11 @@ const adminListDescriptors = {
     GGRC.mustache_path + '/custom_attribute_definitions/tree.mustache',
     sortable: false,
     list_loader: function () {
-      return CMS.Models.CustomAttributable.findAll();
+      return CustomAttributable.findAll();
     },
     draw_children: true,
     child_options: [{
-      model: CMS.Models.CustomAttributeDefinition,
+      model: CustomAttributeDefinition,
       mapping: 'custom_attribute_definitions',
       show_view:
       GGRC.mustache_path +
@@ -164,7 +166,7 @@ new GGRC.WidgetList('ggrc_admin', {
       widget_icon: 'workflow',
       content_controller: CMS.Controllers.TreeView,
       content_controller_selector: 'ul',
-      model: CMS.Models.CustomAttributable,
+      model: CustomAttributable,
       widget_initial_content:
       '<ul' +
       '  class="tree-structure new-tree colored-list"' +
