@@ -4,6 +4,11 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
+import '../mixins/related-assessments-loader';
 
 export default Cacheable('CMS.Models.Objective', {
   root_object: 'objective',

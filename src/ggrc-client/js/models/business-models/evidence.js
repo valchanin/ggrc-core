@@ -5,6 +5,8 @@
 
 import Cacheable from '../cacheable';
 import {getRole} from '../../plugins/utils/acl-utils';
+import '../mixins/access-control-list';
+import '../mixins/ca-update';
 
 const getAccessControlList = ()=> {
   let adminRole = getRole('Evidence', 'Admin');

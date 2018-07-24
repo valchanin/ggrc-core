@@ -20,7 +20,5 @@ export default Cacheable('CMS.Models.Revision', {
   // by the client directly
   findAll: '/api/revisions',
   findOne: '/api/revisions/{id}',
-
-  mixins: [],
   attributes: {},
 }, {});

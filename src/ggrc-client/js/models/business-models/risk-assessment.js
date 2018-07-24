@@ -4,6 +4,9 @@
  */
 
 import Cacheable from '../cacheable';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/base-notifications';
 
 const path = GGRC.mustache_path + '/risk_assessments';
 

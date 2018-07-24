@@ -4,6 +4,10 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/unique-title';
+import '../mixins/timeboxed';
+import '../mixins/ca-update';
+import '../mixins/base-notifications';
 
 export default Cacheable('CMS.Models.Directive', {
   root_object: 'directive',

@@ -5,6 +5,12 @@
 
 import Cacheable from '../cacheable';
 import {getRole} from '../../plugins/utils/acl-utils';
+import '../mixins/access-control-list';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/mapping-limit';
+import '../mixins/issue-tracker.js';
 
 export default Cacheable('CMS.Models.Audit', {
   root_object: 'audit',

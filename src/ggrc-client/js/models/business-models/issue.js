@@ -4,6 +4,13 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/in-scope-objects';
+import '../mixins/in-scope-objects-preload';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
+import '../mixins/issue-tracker';
 
 export default Cacheable('CMS.Models.Issue', {
   root_object: 'issue',

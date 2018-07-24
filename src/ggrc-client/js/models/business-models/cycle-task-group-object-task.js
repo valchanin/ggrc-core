@@ -9,6 +9,10 @@ import {getRole} from '../../plugins/utils/acl-utils';
 import {REFRESH_SUB_TREE} from '../../events/eventTypes';
 import {getPageType} from '../../plugins/utils/current-page-utils';
 import {getClosestWeekday} from '../../plugins/utils/date-util';
+import '../mixins/timeboxed';
+import '../mixins/is-overdue';
+import '../mixins/access-control-list';
+import '../mixins/ca-update';
 
 const _mustachePath = GGRC.mustache_path + '/cycle_task_group_object_tasks';
 

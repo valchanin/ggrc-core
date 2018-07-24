@@ -4,6 +4,7 @@
  */
 
 import Cacheable from '../cacheable';
+import '../mixins/contactable';
 
 export default Cacheable('CMS.Models.TaskGroup', {
   root_object: 'task_group',

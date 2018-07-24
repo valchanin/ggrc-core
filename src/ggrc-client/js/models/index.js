@@ -4,7 +4,6 @@
 */
 
 import './mappers';
-import './mixins';
 import './cacheable';
 import './save_queue';
 import './models-extensions';

@@ -14,7 +14,6 @@ export default Cacheable('CMS.Models.CustomAttributeValue', {
   create: 'POST /api/custom_attribute_values',
   update: 'PUT /api/custom_attribute_values/{id}',
   destroy: 'DELETE /api/custom_attribute_values/{id}',
-  mixins: [],
   attributes: {
     definition: 'CMS.Models.CustomAttributeDefinition.stub',
     modified_by: 'CMS.Models.Person.stub',

@@ -19,7 +19,6 @@ export default Cacheable('CMS.Models.AccessControlRole', {
   create: 'POST /api/access_control_roles',
   update: 'PUT /api/access_control_roles/{id}',
   destroy: 'DELETE /api/access_control_roles/{id}',
-  mixins: [],
   attributes: {},
   defaults: {
     read: true,

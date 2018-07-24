@@ -4,6 +4,7 @@
 */
 
 import Directive from './directive';
+import '../mixins/access-control-list';
 
 export default Directive('CMS.Models.Regulation', {
   root_object: 'regulation',

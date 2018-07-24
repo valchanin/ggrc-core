@@ -5,6 +5,7 @@
 
 import Cacheable from '../cacheable';
 import tracker from '../../tracker';
+import '../mixins/ca-update';
 
 export default Cacheable('CMS.Models.Person', {
   root_object: 'person',

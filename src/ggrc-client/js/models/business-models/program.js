@@ -5,6 +5,11 @@
 
 import Cacheable from '../cacheable';
 import {getRole} from '../../plugins/utils/acl-utils';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
 
 export default Cacheable('CMS.Models.Program', {
   root_object: 'program',

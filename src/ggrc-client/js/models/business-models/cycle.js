@@ -5,6 +5,7 @@
 
 import Cacheable from '../cacheable';
 import Permission from '../../permission';
+import '../mixins/is-overdue';
 
 function refreshAttr(instance, attr) {
   let result;

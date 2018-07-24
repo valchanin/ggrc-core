@@ -4,6 +4,7 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/is-overdue';
 
 export default Cacheable('CMS.Models.CycleTaskGroup', {
   root_object: 'cycle_task_group',

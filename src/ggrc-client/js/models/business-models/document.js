@@ -6,6 +6,8 @@
 import Cacheable from '../cacheable';
 import {getRole} from '../../plugins/utils/acl-utils';
 import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
+import '../mixins/access-control-list';
+import '../mixins/ca-update';
 
 const getAccessControlList = ()=> {
   let adminRole = getRole('Document', 'Admin');

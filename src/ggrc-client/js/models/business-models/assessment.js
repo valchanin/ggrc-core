@@ -9,6 +9,16 @@ import {getRole} from '../../plugins/utils/acl-utils';
 import {sortByName} from '../../plugins/utils/label-utils';
 import tracker from '../../tracker';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/auto-status-changeable';
+import '../mixins/timeboxed';
+import '../mixins/mapping-limit';
+import '../mixins/in-scope-objects';
+import '../mixins/access-control-list';
+import '../mixins/refetch-hash';
+import '../mixins/assessment-issue-tracker';
+import '../mixins/related-assessments-loader';
 
 export default Cacheable('CMS.Models.Assessment', {
   root_object: 'assessment',

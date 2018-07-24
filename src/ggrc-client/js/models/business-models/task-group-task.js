@@ -10,6 +10,9 @@ import {
   getDate,
 } from '../../plugins/utils/date-util';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
+import '../mixins/contactable';
+import '../mixins/timeboxed';
+import '../mixins/access-control-list';
 
 export default Cacheable('CMS.Models.TaskGroupTask', {
   root_object: 'task_group_task',

@@ -17,7 +17,6 @@ export default Cacheable('CMS.Models.Comment', {
   update: 'PUT /api/comments/{id}',
   destroy: 'DELETE /api/comments/{id}',
   create: 'POST /api/comments',
-  mixins: [],
   init: function () {
     this.validatePresenceOf('description');
     if (this._super) {

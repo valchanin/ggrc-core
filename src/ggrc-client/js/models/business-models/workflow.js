@@ -5,6 +5,9 @@
 
 import Cacheable from '../cacheable';
 import TaskGroup from './task-group';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/access-control-list';
 
 export default Cacheable('CMS.Models.Workflow', {
   root_object: 'workflow',

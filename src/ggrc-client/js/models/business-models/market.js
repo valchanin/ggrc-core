@@ -4,6 +4,11 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
 
 export default Cacheable('CMS.Models.Market', {
   root_object: 'market',

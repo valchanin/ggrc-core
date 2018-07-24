@@ -5,6 +5,11 @@
 
 import Cacheable from '../cacheable';
 import {hasQuestions} from '../../plugins/utils/ggrcq-utils';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/timeboxed';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
 
 export default Cacheable('CMS.Models.Product', {
   root_object: 'product',

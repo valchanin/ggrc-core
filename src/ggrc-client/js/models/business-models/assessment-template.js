@@ -5,6 +5,11 @@
 
 import Cacheable from '../cacheable';
 import {getPageInstance} from '../../plugins/utils/current-page-utils';
+import '../mixins/mapping-limit';
+import '../mixins/in-scope-objects';
+import '../mixins/in-scope-objects-preload';
+import '../mixins/refetch-hash';
+import '../mixins/assessment-issue-tracker';
 
 /**
  * A model describing a template for the newly created Assessment objects.

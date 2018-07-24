@@ -4,6 +4,10 @@
 */
 
 import Cacheable from '../cacheable';
+import '../mixins/unique-title';
+import '../mixins/ca-update';
+import '../mixins/access-control-list';
+import '../mixins/base-notifications';
 
 export default Cacheable('CMS.Models.Clause', {
   root_object: 'clause',

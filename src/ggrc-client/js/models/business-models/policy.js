@@ -5,6 +5,7 @@
 
 import Cacheable from '../cacheable';
 import Directive from './directive';
+import '../mixins/access-control-list';
 
 export default Directive('CMS.Models.Policy', {
   root_object: 'policy',

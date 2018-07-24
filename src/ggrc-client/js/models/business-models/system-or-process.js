@@ -4,6 +4,11 @@
  */
 
 import Cacheable from '../cacheable';
+import '../mixins/unique-title';
+import '../mixins/timeboxed';
+import '../mixins/base-notifications';
+import '../mixins/ca-update';
+import '../mixins/access-control-list';
 
 export default Cacheable('CMS.Models.SystemOrProcess', {
   root_object: 'system_or_process',
