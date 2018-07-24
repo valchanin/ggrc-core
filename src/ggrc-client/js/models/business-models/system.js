@@ -4,9 +4,7 @@
  */
 
 import SystemOrProcess from './system-or-process';
-import Program from './program';
 import {hasQuestions} from '../../plugins/utils/ggrcq-utils';
-import {inferObjectType} from '../../plugins/utils/models-utils';
 
 export default SystemOrProcess('CMS.Models.System', {
   root_object: 'system',
@@ -33,13 +31,7 @@ export default SystemOrProcess('CMS.Models.System', {
     can.extend(this.attributes, SystemOrProcess.attributes);
     this._super && this._super(...arguments);
     this.tree_view_options = $.extend(true, {},
-      SystemOrProcess.tree_view_options, {
-        // systems is a special case; can be imported to programs
-        add_item_view: GGRC.mustache_path +
-        (inferObjectType(GGRC.page_object) === Program ?
-          '/snapshots/tree_add_item.mustache' :
-          '/base_objects/tree_add_item.mustache'),
-      });
+      SystemOrProcess.tree_view_options);
 
     if (hasQuestions(this.shortName)) {
       this.tree_view_options.attr_list.push({
