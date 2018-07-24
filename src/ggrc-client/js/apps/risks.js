@@ -12,6 +12,7 @@ import {
 import Mappings from '../models/mappers/mappings';
 import {registerHook} from '../plugins/ggrc_utils';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
+import * as businessModels from '../models/business-models';
 
 (function ($, CMS, GGRC) {
   let RisksExtension = {};
@@ -58,8 +59,8 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
   // Register Risk Assessment models for use with `inferObjectType`
   RisksExtension.object_type_decision_tree = function () {
     return {
-      risk: CMS.Models.Risk,
-      threat: CMS.Models.Threat,
+      risk: businessModels.Risk,
+      threat: businessModels.Threat,
     };
   };
 
@@ -131,10 +132,10 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
         owned_risks: TypeFilter('related_objects_via_search', 'Risk'),
         owned_threats: TypeFilter('related_objects_via_search', 'Threat'),
         all_risks: Search(function (binding) {
-          return CMS.Models.Risk.findAll({});
+          return businessModels.Risk.findAll({});
         }),
         all_threats: Search(function (binding) {
-          return CMS.Models.Threat.findAll({});
+          return businessModels.Threat.findAll({});
         }),
       },
     };
@@ -165,7 +166,7 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
 
     let relatedOrOwned = isMyWork() ? 'owned_' : 'related_';
     let sortedWidgetTypes = _.sortBy(riskObjectTypes, function (type) {
-      let model = CMS.Models[type] || {};
+      let model = businessModels[type] || {};
       return model.title_plural || type;
     });
     let baseWidgetsByType = GGRC.tree_view.base_widgets_by_type;
@@ -183,7 +184,7 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
       if (modelName === 'MultitypeSearch' || !baseWidgetsByType[modelName]) {
         return;
       }
-      model = CMS.Models[modelName];
+      model = businessModels[modelName];
 
       // First we add Risk and Threat to other object's maps
       baseWidgetsByType[modelName] = baseWidgetsByType[modelName].concat(
@@ -216,14 +217,14 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
 
       GGRC.tree_view.basic_model_list.push({
         model_name: name,
-        display_name: CMS.Models[name].title_singular,
+        display_name: businessModels[name].title_singular,
       });
 
       can.each(widgetList, function (item) {
         if (extendedModuleTypes.indexOf(item) !== -1) {
           childModelList.push({
             model_name: item,
-            display_name: CMS.Models[item].title_singular,
+            display_name: businessModels[item].title_singular,
           });
         }
       });
@@ -232,7 +233,7 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
         subTrees.attr(name, {
           model_list: childModelList,
           display_list:
-          CMS.Models[name].tree_view_options.child_tree_display_list ||
+          businessModels[name].tree_view_options.child_tree_display_list ||
           widgetList,
         });
       }
@@ -241,36 +242,36 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
     threatDescriptor = {
       widgetType: 'treeview',
       treeViewDepth: 2,
-      widget_id: CMS.Models.Threat.table_singular,
-      widget_name: CMS.Models.Threat.title_plural,
-      widget_icon: CMS.Models.Threat.table_singular,
+      widget_id: businessModels.Threat.table_singular,
+      widget_name: businessModels.Threat.title_plural,
+      widget_icon: businessModels.Threat.table_singular,
       content_controller_options: {
         draw_children: true,
         parent_instance: pageInstance,
-        model: CMS.Models.Threat,
-        mapping: relatedOrOwned + CMS.Models.Threat.table_plural,
+        model: businessModels.Threat,
+        mapping: relatedOrOwned + businessModels.Threat.table_plural,
       },
     };
     riskDescriptor = {
       widgetType: 'treeview',
       treeViewDepth: 2,
-      widget_id: CMS.Models.Risk.table_singular,
-      widget_name: CMS.Models.Risk.title_plural,
-      widget_icon: CMS.Models.Risk.table_singular,
+      widget_id: businessModels.Risk.table_singular,
+      widget_name: businessModels.Risk.title_plural,
+      widget_icon: businessModels.Risk.table_singular,
       order: 45, // between default Objective (40) and Control (50)
       content_controller_options: {
         draw_children: true,
         parent_instance: pageInstance,
-        model: CMS.Models.Risk,
-        mapping: relatedOrOwned + CMS.Models.Risk.table_plural,
+        model: businessModels.Risk,
+        mapping: relatedOrOwned + businessModels.Risk.table_plural,
       },
     };
 
-    if (pageInstance instanceof CMS.Models.Risk) {
+    if (pageInstance instanceof businessModels.Risk) {
       RisksExtension.init_widgets_for_risk_page();
-    } else if (pageInstance instanceof CMS.Models.Threat) {
+    } else if (pageInstance instanceof businessModels.Threat) {
       RisksExtension.init_widgets_for_threat_page();
-    } else if (pageInstance instanceof CMS.Models.Person) {
+    } else if (pageInstance instanceof businessModels.Person) {
       RisksExtension.init_widgets_for_person_page();
     } else {
       RisksExtension.init_widgets_for_other_pages();

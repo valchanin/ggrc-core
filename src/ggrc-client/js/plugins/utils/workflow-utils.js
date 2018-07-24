@@ -5,6 +5,7 @@
 
 import {confirm} from '../../plugins/utils/modals';
 import Permission from '../../permission';
+import * as businessModels from '../../models/business-models';
 /**
  * A set of properties which describe minimum information
  * about cycle.
@@ -21,11 +22,11 @@ import Permission from '../../permission';
 
 /**
  * Creates cycle instance.
- * @param {CMS.Models.Workflow} workflow - a workflow instance.
- * @return {CMS.Models.Cycle} - a new cycle based on workflow.
+ * @param {Workflow} workflow - a workflow instance.
+ * @return {Cycle} - a new cycle based on workflow.
  */
 function createCycle(workflow) {
-  return new CMS.Models.Cycle({
+  return new businessModels.Cycle({
     context: workflow.context.stub(),
     workflow: {id: workflow.id, type: 'Workflow'},
     autogenerate: true,
@@ -34,7 +35,7 @@ function createCycle(workflow) {
 
 /**
  * Redirects to cycle with certain id.
- * @param {CMS.Models.Cycle|CycleStub} cycle - an object containing cycle id.
+ * @param {Cycle|CycleStub} cycle - an object containing cycle id.
  * @param {number} id - cycle id.
  */
 function redirectToCycle({id}) {

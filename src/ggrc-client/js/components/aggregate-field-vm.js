@@ -4,6 +4,8 @@
 */
 
 import RefreshQueue from '../models/refresh_queue';
+import * as businessModels from '../models/business-models';
+
 const TOOLTIP_ITEMS_LIMIT = 5;
 
 const viewModel = can.Map.extend({
@@ -63,7 +65,7 @@ const viewModel = can.Map.extend({
     const rq = new RefreshQueue();
 
     can.each(items, function (item) {
-      rq.enqueue(CMS.Models[item.type].model(item));
+      rq.enqueue(businessModels[item.type].model(item));
     });
 
     return rq.trigger();

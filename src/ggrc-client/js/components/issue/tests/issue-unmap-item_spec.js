@@ -7,6 +7,7 @@ import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import Component from '../issue-unmap-item';
 import * as QueryAPI from '../../../plugins/utils/query-api-utils';
 import * as CurrentPageUtils from '../../../plugins/utils/current-page-utils';
+import * as businessModels from '../../../models/business-models';
 
 describe('issue-unmap-related-snapshots component', ()=> {
   let viewModel;
@@ -196,11 +197,6 @@ describe('issue-unmap-related-snapshots component', ()=> {
         FIRST: 0,
         SECOND: 1,
       };
-      originalModels = CMS.Models;
-    });
-
-    afterAll(()=> {
-      CMS.Models = originalModels;
     });
 
     beforeEach(()=> {
@@ -209,12 +205,15 @@ describe('issue-unmap-related-snapshots component', ()=> {
         type: 'Type',
       };
 
-      CMS.Models = {};
-      CMS.Models[relatedObject.type] = {
+      businessModels[relatedObject.type] = {
         root_collection: 'rootCollectionType',
       };
 
       spyOn(window, 'open');
+    });
+
+    afterEach(() => {
+      businessModels[relatedObject.type] = null;
     });
 
     it('calls window.open with second "_blank" param', ()=> {
@@ -236,7 +235,7 @@ describe('issue-unmap-related-snapshots component', ()=> {
       it(`url consists of root_collection from appopriate model and id
         based on passed related object`, ()=> {
           let rootCollectionType =
-            CMS.Models[relatedObject.type].root_collection;
+            businessModels[relatedObject.type].root_collection;
           let expectedUrl;
 
           viewModel.openObject(relatedObject);
@@ -249,7 +248,7 @@ describe('issue-unmap-related-snapshots component', ()=> {
         child_id props if a type of related object equals to "Snapshot"`, ()=> {
           let relatedObjectType = 'Snapshot';
           let rootCollectionType =
-            CMS.Models[relatedObject.type].root_collection;
+            businessModels[relatedObject.type].root_collection;
           let oldRelatedObjectType = relatedObject.type;
           let expectedUrl;
 

@@ -4,6 +4,7 @@
 */
 
 import template from './templates/export-panel.mustache';
+import * as businessModels from '../../models/business-models';
 
 let url = can.route.deparam(window.location.search.substr(1));
 let filterModel = can.Map({
@@ -54,7 +55,7 @@ export default can.Component.extend({
     removable: false,
     item: null,
     fetch_relevant_data: function (id, type) {
-      let dfd = CMS.Models[type].findOne({id: id});
+      let dfd = businessModels[type].findOne({id: id});
       dfd.then(function (result) {
         this.attr('item.relevant').push(new filterModel({
           model_name: url.relevant_type,

@@ -3,28 +3,30 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import * as businessModels from '../../js/models/business-models';
+
 describe('can.mustache.helper.model_info', function () {
   'use strict';
 
   let helper;
   let fakeModel;
-  let fakeOptions;  // a fake "options" argument
-  let origModel;  // the original model, if any, in the CMS.Models
+  let fakeOptions; // a fake "options" argument
+  let origModel; // the original model, if any, in the Models
 
   beforeAll(function () {
     helper = can.Mustache._helpers.model_info.fn;
   });
 
   beforeEach(function () {
-    origModel = CMS.Models.ModelFoo;
+    origModel = businessModels.ModelFoo;
     fakeModel = {};
-    CMS.Models.ModelFoo = fakeModel;
+    businessModels.ModelFoo = fakeModel;
 
     fakeOptions = {};
   });
 
   afterEach(function () {
-    CMS.Models.ModelFoo = origModel;
+    businessModels.ModelFoo = origModel;
   });
 
   it('returns the value of the correct model attribute', function () {
@@ -47,7 +49,7 @@ describe('can.mustache.helper.model_info', function () {
   });
 
   it('raises an error on an unknown model', function () {
-    delete CMS.Models.ModelFoo;
+    delete businessModels.ModelFoo;
 
     expect(function () {
       helper('ModelFoo', 'property', fakeOptions);

@@ -18,6 +18,7 @@ import * as caUtils from '../../../../plugins/utils/ca-utils';
 import * as DeferredTransactionUtil from '../../../../plugins/utils/deferred-transaction-utils';
 import Permission from '../../../../permission';
 import {CUSTOM_ATTRIBUTE_TYPE} from '../../../../plugins/utils/custom-attribute/custom-attribute-config';
+import * as businessModels from '../../../../models/business-models/';
 
 describe('assessment-info-pane component', () => {
   let vm;
@@ -82,20 +83,20 @@ describe('assessment-info-pane component', () => {
 
     beforeEach(function () {
       fakeType = 'FakeType';
-      CMS.Models[fakeType] = {};
+      businessModels[fakeType] = {};
       vm.attr('instance', {
         assessment_type: fakeType,
       });
     });
 
     afterAll(function () {
-      delete CMS.Models[fakeType];
+      delete businessModels[fakeType];
     });
 
     it('returns singular title for object which has type equals to ' +
     'assessment object type', function () {
       const title = 'Fake Title';
-      CMS.Models[fakeType].title_singular = title;
+      businessModels[fakeType].title_singular = title;
       expect(vm.attr('assessmentTypeNameSingular')).toBe(title);
     });
   });
@@ -105,20 +106,20 @@ describe('assessment-info-pane component', () => {
 
     beforeEach(function () {
       fakeType = 'FakeType';
-      CMS.Models[fakeType] = {};
+      businessModels[fakeType] = {};
       vm.attr('instance', {
         assessment_type: fakeType,
       });
     });
 
     afterAll(function () {
-      delete CMS.Models[fakeType];
+      delete businessModels[fakeType];
     });
 
     it('returns plural title for object which has type equals to ' +
     'assessment object type', function () {
       const title = 'Fake Title';
-      CMS.Models[fakeType].title_plural = title;
+      businessModels[fakeType].title_plural = title;
       expect(vm.attr('assessmentTypeNamePlural')).toBe(title);
     });
   });

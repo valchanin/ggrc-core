@@ -15,6 +15,7 @@ import {
   getPageInstance,
   navigate,
 } from '../../plugins/utils/current-page-utils';
+import * as businessModels from '../../models/business-models';
 
 export default can.Component.extend({
   tag: 'issue-unmap-item',
@@ -109,7 +110,7 @@ export default can.Component.extend({
         id = relatedObject.child_id;
       }
 
-      model = CMS.Models[objectType];
+      model = businessModels[objectType];
       type = model.root_collection;
       url = '/' + type + '/' + id;
 

@@ -5,6 +5,7 @@
 
 import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import Component from '../external-data-autocomplete';
+import * as businessModels from '../../../models/business-models';
 
 describe('external-data-autocomplete component', ()=> {
   let viewModel;
@@ -186,19 +187,16 @@ describe('external-data-autocomplete component', ()=> {
     });
 
     describe('createOrGet() method', ()=> {
-      let originalModels;
       let createDfd;
       let item;
       let response;
       let model;
-      beforeAll(()=> originalModels = CMS.Models);
-      afterAll(()=> CMS.Models = originalModels);
 
       beforeEach(()=> {
         createDfd = can.Deferred();
         item = new can.Map({test: true});
         viewModel.attr('type', 'TestType');
-        CMS.Models.TestType = can.Map.extend({
+        businessModels.TestType = can.Map.extend({
           create: jasmine.createSpy().and.returnValue(createDfd),
           root_object: 'test',
           cache: {},
@@ -213,17 +211,21 @@ describe('external-data-autocomplete component', ()=> {
         ]];
       });
 
+      afterEach(() => {
+        businessModels.TestType = null;
+      });
+
       it('make call to create model', ()=> {
         viewModel.createOrGet(item);
 
-        expect(CMS.Models.TestType.create).toHaveBeenCalledWith(item);
+        expect(businessModels.TestType.create).toHaveBeenCalledWith(item);
       });
 
       it('creates model with empty context', ()=> {
         item.attr('context', 'test');
         viewModel.createOrGet(item);
 
-        let model = CMS.Models.TestType.create.calls.argsFor(0)[0];
+        let model = businessModels.TestType.create.calls.argsFor(0)[0];
         expect(model.attr('context')).toBe(null);
       });
 
@@ -231,7 +233,7 @@ describe('external-data-autocomplete component', ()=> {
         item.attr('external', false);
         viewModel.createOrGet(item);
 
-        let model = CMS.Models.TestType.create.calls.argsFor(0)[0];
+        let model = businessModels.TestType.create.calls.argsFor(0)[0];
         expect(model.attr('external')).toBe(true);
       });
 
@@ -242,20 +244,20 @@ describe('external-data-autocomplete component', ()=> {
 
         resultDfd.then((resultModel)=> {
           expect(resultModel.attr('id')).toBe('testId');
-          expect(resultModel instanceof CMS.Models.TestType).toBe(true);
+          expect(resultModel instanceof businessModels.TestType).toBe(true);
           done();
         });
       });
 
       it('returns cached model if there is value in cache', (done)=> {
-        CMS.Models.TestType.cache['testId'] = {cached: true};
+        businessModels.TestType.cache['testId'] = {cached: true};
 
         let resultDfd = viewModel.createOrGet(item);
 
         createDfd.resolve(response);
 
         resultDfd.then((resultModel)=> {
-          expect(resultModel).toBe(CMS.Models.TestType.cache['testId']);
+          expect(resultModel).toBe(businessModels.TestType.cache['testId']);
           done();
         });
       });

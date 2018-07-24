@@ -10,6 +10,7 @@ import {
 } from '../../plugins/utils/gdrive-picker-utils.js';
 import {backendGdriveClient} from '../../plugins/ggrc-gapi-client';
 import tracker from '../../tracker';
+import * as businessModels from '../../models/business-models';
 
 (function (can, $, GGRC, CMS) {
   'use strict';
@@ -174,7 +175,7 @@ import tracker from '../../tracker';
         let instanceType = this.attr('instance.type');
         let contextId = this.attr('instance.context.id') || null;
         let modelType = this.attr('modelType');
-        let ModelClass = CMS.Models[modelType];
+        let ModelClass = businessModels[modelType];
 
         let dfdDocs = files.map(function (file) {
           let model = new ModelClass({

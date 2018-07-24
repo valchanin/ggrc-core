@@ -8,6 +8,7 @@ import {getColumnsForModel} from '../../plugins/utils/tree-view-utils';
 import * as AdvancedSearch from '../../plugins/utils/advanced-search-utils';
 import template from './advanced-search-mapping-criteria.mustache';
 import Mappings from '../../models/mappers/mappings';
+import * as businessModels from '../../models/business-models';
 
 /**
  * Mapping Criteria view model.
@@ -116,7 +117,7 @@ let viewModel = can.Map.extend({
       let modelName = this.attr('modelName');
 
       this.attr('criteria.objectName', modelName);
-      return [CMS.Models[modelName]];
+      return [businessModels[modelName]];
     }
 
     let mappings = Mappings
@@ -124,7 +125,7 @@ let viewModel = can.Map.extend({
     let types = _.chain(mappings)
       .keys()
       .map(function (mapping) {
-        return CMS.Models[mapping];
+        return businessModels[mapping];
       })
       .compact()
       .sortBy('model_singular')
@@ -148,7 +149,7 @@ let viewModel = can.Map.extend({
       return 'Mapped To';
     }
     return 'Where ' +
-            CMS.Models[this.attr('modelName')].title_singular +
+            businessModels[this.attr('modelName')].title_singular +
             ' is mapped to';
   },
   /**

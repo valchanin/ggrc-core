@@ -11,6 +11,7 @@ import {
 } from '../models/mappers/mapper-helpers';
 import Mappings from '../models/mappers/mappings';
 import {getPageInstance} from '../plugins/utils/current-page-utils';
+import * as businessModels from '../models/business-models';
 
 (function ($, CMS, GGRC) {
   let RiskAssessmentsExtension = {};
@@ -22,11 +23,12 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
   // Register RA models for use with `inferObjectType`
   RiskAssessmentsExtension.object_type_decision_tree = function () {
     return {
-      risk_assessment: CMS.Models.RiskAssessment,
+      risk_assessment: businessModels.RiskAssessment,
     };
   };
 
-  CMS.Models.Program.attributes.risk_assessments = 'CMS.Models.RiskAssessment.stubs';
+  businessModels.Program.attributes.risk_assessments
+    = 'CMS.Models.RiskAssessment.stubs';
 
   // Configure mapping extensions for ggrc_risk_assessments
   RiskAssessmentsExtension.init_mappings = function () {
@@ -82,7 +84,7 @@ import {getPageInstance} from '../plugins/utils/current-page-utils';
             add_item_view: GGRC.mustache_path +
               '/risk_assessments/tree_add_item.mustache',
             parent_instance: page_instance,
-            model: CMS.Models.RiskAssessment,
+            model: businessModels.RiskAssessment,
             draw_children: true,
             allow_mapping: false,
           },

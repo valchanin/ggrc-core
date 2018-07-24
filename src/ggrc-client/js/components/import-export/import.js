@@ -29,6 +29,7 @@ import {
 } from '../../plugins/ggrc-gapi-client';
 import {getPickerElement} from '../../plugins/ggrc_utils';
 import errorTemplate from './templates/import-error.mustache';
+import * as businessModels from '../../models/business-models';
 
 const messages = {
   INCORRECT_FORMAT: `The file is not in a recognized format. 
@@ -48,7 +49,7 @@ const messages = {
   FILE_STATS: (objects) => {
     const stats = Object.keys(objects).map((model) => {
       return `${objects[model]} 
-      ${objects[model] === 1 ? model : CMS.Models[model].model_plural}`;
+      ${objects[model] === 1 ? model : businessModels[model].model_plural}`;
     }).join(', ');
     return `You are going to import: <span class="gray">${stats}</span>
       <div class="margin-top-20">${messages.PLEASE_CONFIRM}</div>`;

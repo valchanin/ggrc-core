@@ -3,6 +3,8 @@
  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  */
 
+import * as businessModels from '../../models/business-models';
+
 /**
    * Util methods for work with Object versions.
    */
@@ -45,7 +47,7 @@ function _getObjectVersionConfig(modelName, forceBuildFromOriginal) {
     return {
       originalModelName: originalModelName,
       widgetId: modelName,
-      widgetName: CMS.Models[originalModelName].title_plural +
+      widgetName: businessModels[originalModelName].title_plural +
         ' Versions',
     };
   }
@@ -53,7 +55,7 @@ function _getObjectVersionConfig(modelName, forceBuildFromOriginal) {
   return {
     originalModelName: modelName,
     widgetId: modelName + '_versions',
-    widgetName: CMS.Models[modelName].title_plural +
+    widgetName: businessModels[modelName].title_plural +
       ' Versions',
   };
 }

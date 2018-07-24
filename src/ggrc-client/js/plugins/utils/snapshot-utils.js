@@ -10,6 +10,7 @@ import {getRole} from './acl-utils';
 import Permission from '../../permission';
 import {hasRelatedAssessments} from './models-utils';
 import {getPageInstance} from '../utils/current-page-utils';
+import * as businessModels from '../../models/business-models';
 
 /**
  * Util methods for work with Snapshots.
@@ -122,7 +123,7 @@ function _buildACL(content) {
  */
 function toObject(instance) {
   let object;
-  let model = CMS.Models[instance.child_type];
+  let model = businessModels[instance.child_type];
   let content = instance.revision.content;
   let audit;
 
@@ -153,7 +154,7 @@ function toObject(instance) {
 
   if (content.access_control_list) {
     content.access_control_list.forEach(function (item) {
-      item.person = new CMS.Models.Person({id: item.person_id}).stub();
+      item.person = new businessModels.Person({id: item.person_id}).stub();
     });
   }
 
@@ -165,8 +166,8 @@ function toObject(instance) {
   object.attr('originalLink', content.originalLink);
   // Update archived flag in content when audit is archived:
   if (instance.parent &&
-    CMS.Models.Audit.findInCacheById(instance.parent.id)) {
-    audit = CMS.Models.Audit.findInCacheById(instance.parent.id);
+    businessModels.Audit.findInCacheById(instance.parent.id)) {
+    audit = businessModels.Audit.findInCacheById(instance.parent.id);
     audit.bind('change', function () {
       let field = arguments[1];
       let newValue = arguments[3];
@@ -187,7 +188,7 @@ function toObject(instance) {
  * @return {String} Url
  */
 function getParentUrl(instance) {
-  let model = CMS.Models[instance.child_type];
+  let model = businessModels[instance.child_type];
   let plural = model.table_plural;
   let link = '/' + plural + '/' + instance.child_id;
 

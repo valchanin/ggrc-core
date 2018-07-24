@@ -7,6 +7,7 @@ import RefreshQueue from '../models/refresh_queue';
 import Permission from '../permission';
 import {getRolesForType} from '../plugins/utils/acl-utils';
 import Mappings from '../models/mappers/mappings';
+import * as businessModels from '../models/business-models';
 
 /**
  * A module containing various utility functions.
@@ -123,11 +124,11 @@ function getPersonInfo(person) {
     return dfd;
   }
 
-  actualPerson = CMS.Models.Person.store[person.id] || {};
+  actualPerson = businessModels.Person.store[person.id] || {};
   if (actualPerson.email) {
     dfd.resolve(actualPerson);
   } else {
-    actualPerson = new CMS.Models.Person({id: person.id});
+    actualPerson = new businessModels.Person({id: person.id});
     new RefreshQueue()
       .enqueue(actualPerson)
       .trigger()
@@ -204,7 +205,7 @@ function isMapped(target, destination, mapping) {
     return false;
   }
   if (_.isUndefined(mapping)) {
-    tablePlural = CMS.Models[destination.type].table_plural;
+    tablePlural = businessModels[destination.type].table_plural;
     mapping = (target.has_binding(tablePlural) ? '' : 'related_') +
       tablePlural;
   }
@@ -403,7 +404,7 @@ function getModelByType(type) {
       'Value of Type is: ', type);
     return null;
   }
-  return CMS.Models[type] || GGRC.Models[type];
+  return businessModels[type];
 }
 
 /**

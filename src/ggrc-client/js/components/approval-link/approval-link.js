@@ -13,6 +13,7 @@ import {
 } from '../../plugins/utils/query-api-utils';
 import {getRole} from '../../plugins/utils/acl-utils';
 import Permission from '../../permission';
+import * as businessModels from '../../models/business-models';
 
 import template from './approval-link.mustache';
 
@@ -68,7 +69,7 @@ export default can.Component.extend({
       batchRequests(buildParam(type, pagingInfo, relevant, null, filter))
         .then((result)=> {
           let values = result[type].values.map((value) => {
-            return new CMS.Models[type](value);
+            return new businessModels[type](value);
           });
           this.attr('reviewTask', values[0]);
           this.attr('isInitializing', false);

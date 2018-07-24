@@ -5,6 +5,7 @@
 
 import template from './templates/relevant-filter.mustache';
 import Mappings from '../../models/mappers/mappings';
+import * as businessModels from '../../models/business-models';
 
 export default can.Component.extend({
   tag: 'relevant-filter',
@@ -51,13 +52,13 @@ export default can.Component.extend({
         models = _.difference(_.unique(models),
           ['CycleTaskEntry', 'CycleTaskGroupObject']);
         models = _.map(models, function (mapping) {
-          return CMS.Models[mapping];
+          return businessModels[mapping];
         });
         return _.sortBy(_.compact(models), 'model_singular');
       }
       mappings = Mappings.get_canonical_mappings_for(type);
       return _.sortBy(_.compact(_.map(_.keys(mappings), function (mapping) {
-        return CMS.Models[mapping];
+        return businessModels[mapping];
       })), 'model_singular');
     },
     optionHidden: function (option) {
@@ -78,7 +79,7 @@ export default can.Component.extend({
     setRelevant: function () {
       this.viewModel.attr('relevant').replace([]);
       can.each(this.viewModel.attr('relevantTo') || [], function (item) {
-        let model = new CMS.Models[item.type](item);
+        let model = new businessModels[item.type](item);
         this.viewModel.attr('relevant').push({
           readOnly: item.readOnly,
           value: true,

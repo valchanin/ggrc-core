@@ -18,6 +18,7 @@ import {
   getPageInstance,
   navigate,
 } from '../plugins/utils/current-page-utils';
+import * as businessModels from '../models/business-models';
 
 (function (can, $, GGRC) {
   'use strict';
@@ -31,7 +32,7 @@ import {
     },
 
     deleteform: function ($target, $trigger, option) {
-      var model = CMS.Models[$trigger.attr('data-object-singular')];
+      var model = businessModels[$trigger.attr('data-object-singular')];
       var instance;
       var deleteCounts = new can.Map({loading: true, counts: ''});
       var modalSettings;
@@ -108,7 +109,7 @@ import {
       var objectParams = $trigger.attr('data-object-params');
       var extendNewInstance = $trigger.attr('data-extend-new-instance');
       var triggerParent = $trigger.closest('.add-button');
-      var model = CMS.Models[$trigger.attr('data-object-singular')];
+      var model = businessModels[$trigger.attr('data-object-singular')];
       var isProposal = $trigger.data('is-proposal');
       var instance;
       var modalTitle;
@@ -259,7 +260,7 @@ import {
     },
 
     archiveform: function ($target, $trigger, option) {
-      var model = CMS.Models[$trigger.attr('data-object-singular')];
+      var model = businessModels[$trigger.attr('data-object-singular')];
       var instance;
 
       if ($trigger.attr('data-object-id') === 'page') {

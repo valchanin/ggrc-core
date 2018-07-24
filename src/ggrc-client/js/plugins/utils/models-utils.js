@@ -4,6 +4,7 @@
 */
 
 import RefreshQueue from '../../models/refresh_queue';
+import * as businessModels from '../../models/business-models/';
 
 const relatedAssessmentsTypes = Object.freeze(['Control', 'Objective']);
 
@@ -15,12 +16,12 @@ const getModelInstance = (id, type, requiredAttr) => {
       reject();
     }
 
-    modelInstance = CMS.Models[type].findInCacheById(id) || {};
+    modelInstance = businessModels[type].findInCacheById(id) || {};
 
     if (modelInstance && modelInstance.hasOwnProperty(requiredAttr)) {
       resolve(modelInstance);
     } else {
-      modelInstance = new CMS.Models[type]({id: id});
+      modelInstance = new businessModels[type]({id: id});
       new RefreshQueue()
         .enqueue(modelInstance)
         .trigger()
@@ -155,7 +156,7 @@ function _addHandler(obj, pj) {
       }), pj.what))) {
     return dfds;
   }
-  const model = (CMS.Models[binding.loader.model_name] ||
+  const model = (businessModels[binding.loader.model_name] ||
     GGRC.Models[binding.loader.model_name]);
   const inst = pj.what instanceof model
     ? pj.what
