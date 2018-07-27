@@ -72,8 +72,8 @@ class TestTaskAssigneesPropagation(base.TestACLPropagation):
               "restore": (False, "unimplemented"),
           },
           "CycleTaskEntry": {
-              "create": False,
-              "read": False,
+              "create": True,
+              "read": True,
               "update": False,
               "delete": False,
           },
@@ -134,9 +134,9 @@ class TestTaskAssigneesPropagation(base.TestACLPropagation):
               "restore": (False, "unimplemented"),
           },
           "CycleTaskEntry": {
-              "create": False,
+              "create": True,
               "read": True,
-              "update": (False, "unimplemented"),
+              "update": False,
               "delete": False,
           },
       },
@@ -198,7 +198,7 @@ class TestTaskAssigneesPropagation(base.TestACLPropagation):
           "CycleTaskEntry": {
               "create": True,
               "read": True,
-              "update": (True, "unimplemented"),
+              "update": True,
               "delete": True,
           },
       },
