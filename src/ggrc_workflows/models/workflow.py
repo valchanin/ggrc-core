@@ -67,10 +67,10 @@ class Workflow(roleable.Roleable,
   recurrences = db.Column(db.Boolean, default=False, nullable=False)
 
   task_groups = db.relationship(
-      'TaskGroup', backref='workflow', cascade='all, delete-orphan')
+      'TaskGroup', backref='_workflow', cascade='all, delete-orphan')
 
   cycles = db.relationship(
-      'Cycle', backref='workflow', cascade='all, delete-orphan')
+      'Cycle', backref='_workflow', cascade='all, delete-orphan')
 
   next_cycle_start_date = db.Column(db.Date, nullable=True)
 

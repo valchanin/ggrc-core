@@ -5,6 +5,8 @@
 
 
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext import hybrid
+from sqlalchemy import orm
 
 from ggrc import db
 from ggrc.models.mixins import Base
@@ -33,6 +35,14 @@ class TaskGroupObject(roleable.Roleable, Timeboxed, base.ContextRBAC, Base,
   object = utils.JsonPolymorphicRelationship("object_id", "object_type",
                                              "{}_object")
 
+  @hybrid.hybrid_property
+  def task_group(self):
+    return self._task_group
+
+  @task_group.setter
+  def task_group(self, task_group):
+    self._task_group = task_group
+
   @property
   def workflow(self):
     """Property which returns parent workflow object."""
@@ -51,7 +61,6 @@ class TaskGroupObject(roleable.Roleable, Timeboxed, base.ContextRBAC, Base,
 
   @classmethod
   def eager_query(cls):
-    from sqlalchemy import orm
 
     query = super(TaskGroupObject, cls).eager_query()
     return query.options(
@@ -99,8 +108,6 @@ class TaskGroupable(object):
 
   @classmethod
   def eager_query(cls):
-    from sqlalchemy import orm
-
     query = super(TaskGroupable, cls).eager_query()
     return cls.eager_inclusions(query, TaskGroupable._include_links).options(
         orm.subqueryload('task_group_objects'))

@@ -5,6 +5,7 @@
 """
 
 from sqlalchemy import orm, inspect
+from sqlalchemy.ext import hybrid
 
 from ggrc import db
 from ggrc.access_control import roleable
@@ -56,7 +57,7 @@ class CycleTaskGroup(roleable.Roleable,
       db.Integer, db.ForeignKey('task_groups.id'), nullable=True)
   cycle_task_group_tasks = db.relationship(
       'CycleTaskGroupObjectTask',
-      backref='cycle_task_group',
+      backref='_cycle_task_group',
       cascade='all, delete-orphan'
   )
   sort_index = db.Column(
@@ -92,6 +93,14 @@ class CycleTaskGroup(roleable.Roleable,
                                   lambda x: x.cycle.next_due_date,
                                   with_template=False),
   ]
+
+  @hybrid.hybrid_property
+  def cycle(self):
+    return self._cycle
+
+  @cycle.setter
+  def cycle(self, cycle):
+    self._cycle = cycle
 
   @property
   def workflow(self):

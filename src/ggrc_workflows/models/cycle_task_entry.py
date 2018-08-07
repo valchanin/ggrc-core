@@ -38,16 +38,17 @@ class CycleTaskEntry(roleable.Roleable, Relatable, Described,
   # `cascade` option must be added on parent's (CycleTask's) side relationship.
   # Because we are using backref on child side, backref must initialize cascade
   # option explicitly for parent's (CycleTask's) part of the relationship.
-  cycle_task_group_object_task = db.relationship(
-      'CycleTaskGroupObjectTask',
-      foreign_keys='CycleTaskEntry.cycle_task_group_object_task_id',
-      backref=backref('cycle_task_entries', cascade="delete, delete-orphan"),
-  )
 
   _api_attrs = reflection.ApiAttributes(
       'cycle',
       'cycle_task_group_object_task',
       'is_declining_review'
+  )
+
+  _cycle_task_group_object_task = db.relationship(
+      'CycleTaskGroupObjectTask',
+      foreign_keys='CycleTaskEntry.cycle_task_group_object_task_id',
+      backref=backref('cycle_task_entries', cascade="delete, delete-orphan"),
   )
 
   @property
@@ -62,3 +63,11 @@ class CycleTaskEntry(roleable.Roleable, Relatable, Described,
   @is_declining_review.setter
   def is_declining_review(self, value):
     self._is_declining_review = bool(value)
+
+  @hybrid_property
+  def cycle_task_group_object_task(self):
+    return self._cycle_task_group_object_task
+
+  @cycle_task_group_object_task.setter
+  def cycle_task_group_object_task(self, value):
+    self._cycle_task_group_object_task = value

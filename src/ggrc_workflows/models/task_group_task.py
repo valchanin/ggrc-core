@@ -8,6 +8,7 @@ import datetime
 
 from sqlalchemy import orm
 from sqlalchemy import schema
+from sqlalchemy.ext import hybrid
 
 from ggrc import db
 from ggrc.access_control import roleable, role
@@ -62,6 +63,14 @@ class TaskGroupTask(roleable.Roleable,
 
   response_options = db.Column(
       JsonType(), nullable=False, default=[])
+
+  @hybrid.hybrid_property
+  def task_group(self):
+    return self._task_group
+
+  @task_group.setter
+  def task_group(self, task_group):
+    self._task_group = task_group
 
   TEXT = 'text'
   MENU = 'menu'

@@ -7,6 +7,7 @@
 from urlparse import urljoin
 
 from sqlalchemy import orm, inspect
+from sqlalchemy.ext import hybrid
 
 from ggrc import db
 from ggrc.fulltext import attributes as ft_attributes
@@ -53,7 +54,7 @@ class Cycle(roleable.Roleable,
       nullable=False,
   )
   cycle_task_groups = db.relationship(
-      'CycleTaskGroup', backref='cycle', cascade='all, delete-orphan')
+      'CycleTaskGroup', backref='_cycle', cascade='all, delete-orphan')
   cycle_task_group_object_tasks = db.relationship(
       'CycleTaskGroupObjectTask', backref='cycle',
       cascade='all, delete-orphan')
@@ -63,6 +64,14 @@ class Cycle(roleable.Roleable,
                          default=True,
                          nullable=False)
   next_due_date = db.Column(db.Date)
+
+  @hybrid.hybrid_property
+  def workflow(self):
+    return self._workflow
+
+  @workflow.setter
+  def workflow(self, workflow):
+    self._workflow = workflow
 
   @property
   def is_done(self):

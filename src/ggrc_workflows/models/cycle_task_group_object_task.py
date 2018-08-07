@@ -130,6 +130,14 @@ class CycleTaskGroupObjectTask(roleable.Roleable,
   verified_date = db.Column(db.DateTime)
 
   @hybrid.hybrid_property
+  def cycle_task_group(self):
+    return self._cycle_task_group
+
+  @cycle_task_group.setter
+  def cycle_task_group(self, cycle_task_group):
+    self._cycle_task_group = cycle_task_group
+
+  @hybrid.hybrid_property
   def object_approval(self):
     return self.cycle.workflow.object_approval
 
