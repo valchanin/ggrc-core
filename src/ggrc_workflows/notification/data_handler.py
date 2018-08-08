@@ -542,7 +542,7 @@ def get_cycle_task_dict(cycle_task, del_rels_cache=None):
 
   object_titles = []
   # every object should have a title or at least a name like person object
-  for related_object in cycle_task.related_objects:
+  for related_object in cycle_task.related_objects():
     object_titles.append(getattr(related_object, "title", "") or
                          getattr(related_object, "name", "") or
                          u"Untitled object")

@@ -154,7 +154,7 @@ class CycleTaskGroupObjectTask(roleable.Roleable,
     """Changing task state must invalidate `workflow_state` on objects
     """
     return [(object_.__class__.__name__, object_.id) for object_ in
-            self.related_objects]  # pylint: disable=not-an-iterable
+            self.related_objects()]
 
   _api_attrs = reflection.ApiAttributes(
       'cycle',
@@ -236,21 +236,6 @@ class CycleTaskGroupObjectTask(roleable.Roleable,
   def workflow(self):
     """Property which returns parent workflow object."""
     return self.cycle.workflow
-
-  @builder.simple_property
-  def related_objects(self):
-    """Compute and return a list of all the objects related to this cycle task.
-
-    Related objects are those that are found either on the "source" side, or
-    on the "destination" side of any of the instance's relations.
-
-    Returns:
-      (list) All objects related to the instance.
-    """
-    # pylint: disable=not-an-iterable
-    sources = [r.source for r in self.related_sources]
-    destinations = [r.destination for r in self.related_destinations]
-    return sources + destinations
 
   @builder.simple_property
   def allow_change_state(self):

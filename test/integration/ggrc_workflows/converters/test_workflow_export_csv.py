@@ -299,7 +299,7 @@ class TestExportMultipleObjects(TestCase):
     cycle_tasks = []
     for cycle_task in cycle.cycle_task_group_object_tasks:
       is_related = False
-      for related_object in cycle_task.related_objects:
+      for related_object in cycle_task.related_objects():
         if related_object.slug == "p1":
           is_related = True
       if is_related:
