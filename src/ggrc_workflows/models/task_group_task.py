@@ -18,11 +18,13 @@ from ggrc.login import get_current_user
 from ggrc.models import mixins
 from ggrc.models.types import JsonType
 from ggrc.models import reflection
+from ggrc.models import relationship
 from ggrc_workflows.models.task_group import TaskGroup
 from ggrc.models.mixins import base
 
 
 class TaskGroupTask(roleable.Roleable,
+                    relationship.Relatable,
                     mixins.Titled,
                     mixins.Described,
                     base.ContextRBAC,
@@ -70,6 +72,8 @@ class TaskGroupTask(roleable.Roleable,
 
   @task_group.setter
   def task_group(self, task_group):
+    if not self._task_group and task_group:
+      relationship.Relationship(source=task_group, destination=self)
     self._task_group = task_group
 
   TEXT = 'text'

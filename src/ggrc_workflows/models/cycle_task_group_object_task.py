@@ -135,6 +135,8 @@ class CycleTaskGroupObjectTask(roleable.Roleable,
 
   @cycle_task_group.setter
   def cycle_task_group(self, cycle_task_group):
+    if not self._cycle_task_group and cycle_task_group:
+      relationship.Relationship(source=cycle_task_group, destination=self)
     self._cycle_task_group = cycle_task_group
 
   @hybrid.hybrid_property

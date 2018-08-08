@@ -12,12 +12,12 @@ from ggrc.models.mixins import Base, Described
 from ggrc.models import reflection
 
 from ggrc.access_control import roleable
-from ggrc.models.relationship import Relatable
+from ggrc.models import relationship
 from ggrc.fulltext import mixin
 from ggrc.models.mixins import base
 
 
-class CycleTaskEntry(roleable.Roleable, Relatable, Described,
+class CycleTaskEntry(roleable.Roleable, relationship.Relatable, Described,
                      base.ContextRBAC, Base, mixin.Indexed, db.Model):
   """Workflow CycleTaskEntry model."""
 
@@ -69,5 +69,7 @@ class CycleTaskEntry(roleable.Roleable, Relatable, Described,
     return self._cycle_task_group_object_task
 
   @cycle_task_group_object_task.setter
-  def cycle_task_group_object_task(self, value):
-    self._cycle_task_group_object_task = value
+  def cycle_task_group_object_task(self, cycle_task):
+    if not self._cycle_task_group_object_task and cycle_task:
+      relationship.Relationship(source=cycle_task, destination=self)
+    self._cycle_task_group_object_task = cycle_task

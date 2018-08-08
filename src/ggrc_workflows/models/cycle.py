@@ -13,8 +13,9 @@ from ggrc import db
 from ggrc.fulltext import attributes as ft_attributes
 from ggrc.fulltext import mixin as ft_mixin
 from ggrc.models import mixins
-from ggrc.models.mixins import base
 from ggrc.models import reflection
+from ggrc.models import relationship
+from ggrc.models.mixins import base
 from ggrc.utils import get_url_root
 from ggrc import builder
 from ggrc.access_control import roleable
@@ -32,6 +33,7 @@ def _query_filtered_by_contact(person):
 
 
 class Cycle(roleable.Roleable,
+            relationship.Relatable,
             mixins.WithContact,
             wf_mixins.CycleStatusValidatedMixin,
             mixins.Timeboxed,
@@ -71,6 +73,8 @@ class Cycle(roleable.Roleable,
 
   @workflow.setter
   def workflow(self, workflow):
+    if not self._workflow and workflow:
+      relationship.Relationship(source=workflow, destination=self)
     self._workflow = workflow
 
   @property

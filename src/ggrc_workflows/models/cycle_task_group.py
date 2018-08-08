@@ -11,6 +11,7 @@ from ggrc import db
 from ggrc.access_control import roleable
 from ggrc.models import mixins
 from ggrc.models import reflection
+from ggrc.models import relationship
 from ggrc.models.mixins import base
 from ggrc.fulltext import mixin as index_mixin
 from ggrc.fulltext import attributes
@@ -29,6 +30,7 @@ def _query_filtered_by_contact(person):
 
 
 class CycleTaskGroup(roleable.Roleable,
+                     relationship.Relatable,
                      mixins.WithContact,
                      wf_mixins.CycleTaskGroupRelatedStatusValidatedMixin,
                      mixins.Slugged,
@@ -100,6 +102,8 @@ class CycleTaskGroup(roleable.Roleable,
 
   @cycle.setter
   def cycle(self, cycle):
+    if not self._cycle and cycle:
+      relationship.Relationship(source=cycle, destination=self)
     self._cycle = cycle
 
   @property

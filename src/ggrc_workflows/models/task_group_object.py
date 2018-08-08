@@ -14,11 +14,16 @@ from ggrc.models.mixins import base
 from ggrc.models.mixins import Timeboxed
 from ggrc.models import reflection
 from ggrc.models import utils
+from ggrc.models import relationship
 
 from ggrc.access_control import roleable
 
 
-class TaskGroupObject(roleable.Roleable, Timeboxed, base.ContextRBAC, Base,
+class TaskGroupObject(roleable.Roleable,
+                      relationship.Relatable,
+                      Timeboxed,
+                      base.ContextRBAC,
+                      Base,
                       db.Model):
   """Workflow TaskGroupObject model."""
 
@@ -41,6 +46,8 @@ class TaskGroupObject(roleable.Roleable, Timeboxed, base.ContextRBAC, Base,
 
   @task_group.setter
   def task_group(self, task_group):
+    if not self._task_group and task_group:
+      relationship.Relationship(source=task_group, destination=self)
     self._task_group = task_group
 
   @property

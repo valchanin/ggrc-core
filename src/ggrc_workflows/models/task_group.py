@@ -17,13 +17,22 @@ from ggrc.models.mixins import (
 )
 from ggrc.models.reflection import AttributeInfo
 from ggrc.models import reflection
+from ggrc.models import relationship
 from ggrc.models import all_models
 from ggrc.models.mixins import base
 from ggrc_workflows.models.task_group_object import TaskGroupObject
 
 
-class TaskGroup(roleable.Roleable, WithContact, Timeboxed, Described,
-                Titled, base.ContextRBAC, Slugged, Indexed, db.Model):
+class TaskGroup(roleable.Roleable,
+                relationship.Relatable,
+                WithContact,
+                Timeboxed,
+                Described,
+                Titled,
+                base.ContextRBAC,
+                Slugged,
+                Indexed,
+                db.Model):
   """Workflow TaskGroup model."""
 
   __tablename__ = 'task_groups'
@@ -90,6 +99,8 @@ class TaskGroup(roleable.Roleable, WithContact, Timeboxed, Described,
 
   @workflow.setter
   def workflow(self, workflow):
+    if not self._workflow and workflow:
+      all_models.Relationship(source=workflow, destination=self)
     self._workflow = workflow
 
   def ensure_assignee_is_workflow_member(self):  # pylint: disable=invalid-name
