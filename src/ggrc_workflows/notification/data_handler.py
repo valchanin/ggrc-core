@@ -543,6 +543,10 @@ def get_cycle_task_dict(cycle_task, del_rels_cache=None):
   object_titles = []
   # every object should have a title or at least a name like person object
   for related_object in cycle_task.related_objects():
+    if related_object.type == "CycleTaskGroup":
+      # We can skip cycle task groups in notifications because they are
+      # irrelevant for the completion of a given cycle task.
+      continue
     object_titles.append(getattr(related_object, "title", "") or
                          getattr(related_object, "name", "") or
                          u"Untitled object")
