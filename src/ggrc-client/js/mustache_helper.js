@@ -529,15 +529,15 @@ Mustache.registerHelper('view_object_link', function (instance, options) {
   let linkText;
 
   function onRenderComplete(link) {
-    let html = [
-      '<a ',
-      '  href="' + link + '"',
-      '  target="_blank"',
-      '  class="view-link">',
-      linkText,
-      '</a>',
-    ].join('');
-    return html;
+    if (link) {
+      return `
+        <a href=${link} target="_blank" class="view-link">
+          ${linkText}
+        </a>
+      `;
+    } else {
+      return `<span>${linkText}</span>`;
+    }
   }
 
   instance = resolveComputed(instance);

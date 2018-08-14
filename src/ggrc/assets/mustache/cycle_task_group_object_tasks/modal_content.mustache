@@ -49,6 +49,7 @@
         {{#prune_context}}
           {{#each list}}
             <div class="oneline">
+            {{#if viewLink}}
               <a href="javascript://" class="unmap" data-toggle="unmap">
                 <span class="result" {{data 'result'}}></span>
                 <i class="fa fa-trash"></i>
@@ -58,6 +59,9 @@
                   {{firstexist title name email link}}
                 </a>
               {{/update_link}}
+            {{else}}
+              <span class="with-empty-trash">{{title}}</span
+            {{/if}}
             </div>
           {{/each}}
         {{/prune_context}}
