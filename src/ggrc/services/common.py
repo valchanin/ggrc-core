@@ -445,8 +445,8 @@ class Resource(ModelView):
           else:
             raise NotImplementedError()
         except (IntegrityError, ValidationError, ValueError) as err:
+          logger.exception(err)
           message = translate_message(err)
-          logger.warning(message)
           raise BadRequest(message)
         except Exception as err:
           logger.exception(err)
