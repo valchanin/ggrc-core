@@ -325,7 +325,8 @@ def dump_attrs(obj):
   attrs = tuple(
       p.key
       for p in mapper.iterate_properties
-      if p.key not in rel_keys)
+      if p.key not in rel_keys and not p.key.startswith("_")
+  )
   # TODO(anushovan): consider caching class definitions.
   attrs_cls = collections.namedtuple('Dumped%s' % obj_cls.__name__, attrs)
   values = tuple(getattr(obj, k, None) for k in attrs)
