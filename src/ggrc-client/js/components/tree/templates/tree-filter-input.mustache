@@ -12,18 +12,7 @@
   <span class="tree-filter_is-expression {{#if isExpression}}valid{{/if}}">
     <i class="fa fa-check-circle{{#unless isExpression}}-o{{/unless}}"></i>
   </span>
-  {{#if showAdvanced}}
-    {{^if disabled}}
-    <a href="javascript://" class="advanced-filter" ($click)="openAdvancedFilter()">
-      <i class="fa fa-filter"></i>
-    </a>
-    {{else}}
-    <div class="advanced-filter-controls">
-      <a href="javascript://" ($click)="openAdvancedFilter()">Filtered</a>
-      <a href="javascript://" ($click)="removeAdvancedFilters()"><i class="fa fa-remove"></i></a>
-    </div>
-    {{/if}}
-  {{/if}}
+  <content></content>
 </div>
 <div class="flex-box tree-filter__actions">
   <button type="submit"

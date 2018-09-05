@@ -6,29 +6,41 @@
 <div class="flex-box flex-col {{cssClasses}}">
   <div class="flex-box flex-col header tree-header-content">
     <div class="flex-box tree-filter">
-      <tree-filter-input class="flex-size-1"
-                         {register-filter}="@registerFilter"
-                         (submit)="onFilter"
-                         (openAdvanced)="openAdvancedFilter"
-                         (removeAdvanced)="removeAdvancedFilters"
-                         {show-advanced}="statusFilterVisible"
-                         {disabled}="advancedSearch.filter"
-                         {depth}="options.depth"
-                         {filter-deep-limit}="options.filterDeepLimit"
-      ></tree-filter-input>
+      <tree-filter-input
+        class="flex-size-1"
+        {register-filter}="@registerFilter"
+        (submit)="onFilter"
+        {disabled}="disableFilters"
+        {depth}="options.depth"
+        {filter-deep-limit}="options.filterDeepLimit">
+
+        {{#if statusFilterVisible}}
+          {{^if disableFilters}}
+          <a href="javascript://" class="advanced-filter" ($click)="openAdvancedFilter">
+            <i class="fa fa-filter"></i>
+          </a>
+          {{else}}
+          <div class="advanced-filter-controls">
+            <a href="javascript://" ($click)="openAdvancedFilter">Filtered</a>
+            <a href="javascript://" ($click)="removeAdvancedFilters"><i class="fa fa-remove"></i></a>
+          </div>
+          {{/if}}
+        {{/if}}
+
+      </tree-filter-input>
       {{#if statusFilterVisible}}
         <tree-status-filter class="flex-size-1"
                             {widget-id}="options.widgetId"
                             {model-name}="modelName"
                             {register-filter}="@registerFilter"
                             (filter)="onFilter"
-                            {disabled}="advancedSearch.filter"
+                            {disabled}="disableFilters"
         >
           <multiselect-dropdown
             {options}="filterStates"
             placeholder="Filter by State"
             plural="States"
-            {disabled}="advancedSearch.filter">
+            {disabled}="disableFilters">
           </multiselect-dropdown>
           {{#if statusTooltipVisible}}
             <i class="fa fa-question-circle" rel="tooltip"

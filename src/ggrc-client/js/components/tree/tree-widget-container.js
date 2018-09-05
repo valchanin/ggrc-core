@@ -165,6 +165,12 @@ viewModel = can.Map.extend({
           pageSize: 10});
       },
     },
+    disableFilters: {
+      get() {
+        let advancedSearchFilter = this.attr('advancedSearch.filter');
+        return !!advancedSearchFilter;
+      },
+    },
   },
   /**
    *

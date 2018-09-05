@@ -28,7 +28,6 @@ let viewModel = can.Map.extend({
     },
   },
   disabled: false,
-  showAdvanced: false,
   options: {
     query: null,
   },
@@ -57,12 +56,6 @@ let viewModel = can.Map.extend({
     this.attr('isExpression', isExpression);
 
     this.attr('options.query', newValue.length ? filter : null);
-  },
-  openAdvancedFilter: function () {
-    this.dispatch('openAdvanced');
-  },
-  removeAdvancedFilters: function () {
-    this.dispatch('removeAdvanced');
   },
 });
 
