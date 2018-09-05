@@ -76,8 +76,18 @@ viewModel = can.Map.extend({
         let filters = can.makeArray(this.attr('filters'));
         let additionalFilter = this.attr('additionalFilter');
 
-        if (this.attr('advancedSearch.filter')) {
-          return this.attr('advancedSearch.filter');
+        let importFilter = this.attr('importFilter');
+        let advancedSearchFilter = this.attr('advancedSearch.filter');
+
+        let advancedFilter = [importFilter, advancedSearchFilter]
+          .reduce((acc, filter) => {
+            return acc ?
+              GGRC.query_parser.join_queries(acc, filter || {expression: {}}) :
+              filter;
+          });
+
+        if (advancedFilter) {
+          return advancedFilter;
         }
 
         if (additionalFilter) {
@@ -168,7 +178,28 @@ viewModel = can.Map.extend({
     disableFilters: {
       get() {
         let advancedSearchFilter = this.attr('advancedSearch.filter');
-        return !!advancedSearchFilter;
+        let importFilter = this.attr('importFilter');
+
+        return !!(advancedSearchFilter || importFilter);
+      },
+    },
+    importFilter: {
+      get() {
+        let importId = router.attr('importId');
+
+        if (importId) {
+          notifier('alert', `The filter query refers to the report you've 
+            received on your email. You can only delete the filter query without
+            possibility to manually modify it.`);
+
+          return {
+            expression: {
+              object_name: 'import',
+              op: {name: 'relevant'},
+              right: importId,
+            },
+          };
+        }
       },
     },
   },
@@ -548,6 +579,10 @@ viewModel = can.Map.extend({
   resetAdvancedFilters: function () {
     this.attr('advancedSearch.filterItems', can.List());
     this.attr('advancedSearch.mappingItems', can.List());
+  },
+  removeImportFilter() {
+    router.removeAttr('importId');
+    this.onFilter();
   },
   closeInfoPane: function () {
     $('.pin-content')

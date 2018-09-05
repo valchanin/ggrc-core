@@ -14,18 +14,29 @@
         {depth}="options.depth"
         {filter-deep-limit}="options.filterDeepLimit">
 
-        {{#if statusFilterVisible}}
-          {{^if disableFilters}}
-          <a href="javascript://" class="advanced-filter" ($click)="openAdvancedFilter">
-            <i class="fa fa-filter"></i>
-          </a>
-          {{else}}
-          <div class="advanced-filter-controls">
-            <a href="javascript://" ($click)="openAdvancedFilter">Filtered</a>
-            <a href="javascript://" ($click)="removeAdvancedFilters"><i class="fa fa-remove"></i></a>
-          </div>
+        <div class="advanced-controls__container">
+          {{#if importFilter}}
+            <div class="advanced-controls__control advanced-controls__control--import-option">
+              <span>Email Import</span>
+              <a href="javascript://" ($click)="removeImportFilter"><i class="fa fa-remove"></i></a>
+            </div>
           {{/if}}
-        {{/if}}
+
+          {{#if statusFilterVisible}}
+            {{^if advancedSearch.filter}}
+              <div class="advanced-controls__filter">
+                <a href="javascript://" ($click)="openAdvancedFilter">
+                  <i class="fa fa-filter"></i>
+                </a>
+              </div>
+            {{else}}
+              <div class="advanced-controls__control advanced-controls__control--filter-option">
+                <a href="javascript://" ($click)="openAdvancedFilter">Filtered</a>
+                <a href="javascript://" ($click)="removeAdvancedFilters"><i class="fa fa-remove"></i></a>
+              </div>
+            {{/if}}
+          {{/if}}
+        <div>
 
       </tree-filter-input>
       {{#if statusFilterVisible}}

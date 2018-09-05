@@ -12,6 +12,7 @@ import {getComponentVM} from '../../../../js_specs/spec_helpers';
 import Component from '../tree-widget-container';
 import Relationship from '../../../models/service-models/relationship';
 import DisplayPrefs from '../../../models/local-storage/display-prefs';
+import router from '../../../router';
 
 describe('tree-widget-container component', function () {
   'use strict';
@@ -728,6 +729,69 @@ describe('tree-widget-container component', function () {
       vm.showLastPage();
 
       expect(vm.attr('pageInfo.current')).toBe(count);
+    });
+  });
+
+  describe('disableFilters get()', () => {
+    describe('returns false', () => {
+      it('if there are no advancedSearch and import filters', () => {
+        router.removeAttr('importId');
+        vm.attr('advancedSearch', {});
+
+        let result = vm.attr('disableFilters');
+
+        expect(result).toBe(false);
+      });
+    });
+
+    describe('returns true', () => {
+      it('if there is import filter', () => {
+        router.attr('importId', 'test');
+        vm.attr('advancedSearch', {});
+
+        let result = vm.attr('disableFilters');
+
+        expect(result).toBe(true);
+      });
+
+      it('if there is advancedSearch filter', () => {
+        router.removeAttr('importId');
+        vm.attr('advancedSearch', {filter: {}});
+
+        let result = vm.attr('disableFilters');
+
+        expect(result).toBe(true);
+      });
+
+      it('if there are import and advancedSearch filters', () => {
+        router.attr('importId', 'test');
+        vm.attr('advancedSearch', {filter: {}});
+
+        let result = vm.attr('disableFilters');
+
+        expect(result).toBe(true);
+      });
+    });
+  });
+
+  describe('removeImportFilter() method', () => {
+    beforeEach(() => {
+      spyOn(vm, 'onFilter');
+    });
+
+    it('removes importId option from route', () => {
+      router.attr('importId', 'test');
+
+      vm.removeImportFilter();
+
+      let result = router.attr('importId');
+      expect(result).toBeUndefined();
+    });
+
+    it('launches search', () => {
+      vm.removeImportFilter();
+
+      expect(vm.onFilter).toHaveBeenCalled();
     });
   });
 });

@@ -302,25 +302,6 @@ tree-filter-input {
         }
       }
     }
-    .advanced-filter{
-      opacity: .7;
-      position: absolute;
-      right: 6px;
-      top: 1px;
-    }
-    .advanced-filter-controls {
-      position: absolute;
-      right: 6px;
-      top: 5px;
-      background: #03A9F4;
-      border-radius: 15px;
-      line-height: 18px;
-      padding: 0 5px 0 5px;
-      a, i {
-        color: #fff;
-        font-size: 12px;
-      }
-    }
   }
 
   .tree-filter__actions {
@@ -336,6 +317,39 @@ tree-filter-input {
         opacity: 1;
       }
     }
+  }
+}
+
+.advanced-controls {
+  &__container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    >* {
+      margin-left: 5px;
+    }
+  }
+  &__control {
+    border-radius: 15px;
+    padding: 0 5px 0 5px;
+    line-height: 18px;
+    a, i, span {
+      color: #fff;
+      font-size: 12px;
+    }
+    &--import-option {
+      background: #1976D2;
+    }
+    &--filter-option {
+      background: #03A9F4;
+    }
+  }
+  &__filter {
+    opacity: .7;
   }
 }
 
